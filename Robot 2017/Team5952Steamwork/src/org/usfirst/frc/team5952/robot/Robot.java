@@ -61,10 +61,8 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Camera1IPDeltaFromTarget", cameraTable.getString("Camera1IPDeltaFromTarget", ""));
 		SmartDashboard.putString("Camera2IPDeltaFromTarget", cameraTable.getString("Camera2IPDeltaFromTarget", ""));
 
-		SmartDashboard.putString("Camera1IPDistanceFromTarget",
-				cameraTable.getString("Camera1IPDistanceFromTarget", ""));
-		SmartDashboard.putString("Camera2IPDistanceFromTarget",
-				cameraTable.getString("Camera2IPDistanceFromTarget", ""));
+		SmartDashboard.putString("Camera1IPDistanceFromTarget",cameraTable.getString("Camera1IPDistanceFromTarget", ""));
+		SmartDashboard.putString("Camera2IPDistanceFromTarget",cameraTable.getString("Camera2IPDistanceFromTarget", ""));
 
 	}
 
