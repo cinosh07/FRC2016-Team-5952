@@ -49,8 +49,8 @@ public class Robot extends IterativeRobot {
 
 		cameraTable = NetworkTable.getTable("Camera");
 
-		camera1IP = cameraTable.getString("Camera1IP", "");
-		camera2IP = cameraTable.getString("Camera2IP", "");
+		camera1IP = cameraTable.getString("Camera1IP", "null");
+		camera2IP = cameraTable.getString("Camera2IP", "null");
 
 		// Show what command your subsystem is running on the SmartDashboard
 		SmartDashboard.putData(drivetrain);
@@ -58,11 +58,11 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Camera1IP", camera1IP);
 		SmartDashboard.putString("Camera2IP", camera2IP);
 
-		SmartDashboard.putString("Camera1IPDeltaFromTarget", cameraTable.getString("Camera1IPDeltaFromTarget", ""));
-		SmartDashboard.putString("Camera2IPDeltaFromTarget", cameraTable.getString("Camera2IPDeltaFromTarget", ""));
+		SmartDashboard.putString("Camera1IPDeltaFromTarget", cameraTable.getString("Camera1IPDeltaFromTarget", "null"));
+		SmartDashboard.putString("Camera2IPDeltaFromTarget", cameraTable.getString("Camera2IPDeltaFromTarget", "null"));
 
-		SmartDashboard.putString("Camera1IPDistanceFromTarget",cameraTable.getString("Camera1IPDistanceFromTarget", ""));
-		SmartDashboard.putString("Camera2IPDistanceFromTarget",cameraTable.getString("Camera2IPDistanceFromTarget", ""));
+		SmartDashboard.putString("Camera1IPDistanceFromTarget",cameraTable.getString("Camera1IPDistanceFromTarget", "null"));
+		SmartDashboard.putString("Camera2IPDistanceFromTarget",cameraTable.getString("Camera2IPDistanceFromTarget", "null"));
 
 	}
 
@@ -147,7 +147,7 @@ public class Robot extends IterativeRobot {
 	private void log() {
 
 		drivetrain.log();
-		SmartDashboard.putString("Camera1IPDeltaFromTarget", cameraTable.getString("Camera1IPDeltaFromTarget", "Not Updated"));
-		SmartDashboard.putString("Camera1IPDistanceFromTarget", cameraTable.getString("Camera1IPDistanceFromTarget", "Not Updated"));
+		SmartDashboard.putString("Camera1IPDeltaFromTarget", cameraTable.getString("Camera1IPDeltaFromTarget", "null"));
+		SmartDashboard.putString("Camera1IPDistanceFromTarget", cameraTable.getString("Camera1IPDistanceFromTarget", "null"));
 	}
 }
