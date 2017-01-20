@@ -6,12 +6,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
-import edu.wpi.first.wpilibj.networktables.*;
-import edu.wpi.cscore.*;
-import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
+
 import org.usfirst.frc.team5952.robot.visionSystem.CameraManager;
-import org.usfirst.frc.team5952.robot.visionSystem.StreamingStateListener;
+
 
 public class Main {
 
