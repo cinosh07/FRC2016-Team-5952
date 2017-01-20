@@ -150,7 +150,7 @@ public class Main {
 			// sees
 			// For now, we are just going to stream the HSV image
 			
-			//Envoyer le data pour l'alignement sur la cible desirer
+			//TODO Envoyer le data pour l'alignement sur la cible desirer
 			table.putString(cameraName+"DeltaFromTarget", "TODO delta corection");
 			table.putString(cameraName+"DistanceFromTarget", "TODO distance");
 			
