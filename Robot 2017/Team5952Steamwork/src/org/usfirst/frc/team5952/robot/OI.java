@@ -3,10 +3,10 @@ package org.usfirst.frc.team5952.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team5952.robot.commands.ExampleCommand;
+import org.usfirst.frc.team5952.robot.commands.SwitchCamera;
 
 
 /**
@@ -55,7 +55,7 @@ public class OI {
 //        SmartDashboard.putData("Open Claw", new OpenClaw());
 //        SmartDashboard.putData("Close Claw", new CloseClaw());
 //        
-//        SmartDashboard.putData("Deliver Soda", new Autonomous());
+        SmartDashboard.putData("Switch Camera", new SwitchCamera(0));
         
         // Create some buttons
         JoystickButton d_up = new JoystickButton(joy, 5);
@@ -68,7 +68,7 @@ public class OI {
         JoystickButton r1 = new JoystickButton(joy, 12);
 
 //        // Connect the buttons to commands
-//        d_up.whenPressed(new SetElevatorSetpoint(0.2));
+        d_up.whenPressed(new SwitchCamera(0));
 //        d_down.whenPressed(new SetElevatorSetpoint(-0.2));
 //        d_right.whenPressed(new CloseClaw());
 //        d_left.whenPressed(new OpenClaw());
