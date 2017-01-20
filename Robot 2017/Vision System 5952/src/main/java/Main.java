@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.tables.*;
 import edu.wpi.cscore.*;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
-import org.usfirst.frc.team5952.robot.visionSystem.*;
+import org.usfirst.frc.team5952.robot.visionSystem.StreamingStateListener;
 
 public class Main {
 	
@@ -55,7 +55,7 @@ public class Main {
 
 		// Loads our OpenCV library. This MUST be included
 		System.loadLibrary("opencv_java310");
-		Test test = new Test();
+		//Test test = new Test();
 		//System.out.println(test.getTestToPrint());
 		// Connect NetworkTables, and get access to the publishing table
 
@@ -77,15 +77,19 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Initializing Network Table");
+		
+		//TODO Initialiser la Network Table dans un singleton
+		System.out.println("Initializing Network Table");	
+		
 		NetworkTable.setClientMode();
 		// Set your team number here
 		NetworkTable.setTeam(teamnumber);
 
 		NetworkTable.initialize();
-
+		
 		NetworkTable table = NetworkTable.getTable("Camera");
-
+		
+		table.addTableListener("SWITCH", new StreamingStateListener(), true);
 		
 		table.putString(cameraName+"IP", ip);
 		// table.
