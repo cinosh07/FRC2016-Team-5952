@@ -45,16 +45,7 @@ public class OI {
 
     public OI() {
     	// Put Some buttons on the SmartDashboard
-//        SmartDashboard.putData("Elevator Bottom", new SetElevatorSetpoint(0));
-//        SmartDashboard.putData("Elevator Platform", new SetElevatorSetpoint(0.2));
-//        SmartDashboard.putData("Elevator Top", new SetElevatorSetpoint(0.3));
-//        
-//        SmartDashboard.putData("Wrist Horizontal", new SetWristSetpoint(0));
-//        SmartDashboard.putData("Raise Wrist", new SetWristSetpoint(-45));
-//        
-//        SmartDashboard.putData("Open Claw", new OpenClaw());
-//        SmartDashboard.putData("Close Claw", new CloseClaw());
-//        
+       
         SmartDashboard.putData("Switch Camera", new SwitchCamera(0));
         
         // Create some buttons
@@ -67,16 +58,9 @@ public class OI {
         JoystickButton l1 = new JoystickButton(joy, 11);
         JoystickButton r1 = new JoystickButton(joy, 12);
 
-//        // Connect the buttons to commands
+        // Connect the buttons to commands
         d_up.whenPressed(new SwitchCamera(0));
-//        d_down.whenPressed(new SetElevatorSetpoint(-0.2));
-//        d_right.whenPressed(new CloseClaw());
-//        d_left.whenPressed(new OpenClaw());
-//        
-//        r1.whenPressed(new PrepareToPickup());
-//        r2.whenPressed(new Pickup());
-//        l1.whenPressed(new Place());
-//        l2.whenPressed(new Autonomous());
+
     }
     
     public Joystick getJoystick() {
