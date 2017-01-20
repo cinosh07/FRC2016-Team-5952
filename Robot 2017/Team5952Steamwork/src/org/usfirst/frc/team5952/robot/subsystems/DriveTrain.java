@@ -53,8 +53,8 @@ public class DriveTrain extends Subsystem {
 		gyro = new AnalogGyro(1);
 
 		// Let's show everything on the LiveWindow
-//		LiveWindow.addActuator("Drive Train", "Front_Left Motor", (Talon) front_left_motor);
-//		LiveWindow.addActuator("Drive Train", "Back Left Motor", (Talon) back_left_motor);
+		LiveWindow.addActuator("Drive Train", "Left Motor", (Talon) left_motor);
+		LiveWindow.addActuator("Drive Train", "Right Motor", (Talon) right_motor);
 //		LiveWindow.addActuator("Drive Train", "Front Right Motor", (Talon) front_right_motor);
 //		LiveWindow.addActuator("Drive Train", "Back Right Motor", (Talon) back_right_motor);
 //		LiveWindow.addSensor("Drive Train", "Left Encoder", left_encoder);
@@ -88,7 +88,7 @@ public class DriveTrain extends Subsystem {
 	 * @param right Speed in range [-1,1]
 	 */
 	public void drive(double left, double right) {
-		//drive.tankDrive(left, right);
+
 		drive.arcadeDrive(Robot.oi.getJoystick());
 	}
 
