@@ -5,10 +5,12 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team5952.robot.commands.ExampleCommand;
+import org.usfirst.frc.team5952.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team5952.robot.subsystems.ExampleSubsystem;
 
 /**
@@ -23,6 +25,13 @@ public class Robot extends IterativeRobot {
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
 
+	public static DriveTrain drivetrain;
+
+	public static NetworkTable cameraTable;
+
+	private static String camera1IP;
+	private static String camera2IP;
+
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 
@@ -33,9 +42,30 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
+		drivetrain = new DriveTrain();
 		chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
+
+		cameraTable = NetworkTable.getTable("Camera");
+
+		camera1IP = cameraTable.getString("Camera1IP", "");
+		camera2IP = cameraTable.getString("Camera2IP", "");
+
+		// Show what command your subsystem is running on the SmartDashboard
+		SmartDashboard.putData(drivetrain);
+
+		SmartDashboard.putString("Camera1IP", camera1IP);
+		SmartDashboard.putString("Camera2IP", camera2IP);
+
+		SmartDashboard.putString("Camera1IPDeltaFromTarget", cameraTable.getString("Camera1IPDeltaFromTarget", ""));
+		SmartDashboard.putString("Camera2IPDeltaFromTarget", cameraTable.getString("Camera2IPDeltaFromTarget", ""));
+
+		SmartDashboard.putString("Camera1IPDistanceFromTarget",
+				cameraTable.getString("Camera1IPDistanceFromTarget", ""));
+		SmartDashboard.putString("Camera2IPDistanceFromTarget",
+				cameraTable.getString("Camera2IPDistanceFromTarget", ""));
+
 	}
 
 	/**
@@ -86,6 +116,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		log();
 	}
 
 	@Override
@@ -104,6 +135,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		log();
 	}
 
 	/**
@@ -112,5 +144,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		LiveWindow.run();
+	}
+
+	private void log() {
+
+		drivetrain.log();
+		SmartDashboard.putString("Camera1IPDeltaFromTarget", cameraTable.getString("Camera1IPDeltaFromTarget", "Not Updated"));
+		SmartDashboard.putString("Camera1IPDistanceFromTarget", cameraTable.getString("Camera1IPDistanceFromTarget", "Not Updated"));
 	}
 }
