@@ -28,9 +28,7 @@ apply from: 'dependencies.gradle'
 
 repositories {
     mavenCentral()
-    maven {
-      url "http://first.wpi.edu/FRC/roborio/maven/release"
-    }
+    mavenLocal()
 }
 
 dependencies {
