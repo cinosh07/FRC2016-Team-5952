@@ -39,6 +39,9 @@ public class Main {
 
 	public static void main(String[] args) {
 
+		
+		
+		
 		// Loads our OpenCV library. This MUST be included
 		System.loadLibrary("opencv_java310");		
 
@@ -48,16 +51,14 @@ public class Main {
 			CameraManager.getInstance().setInputstreamport(Integer.parseInt(prop.getProperty("inputstreamport")));
 			CameraManager.getInstance().setCameraName(prop.getProperty("networktablename"));
 
-			System.out.println("Team number = " + prop.getProperty("teamnumber"));
-			System.out.println("Streaming Port = " + prop.getProperty("inputstreamport"));
-			System.out.println("Camera Networktable Name = " + prop.getProperty("networktablename"));
-
 			try {
 				System.out.println(prop.getProperty("networktablename")+" IP Adress: "+InetAddress.getLocalHost().getHostAddress());
 			} catch (UnknownHostException e) {
 				System.out.println("Cannot found Network Card");
 				e.printStackTrace();
 			}
+			CameraManager.getInstance().init();
+			CameraManager.getInstance().startPlayback();
 		}
 		
 	}
