@@ -15,4 +15,4 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'Vision System Client 5952'
+rootProject.name = 'Vision System 5952'

@@ -1,0 +1,12 @@
+http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilib/networktables/java/NetworkTables/3.1.6/NetworkTables-3.1.6-arm-raspbian.jar
+
+http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/cscore/java/cscore/1.0.1/cscore-1.0.1-arm-raspbian.jar
+
+	  
+mvn install:install-file "-Dfile=C:\Users\ares-b02\robot_workspace\Vision System 5952\libRaspian\NetworkTables-3.1.6-arm-raspbian.jar" "-DgroupId=edu.wpi.first.wpilib.networktables.java" "-DartifactId=NetworkTables" "-Dversion=3.1.6" "-Dpackaging=jar"  
+
+mvn install:install-file "-Dfile=C:\Users\ares-b02\robot_workspace\Vision System 5952\libRaspian\cscore-1.0.1-arm-raspbian.jar" "-DgroupId=edu.wpi.cscore.java" "-DartifactId=cscore" "-Dversion=1.0.1" "-Dpackaging=jar"  
+
+mvn install:install-file "-Dfile=C:\Users\ares-b02\robot_workspace\Vision System 5952\libRaspian\opencv-java-3.1.0.jar" "-DgroupId=org.opencv" "-DartifactId=opencv-java" "-Dversion=3.1.0" "-Dpackaging=jar"  
+
+mvn install:install-file "-Dfile=C:\Users\ares-b02\robot_workspace\Vision System 5952\libRaspian\opencv-jni-3.1.0-linux-arm-raspbian.jar" "-DgroupId=org.opencv" "-DartifactId=opencv-jni" "-Dversion=3.1.0" "-Dpackaging=jar"  
