@@ -34,18 +34,13 @@ import edu.wpi.first.wpilibj.tables.ITable;
 
 public class CameraManager {
 
-	
+	//TODO Pour Tester sur l'ordi mettre a true sinon a false
 	private boolean debug = true;
 	
 	
 	private static CameraManager instance = null;
-
 	private int teamnumber = 5952;
-	
-
 	private int inputstreamport = 1185;
-	
-
 	private String cameraName = "Camera1";
 	private String robotIP = "10.59.52.2";
 	private String ip = "192.168.1.54";
