@@ -47,6 +47,7 @@ public class Main {
 			CameraManager.getInstance().setTeamnumber(Integer.parseInt(prop.getProperty("teamnumber")));
 			CameraManager.getInstance().setInputstreamport(Integer.parseInt(prop.getProperty("inputstreamport")));
 			CameraManager.getInstance().setCameraName(prop.getProperty("networktablename"));
+			CameraManager.getInstance().startStreaming();
 
 			System.out.println("Team number = " + prop.getProperty("teamnumber"));
 			System.out.println("Streaming Port = " + prop.getProperty("inputstreamport"));
