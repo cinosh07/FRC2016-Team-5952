@@ -3,21 +3,34 @@ package org.usfirst.frc.team5952.robot.visionSystem;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SpringLayout;
+import javax.swing.border.Border;
 
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -36,8 +49,11 @@ public class CameraManager {
 
 	//TODO Pour Tester sur l'ordi mettre a true sinon a false
 	private boolean debug = true;
+	private static String camera1URL = "http://192.168.1.54:1185/stream.mjpg";
+	private static String camera2URL = "http://192.168.1.54:1185/stream.mjpg";
+	// ***********************************************************************
 	
-	
+	private String title = "Robuck Team 5962 - Navigation System";
 	private static CameraManager instance = null;
 	private int teamnumber = 5952;
 	private int inputstreamport = 1185;
@@ -45,13 +61,13 @@ public class CameraManager {
 	private String robotIP = "10.59.52.2";
 	private String ip = "192.168.1.54";
 	private NetworkTable table = null;
-	private JFrame jframe = null;
-	private JLabel vidpanel = null;
+	private JFrame playerWindow = null;
+	private JLabel videoPlayer = null;
 	private ImageIcon imageVideo = null;
-	private ImageIcon defaultImageVideo = new ImageIcon("/home/pi/Robot2017/default.png");
+	private ImageIcon defaultImageVideo = null;
 	private boolean cleanVideo = true;
-	private static String camera1URL = "http://192.168.1.54:1185/stream.mjpg";
-	private static String camera2URL = "http://192.168.1.54:1185/stream.mjpg";
+	
+	
 	
 	protected CameraManager() {
 	      // Exists only to defeat instantiation.
@@ -64,35 +80,141 @@ public class CameraManager {
 		return instance;
 	}
 	
+	
 	public void init() {
 		
+		//Definir l'image d'arriere plan de la fenetre video
+		File sourceimage = null;
+	    Image image = null;
+	    if (debug) {
+	    	sourceimage = new File("c:\\temp\\back.jpg");
+	    	
+	    	try {
+				image = ImageIO.read(sourceimage);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	
+	    	
+	    	defaultImageVideo = new ImageIcon(image);
+	    } else {
+	    	sourceimage = new File("/home/pi/Robot2017/default.png");
+	    	
+	    	try {
+				image = ImageIO.read(sourceimage);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	defaultImageVideo = new ImageIcon(image);
+	    }
+	    
+	    
+	    //Construction du GUI
+	    GridBagConstraints c = new GridBagConstraints();
+	    playerWindow = new JFrame("");
+	  	playerWindow.getContentPane().setLayout(new GridBagLayout());
+	  	playerWindow.setSize(800, 600);
+	  	playerWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	  	playerWindow.setTitle(title);
+
+	     
+	    //*********************************************************
+	    //TODO ajouter les boutons et controles du Video Player vers le robot
+	    
+	    JPanel buttonBar = new JPanel(new FlowLayout());
+	    JButton OKButton = new JButton("OK");
+	    OKButton.setSize(30, 20);
+	    OKButton.setMaximumSize(new Dimension(30,
+                20));
+	    //OKButton.addActionListener(new MyAction());
+	    buttonBar.add(OKButton);
+	   // playerWindow.getContentPane().add(videoPlayer, BorderLayout.CENTER);
+	    
+	    
+	    
+	   //***********************************************
+ 
+	  //*********************************************************
+	    //TODO ajouter l'OSD du Video Player qui affiche les datas du robot
+	    JPanel videoContainer = new JPanel(new BorderLayout());
+	    
+	    videoContainer.setSize(640, 480);
+	    
+	    
+	    videoPlayer = new JLabel(" ", imageVideo, JLabel.CENTER);
+	    videoPlayer.setSize(640, 480);
+	    videoPlayer.setBackground(Color.BLACK);
+	    videoPlayer.setForeground(Color.white);
+	    
+	    switchVidpanelBorderColor(Color.RED);
+	    
+	    videoContainer.add(videoPlayer,BorderLayout.CENTER);
+	    
+	    JLabel backgroundImage = new JLabel(" ", defaultImageVideo, JLabel.CENTER);
+	    videoContainer.add(backgroundImage,BorderLayout.CENTER);
+	    
+	    //***********************************************
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    //Placement des composantes dans le gui
+	    c.fill = GridBagConstraints.HORIZONTAL;
+	    c.ipady = 0;       //reset to default
+	    c.weighty = 1.0;   //request any extra vertical space
+	    c.anchor = GridBagConstraints.PAGE_START; //bottom of space
+	    c.insets = new Insets(10,0,0,0);  //top padding
+	    c.gridx = 1;       //aligned with button 2
+	    c.gridwidth = 3;   //2 columns wide
+	    c.gridy = 0;       //third row
+	
+	    playerWindow.getContentPane().add(videoContainer,c);
+	    
+	    c.fill = GridBagConstraints.HORIZONTAL;
+	    c.ipady = 0;       //reset to default
+	    c.weighty = 1.0;   //request any extra vertical space
+	    c.anchor = GridBagConstraints.PAGE_END; //bottom of space
+	    c.insets = new Insets(10,0,0,0);  //top padding
+	    c.gridx = 1;       //aligned with button 2
+	    c.gridwidth = 3;   //2 columns wide
+	    c.gridy = 2;       //third row
+	    
+	    playerWindow.getContentPane().add(buttonBar,c);
+	 
+
+	    playerWindow.setVisible(true);
+	    
+   
 		
-		//Construction du GUI
-		imageVideo = defaultImageVideo;
-		jframe = new JFrame("Video");
-		jframe.setSize(800, 600);
-	    jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    
-	    
-	    vidpanel = new JLabel(" ", imageVideo, JLabel.CENTER);
-	    vidpanel.setSize(640, 480);
-	    vidpanel.setBackground(Color.BLACK);
-	    jframe.getContentPane().add(vidpanel, BorderLayout.CENTER);
-	    
-	    jframe.setVisible(true);
-    
-	    //TODO ajouter les boutons et controles du GUI
+	}
+	
+	private void switchVidpanelBorderColor(Color color) {
+
+		if (color == Color.RED) {
+			
+			videoPlayer.setText("Not Connected");
+			
 		
+		} else if(color == Color.YELLOW) {
+			
+			videoPlayer.setText("Connecting to video stream ... " + getCameraURL(table.getString("Camera1IP", ip),debug));
+			
+		}else {
+		
+			
+			videoPlayer.setText("");
+		}
+	    videoPlayer.setBorder(BorderFactory.createLineBorder(color, 5));
 	}
 	
 	public void startPlayback() {
 		
-		try {
-			ip = InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
-			System.out.println("Cannot found Network Card");
-			e.printStackTrace();
-		}
+		
 		
 		// Connect NetworkTables, and get access to the publishing table
 		System.out.println("Initializing Network Table");
@@ -132,14 +254,15 @@ public class CameraManager {
 		    // be found using NetworkTables to connect to. Create an HttpCamera by giving a specified stream
 		    // Note if this happens, no restream will be created
 		    if (camera == null) {
-	
-		      camera = new HttpCamera("CoprocessorCamera", getCameraURL(table.getString("Camera1IP", ip)));
+		      switchVidpanelBorderColor(Color.YELLOW);
+		      camera = new HttpCamera("CoprocessorCamera", getCameraURL(table.getString("Camera1IP", ip),debug));
 		      inputStream.setSource(camera);
 		    }
 	    	
 	    } else {
 	    	
-	    	camera = new HttpCamera("CoprocessorCamera", camera1URL);
+	    	switchVidpanelBorderColor(Color.YELLOW);
+	    	camera = new HttpCamera("CoprocessorCamera", getCameraURL(table.getString("Camera1IP", ip),debug));
 		    inputStream.setSource(camera);
 	    	
 	    	
@@ -197,9 +320,9 @@ public class CameraManager {
 				imageVideo = new ImageIcon(createAwtImage(hsv));
 				
 			}
-			
-			vidpanel.setIcon(imageVideo);
-			vidpanel.repaint();
+			switchVidpanelBorderColor(Color.GREEN);
+			videoPlayer.setIcon(imageVideo);
+			videoPlayer.repaint();
 			
 			
 		}
@@ -212,6 +335,7 @@ public class CameraManager {
 		
 		
 		//TODO Implementer la fonction d'arreter le playback
+		switchVidpanelBorderColor(Color.RED);
 		
 	}
 
@@ -322,19 +446,19 @@ public class CameraManager {
 	}
 
 	public JFrame getJframe() {
-		return jframe;
+		return playerWindow;
 	}
 
-	public void setJframe(JFrame jframe) {
-		this.jframe = jframe;
+	public void setJframe(JFrame playerWindow) {
+		this.playerWindow = playerWindow;
 	}
 
 	public JLabel getVidpanel() {
-		return vidpanel;
+		return videoPlayer;
 	}
 
-	public void setVidpanel(JLabel vidpanel) {
-		this.vidpanel = vidpanel;
+	public void setVidpanel(JLabel videoPlayer) {
+		this.videoPlayer = videoPlayer;
 	}
 
 	public boolean isCleanVideo() {
@@ -345,7 +469,12 @@ public class CameraManager {
 		this.cleanVideo = cleanVideo;
 	}
 
-	private static String getCameraURL(String ip) {
+	private static String getCameraURL(String ip, Boolean debug) {
+		
+		if (debug) {
+			return camera1URL;
+		}
+		
 		String url = "http://";
 		url = url + ip;
 		url = url + ":1185/stream.mjpg";
