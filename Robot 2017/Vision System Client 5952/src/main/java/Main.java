@@ -47,9 +47,10 @@ public class Main {
 			CameraManager.getInstance().setTeamnumber(Integer.parseInt(prop.getProperty("teamnumber")));
 			CameraManager.getInstance().setInputstreamport(Integer.parseInt(prop.getProperty("inputstreamport")));
 			CameraManager.getInstance().setCameraName(prop.getProperty("networktablename"));
-
+			
 			try {
 				System.out.println(prop.getProperty("networktablename")+" IP Adress: "+InetAddress.getLocalHost().getHostAddress());
+				System.out.println("System Hostname: "+InetAddress.getLocalHost().getHostName());
 			} catch (UnknownHostException e) {
 				System.out.println("Cannot found Network Card");
 				e.printStackTrace();
@@ -58,6 +59,7 @@ public class Main {
 		}
 		try {
 			System.out.println("System IP Adress: "+InetAddress.getLocalHost().getHostAddress());
+			System.out.println("System Hostname: "+InetAddress.getLocalHost().getHostName());
 		} catch (UnknownHostException e) {
 			System.out.println("Cannot found Network Card");
 			e.printStackTrace();
