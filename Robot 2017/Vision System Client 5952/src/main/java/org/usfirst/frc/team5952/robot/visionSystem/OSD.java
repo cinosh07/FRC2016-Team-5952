@@ -21,7 +21,7 @@ public class OSD extends JPanel {
 	public OSD() {
 		
 		this.setLayout(layoutGrid);
-		GridBagConstraints c = new GridBagConstraints();
+		GridBagConstraints distanceToTargetLabelConstraint = new GridBagConstraints();
 		
 		
 		//TODO Finir d'ajouter les fonctions que l'on veux voire apparaitre a l'ecran
@@ -30,29 +30,29 @@ public class OSD extends JPanel {
 		
 		distanceToTargetLabel = new JLabel("DistTarg: N/A", JLabel.CENTER);
 		distanceToTargetLabel.setForeground(Color.white);	
-		c.fill = GridBagConstraints.HORIZONTAL;
-	    c.ipady = 0;       //reset to default
-	    c.weighty = 1.0;   //request any extra vertical space
-	    c.anchor = GridBagConstraints.PAGE_END; //bottom of space
-	    c.insets = new Insets(10,10,10,10);  //top padding
-	    c.gridx = 0;       //aligned with button 2
-	    c.gridwidth = 8;   //2 columns wide
-	    c.gridy = 3;       //third row
-	    this.add(distanceToTargetLabel,c);
+		distanceToTargetLabelConstraint.fill = GridBagConstraints.HORIZONTAL;
+		distanceToTargetLabelConstraint.ipady = 0;       //reset to default
+		distanceToTargetLabelConstraint.weighty = 1.0;   //request any extra vertical space
+		distanceToTargetLabelConstraint.anchor = GridBagConstraints.PAGE_END; //bottom of space
+		distanceToTargetLabelConstraint.insets = new Insets(10,10,10,10);  //top padding
+		distanceToTargetLabelConstraint.gridx = 0;       //aligned with button 2
+		distanceToTargetLabelConstraint.gridwidth = 3;   //2 columns wide
+		distanceToTargetLabelConstraint.gridy = 5;       //third row
+	    this.add(distanceToTargetLabel,distanceToTargetLabelConstraint);
 	    
 	    // Label Target Locked
-		
+	    GridBagConstraints targetLockedLabelConstraint = new GridBagConstraints();
  		targetLockedLabel = new JLabel("Target Locked", JLabel.CENTER);
  		targetLockedLabel.setForeground(Color.RED);	
- 		c.fill = GridBagConstraints.HORIZONTAL;
- 	    c.ipady = 0;       //reset to default
- 	    c.weighty = 1.0;   //request any extra vertical space
- 	    c.anchor = GridBagConstraints.PAGE_END; //bottom of space
- 	    c.insets = new Insets(10,10,10,10);  //top padding
- 	    c.gridx = 1;       //aligned with button 2
- 	    c.gridwidth = 8;   //2 columns wide
- 	    c.gridy = 3;       //third row
- 	    this.add(targetLockedLabel,c);
+ 		targetLockedLabelConstraint.fill = GridBagConstraints.HORIZONTAL;
+ 		targetLockedLabelConstraint.ipady = 0;       //reset to default
+ 		targetLockedLabelConstraint.weighty = 1.0;   //request any extra vertical space
+ 		targetLockedLabelConstraint.anchor = GridBagConstraints.PAGE_START; //bottom of space
+ 		targetLockedLabelConstraint.insets = new Insets(10,10,10,10);  //top padding
+ 		targetLockedLabelConstraint.gridx = 0;       //aligned with button 2
+ 		targetLockedLabelConstraint.gridwidth = 3;   //2 columns wide
+ 		targetLockedLabelConstraint.gridy = 0;       //third row
+ 	    this.add(targetLockedLabel,targetLockedLabelConstraint);
 	    
 	    
 	    
