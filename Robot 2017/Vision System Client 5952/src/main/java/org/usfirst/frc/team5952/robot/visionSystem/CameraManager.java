@@ -2,16 +2,22 @@ package org.usfirst.frc.team5952.robot.visionSystem;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
+import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -28,6 +34,10 @@ import edu.wpi.first.wpilibj.tables.ITable;
 
 public class CameraManager {
 
+	
+	private boolean debug = true;
+	
+	
 	private static CameraManager instance = null;
 
 	private int teamnumber = 5952;
@@ -37,14 +47,16 @@ public class CameraManager {
 	
 
 	private String cameraName = "Camera1";
-	private String robotIP = "10.1.90.2";
-	private String ip = null;
+	private String robotIP = "10.59.52.2";
+	private String ip = "192.168.1.54";
 	private NetworkTable table = null;
 	private JFrame jframe = null;
 	private JLabel vidpanel = null;
 	private ImageIcon imageVideo = null;
 	private ImageIcon defaultImageVideo = new ImageIcon("/home/pi/Robot2017/default.png");
-	private boolean cleanVideo = false;
+	private boolean cleanVideo = true;
+	private static String camera1URL = "http://192.168.1.54:1185/stream.mjpg";
+	private static String camera2URL = "http://192.168.1.54:1185/stream.mjpg";
 	
 	protected CameraManager() {
 	      // Exists only to defeat instantiation.
@@ -59,12 +71,23 @@ public class CameraManager {
 	
 	public void init() {
 		
+		imageVideo = defaultImageVideo;
 		jframe = new JFrame("Video");
+		jframe.setSize(800, 600);
 	    jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    
+	    
 	    vidpanel = new JLabel(" ", imageVideo, JLabel.CENTER);
+	    vidpanel.setSize(640, 480);
+	    vidpanel.setBackground(Color.BLACK);
 	    jframe.getContentPane().add(vidpanel, BorderLayout.CENTER);
+	    
+	  
+	    
+	    
+	    
 	    jframe.setVisible(true);
-	    imageVideo = defaultImageVideo;
+    
 	    
 		
 	}
@@ -89,6 +112,8 @@ public class CameraManager {
 		table = NetworkTable.getTable("Camera");
 		
 		table.addTableListener("SWITCH", new StreamingStateListener(), true);
+		
+		
 	
 		// This is the network port you want to stream the raw received image to
 		// By rules, this has to be between 1180 and 1190, so 1185 is a good
@@ -105,16 +130,29 @@ public class CameraManager {
 	    // CameraServer.getInstance().startAutomaticCapture("YourCameraNameHere");
 	    // "USB Camera 0" is the default if no string is specified
 	    String cameraName = "USB Camera 0";
-	    HttpCamera camera = setHttpCamera(cameraName, inputStream);
-	    // It is possible for the camera to be null. If it is, that means no camera could
-	    // be found using NetworkTables to connect to. Create an HttpCamera by giving a specified stream
-	    // Note if this happens, no restream will be created
-	    if (camera == null) {
-	      camera = new HttpCamera("CoprocessorCamera", "YourURLHere");
-	      inputStream.setSource(camera);
-	    }
+	    HttpCamera camera = null;
 	    
-		
+	    
+		if (!debug ) {
+	    	camera = setHttpCamera(cameraName, inputStream);
+		    // It is possible for the camera to be null. If it is, that means no camera could
+		    // be found using NetworkTables to connect to. Create an HttpCamera by giving a specified stream
+		    // Note if this happens, no restream will be created
+		    if (camera == null) {
+	
+		      camera = new HttpCamera("CoprocessorCamera", getCameraURL(table.getString("Camera1IP", ip)));
+		      inputStream.setSource(camera);
+		    }
+	    	
+	    } else {
+	    	
+	    	camera = new HttpCamera("CoprocessorCamera", camera1URL);
+		    inputStream.setSource(camera);
+	    	
+	    	
+	    }
+
+	    
 		// This creates a CvSink for us to use. This grabs images from our
 		// selected camera,
 		// and will allow us to use those images in opencv
@@ -204,42 +242,43 @@ public class CameraManager {
 	    return image;
 	}
 
-	private static HttpCamera setHttpCamera(String cameraName, MjpegServer server) {
-	    // Start by grabbing the camera from NetworkTables
-	    NetworkTable publishingTable = NetworkTable.getTable("CameraPublisher");
-	    // Wait for robot to connect. Allow this to be attempted indefinitely
-	    while (true) {
-	      try {
-	        if (publishingTable.getSubTables().size() > 0) {
-	          break;
-	        }
-	        Thread.sleep(500);
-	        } catch (Exception e) {
-	            // TODO Auto-generated catch block
-	            e.printStackTrace();
-	        }
-	    }
+	
+	 private static HttpCamera setHttpCamera(String cameraName, MjpegServer server) {
+		    // Start by grabbing the camera from NetworkTables
+		    NetworkTable publishingTable = NetworkTable.getTable("CameraPublisher");
+		    // Wait for robot to connect. Allow this to be attempted indefinitely
+		    while (true) {
+		      try {
+		        if (publishingTable.getSubTables().size() > 0) {
+		          break;
+		        }
+		        Thread.sleep(500);
+		        } catch (Exception e) {
+		            // TODO Auto-generated catch block
+		            e.printStackTrace();
+		        }
+		    }
 
 
-	    HttpCamera camera = null;
-	    if (!publishingTable.containsSubTable(cameraName)) {
-	      return null;
-	    }
-	    ITable cameraTable = publishingTable.getSubTable(cameraName);
-	    String[] urls = cameraTable.getStringArray("streams", null);
-	    if (urls == null) {
-	      return null;
-	    }
-	    ArrayList<String> fixedUrls = new ArrayList<String>();
-	    for (String url : urls) {
-	      if (url.startsWith("mjpg")) {
-	        fixedUrls.add(url.split(":", 2)[1]);
-	      }
-	    }
-	    camera = new HttpCamera("CoprocessorCamera", fixedUrls.toArray(new String[0]));
-	    server.setSource(camera);
-	    return camera;
-	  }
+		    HttpCamera camera = null;
+		    if (!publishingTable.containsSubTable(cameraName)) {
+		      return null;
+		    }
+		    ITable cameraTable = publishingTable.getSubTable(cameraName);
+		    String[] urls = cameraTable.getStringArray("streams", null);
+		    if (urls == null) {
+		      return null;
+		    }
+		    ArrayList<String> fixedUrls = new ArrayList<String>();
+		    for (String url : urls) {
+		      if (url.startsWith("mjpg")) {
+		        fixedUrls.add(url.split(":", 2)[1]);
+		      }
+		    }
+		    camera = new HttpCamera("CoprocessorCamera", fixedUrls.toArray(new String[0]));
+		    server.setSource(camera);
+		    return camera;
+		  }
 	
 	//Getters and Setters
 	public String getCameraName() {
@@ -312,5 +351,15 @@ public class CameraManager {
 	public void setCleanVideo(boolean cleanVideo) {
 		this.cleanVideo = cleanVideo;
 	}
+
+	private static String getCameraURL(String ip) {
+		String url = "http://";
+		url = url + ip;
+		url = url + ":1185/stream.mjpg";
+		
+		return url;
+	}
+
+	
 
 }

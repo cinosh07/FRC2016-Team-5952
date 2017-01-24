@@ -13,7 +13,7 @@ import org.usfirst.frc.team5952.robot.visionSystem.CameraManager;
 public class Main {
 
 	static {
-		loadProperties();
+		//loadProperties();
 	}
 	static Properties prop;
 
@@ -38,12 +38,9 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-
-		
-		
 		
 		// Loads our OpenCV library. This MUST be included
-		System.loadLibrary("opencv_java310");		
+		//System.loadLibrary("opencv_java310");		
 
 		if (prop != null) {
 
@@ -57,9 +54,16 @@ public class Main {
 				System.out.println("Cannot found Network Card");
 				e.printStackTrace();
 			}
-			CameraManager.getInstance().init();
-			CameraManager.getInstance().startPlayback();
+			
 		}
+		try {
+			System.out.println("System IP Adress: "+InetAddress.getLocalHost().getHostAddress());
+		} catch (UnknownHostException e) {
+			System.out.println("Cannot found Network Card");
+			e.printStackTrace();
+		}
+		CameraManager.getInstance().init();
+		CameraManager.getInstance().startPlayback();
 		
 	}
 
