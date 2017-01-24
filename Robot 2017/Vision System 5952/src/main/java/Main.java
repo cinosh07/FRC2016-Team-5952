@@ -55,11 +55,13 @@ public class Main {
 
 			try {
 				System.out.println(prop.getProperty("networktablename")+" IP Adress: "+InetAddress.getLocalHost().getHostAddress());
+				System.out.println("System Hostname: "+InetAddress.getLocalHost().getHostName());
 			} catch (UnknownHostException e) {
 				System.out.println("Cannot found Network Card");
 				e.printStackTrace();
 			}
 		}
+
 		
 	}
 
