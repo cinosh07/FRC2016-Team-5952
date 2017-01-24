@@ -71,6 +71,8 @@ public class CameraManager {
 	
 	public void init() {
 		
+		
+		//Construction du GUI
 		imageVideo = defaultImageVideo;
 		jframe = new JFrame("Video");
 		jframe.setSize(800, 600);
@@ -82,13 +84,9 @@ public class CameraManager {
 	    vidpanel.setBackground(Color.BLACK);
 	    jframe.getContentPane().add(vidpanel, BorderLayout.CENTER);
 	    
-	  
-	    
-	    
-	    
 	    jframe.setVisible(true);
     
-	    
+	    //TODO ajouter les boutons et controles du GUI
 		
 	}
 	
