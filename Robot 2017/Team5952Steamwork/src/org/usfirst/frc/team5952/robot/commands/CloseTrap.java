@@ -7,10 +7,9 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class OpenTrap extends Command {
+public class CloseTrap extends Command {
 
-
-    public OpenTrap() {
+    public CloseTrap() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.trap);
@@ -18,7 +17,7 @@ public class OpenTrap extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.trap.openTrap();
+    	Robot.trap.closeTrap();
     }
 
     // Called repeatedly when this Command is scheduled to run
