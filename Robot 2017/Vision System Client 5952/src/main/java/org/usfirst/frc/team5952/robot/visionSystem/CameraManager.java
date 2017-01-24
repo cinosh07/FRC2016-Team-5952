@@ -1,9 +1,7 @@
 package org.usfirst.frc.team5952.robot.visionSystem;
 
 import java.awt.BorderLayout;
-import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -15,32 +13,20 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SpringLayout;
-import javax.swing.border.Border;
-
 import org.opencv.core.Mat;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.HttpCamera;
 import edu.wpi.cscore.MjpegServer;
-import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.ITable;
