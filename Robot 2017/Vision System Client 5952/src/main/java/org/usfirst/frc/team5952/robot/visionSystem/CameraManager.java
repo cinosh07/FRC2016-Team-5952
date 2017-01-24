@@ -8,6 +8,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
@@ -52,7 +54,7 @@ public class CameraManager {
 	private ImageIcon imageVideo = null;
 	private ImageIcon defaultImageVideo = null;
 	private boolean cleanVideo = true;
-	
+	private OSD osd = null;
 	
 	
 	protected CameraManager() {
@@ -66,7 +68,9 @@ public class CameraManager {
 		return instance;
 	}
 	
-	
+	public void visibleOSD(ActionEvent e) {
+		
+	}
 	public void init() {
 		
 		//Definir l'image d'arriere plan de la fenetre video
@@ -110,25 +114,35 @@ public class CameraManager {
 	    //TODO ajouter les boutons et controles du Video Player vers le robot
 	    
 	    JPanel buttonBar = new JPanel(new FlowLayout());
-	    JButton OKButton = new JButton("OK");
-	    OKButton.setSize(30, 20);
-	    OKButton.setMaximumSize(new Dimension(30,
+	    JButton OSDButton = new JButton("OSD");
+	    OSDButton.setSize(30, 20);
+	    OSDButton.setMaximumSize(new Dimension(30,
                 20));
-	    //OKButton.addActionListener(new MyAction());
-	    buttonBar.add(OKButton);
-	   // playerWindow.getContentPane().add(videoPlayer, BorderLayout.CENTER);
+	    OSDButton.addActionListener(new ActionListener()
+	    {
+	    	  public void actionPerformed(ActionEvent e)
+	    	  {
+	    	   if (osd.isVisible()) {
+	    		   osd.setVisible(false);
+	    	   } else {
+	    		   osd.setVisible(true);
+	    	   }
+	    	  }
+	    	});
+	    buttonBar.add(OSDButton);
+
 	    
 	    
 	    
 	   //***********************************************
  
-	  //*********************************************************
-	    //TODO ajouter l'OSD du Video Player qui affiche les datas du robot
+	    //*********************************************************
+	    //TODO finaliser et synchroniser l'OSD du Video Player qui affiche les datas du robot avec la Network Tables
 	    JPanel videoContainer = new JPanel(new BorderLayout());
 	    
 	    videoContainer.setSize(640, 480);
 	    
-	    OSD osd = new OSD();
+	    osd = new OSD();
 	    
 	    osd.setSize(640, 480);
 	    osd.setForeground(Color.white);

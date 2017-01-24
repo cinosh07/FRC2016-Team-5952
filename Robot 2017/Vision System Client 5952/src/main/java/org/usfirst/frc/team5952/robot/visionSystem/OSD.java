@@ -32,8 +32,8 @@ public class OSD extends JPanel {
 	    c.anchor = GridBagConstraints.PAGE_END; //bottom of space
 	    c.insets = new Insets(10,10,10,10);  //top padding
 	    c.gridx = 1;       //aligned with button 2
-	    c.gridwidth = 3;   //2 columns wide
-	    c.gridy = 2;       //third row
+	    c.gridwidth = 8;   //2 columns wide
+	    c.gridy = 3;       //third row
 	    this.add(distanceToTargetLabel,c);
 		
 	}
