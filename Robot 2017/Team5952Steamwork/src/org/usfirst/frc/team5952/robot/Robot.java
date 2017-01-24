@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team5952.robot.commands.ExampleCommand;
 import org.usfirst.frc.team5952.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team5952.robot.subsystems.ExampleSubsystem;
+import org.usfirst.frc.team5952.robot.subsystems.MonteCorde;
 import org.usfirst.frc.team5952.robot.subsystems.Trap;
 
 /**
@@ -29,7 +30,7 @@ public class Robot extends IterativeRobot {
 	public static DriveTrain drivetrain;
 	public static Trap trap;
 	public static NetworkTable cameraTable;
-
+    public static MonteCorde montecorde;
 	private static String camera1IP;
 	private static String camera2IP;
 

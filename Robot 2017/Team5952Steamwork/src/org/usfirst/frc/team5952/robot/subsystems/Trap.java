@@ -7,9 +7,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public class Trap extends Subsystem {
-
-    
-	//TODO Initialiser le solenoid
+	
 	DoubleSolenoid solenoid1 = new DoubleSolenoid(1,2);
 
 	
@@ -20,13 +18,11 @@ public class Trap extends Subsystem {
     
     public void openTrap() {
     	
-    	//TODO Ouvrir le solenoid
     	solenoid1.set(DoubleSolenoid.Value.kForward);
     	
     }
     public void closeTrap() {
     	
-    	//TODO Fermer le solenoid
     	solenoid1.set(DoubleSolenoid.Value.kReverse);
     	
     }
