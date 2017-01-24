@@ -128,8 +128,9 @@ public class CameraManager {
 			table.putString(cameraName+"DistanceFromTarget", "TODO distance");
 			
 			
-			//imageSource.putFrame(hsv);
-			imageSource.putFrame(inputImage);
+			//TODO Switcher entre les hsv et inputImage dans imageSource.putFrame(hsv) avec un bouton sur la console en changeant l<etat d<une valeur booleen dans la network table
+			imageSource.putFrame(hsv);
+			//imageSource.putFrame(inputImage);
 		}
 		
 		
