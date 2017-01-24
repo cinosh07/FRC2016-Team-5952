@@ -93,7 +93,7 @@ public class CameraManager {
 		CvSource imageSource = new CvSource("CV Image Source", VideoMode.PixelFormat.kMJPEG, 640, 480, 30);
 		MjpegServer cvStream = new MjpegServer("CV Image Stream", 1186);
 		cvStream.setSource(imageSource);
-
+		
 		cvStream.free();
 
 		// All Mats and Lists should be stored outside the loop to avoid
@@ -128,7 +128,8 @@ public class CameraManager {
 			table.putString(cameraName+"DistanceFromTarget", "TODO distance");
 			
 			
-			imageSource.putFrame(hsv);
+			//imageSource.putFrame(hsv);
+			imageSource.putFrame(inputImage);
 		}
 		
 		
