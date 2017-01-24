@@ -134,6 +134,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		
 		Scheduler.getInstance().run();
 		log();
 	}
@@ -148,8 +149,13 @@ public class Robot extends IterativeRobot {
 
 	private void log() {
 
-		drivetrain.log();
+		SmartDashboard.putString("Camera1IP", camera1IP);
+		SmartDashboard.putString("Camera2IP", camera2IP);
+		SmartDashboard.putString("Camera2IPDeltaFromTarget", cameraTable.getString("Camera2IPDeltaFromTarget", "null"));
+		SmartDashboard.putString("Camera2IPDistanceFromTarget",cameraTable.getString("Camera2IPDistanceFromTarget", "null"));
+		
 		SmartDashboard.putString("Camera1IPDeltaFromTarget", cameraTable.getString("Camera1IPDeltaFromTarget", "null"));
 		SmartDashboard.putString("Camera1IPDistanceFromTarget", cameraTable.getString("Camera1IPDistanceFromTarget", "null"));
+		drivetrain.log();
 	}
 }
