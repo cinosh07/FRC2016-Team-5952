@@ -22,7 +22,7 @@ public class OSD extends JPanel {
 		GridBagConstraints c = new GridBagConstraints();
 		
 		
-		
+		//TODO Finir d'ajouter les fonctions que l'on veux voire apparaitre a l'ecran
 		// Label Distance to target
 		distanceToTargetLabel = new JLabel("DistTarg: N/A", JLabel.CENTER);
 		distanceToTargetLabel.setForeground(Color.white);	
