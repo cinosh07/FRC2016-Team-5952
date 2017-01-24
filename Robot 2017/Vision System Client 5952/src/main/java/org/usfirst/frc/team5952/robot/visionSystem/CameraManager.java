@@ -128,6 +128,12 @@ public class CameraManager {
 	    
 	    videoContainer.setSize(640, 480);
 	    
+	    OSD osd = new OSD();
+	    
+	    osd.setSize(640, 480);
+	    osd.setForeground(Color.white);
+	    osd.setOpaque(false);
+	    videoContainer.add(osd,BorderLayout.CENTER);
 	    
 	    videoPlayer = new JLabel(" ", imageVideo, JLabel.CENTER);
 	    videoPlayer.setSize(640, 480);
