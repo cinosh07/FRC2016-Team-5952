@@ -2,6 +2,7 @@ package org.usfirst.frc.team5952.robot.visionSystem;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics2D;
@@ -124,6 +125,10 @@ public class CameraManager {
 	    playerWindow.setSize(800, 480);
 	  	playerWindow.getContentPane().setLayout(new GridBagLayout()); 	
 	  	playerWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	  	if (!debug) {
+	  		playerWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	  	}
+	  	playerWindow.setUndecorated(true);
 	  	playerWindow.getContentPane().setBackground(Color.black);
 	  	playerWindow.setTitle(title);
 
@@ -162,6 +167,10 @@ public class CameraManager {
 	    JButton radarCompassButton = new JButton("Radar Compass");
 	    radarCompassButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
 	    buttonBar.add(radarCompassButton);
+	    
+	    JButton fullscreenButton = new JButton("Fullscreen");
+	    fullscreenButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
+	    buttonBar.add(fullscreenButton);
 	    
 	    JButton mapButton = new JButton("Map");
 	    mapButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
@@ -226,16 +235,16 @@ public class CameraManager {
 	    c.anchor = GridBagConstraints.BASELINE;
 	    c.insets = new Insets(5,0,0,5);  //top padding
 	    
-	    buttonBar2.setSize(playerWindow.getWidth() - videoPlayer.getWidth() - 40 ,videoContainerMaxHeight - 26);
+	    buttonBar2.setSize(playerWindow.getWidth() - videoPlayer.getWidth() - 40 ,videoContainerMaxHeight);
 	    buttonBar2.setBorder(BorderFactory.createLineBorder(Color.BLUE, 1));
 	    JLabel buttonBar2Label = new JLabel("");
 	    
 	    
 	    
 	    
-	    buttonBar2Label.setIcon(new ImageIcon(getScaledImage(backgroundClean.getImage(),playerWindow.getWidth() - videoPlayer.getWidth() - 40 ,videoContainerMaxHeight - 26)));
-	    buttonBar2Label.setSize(playerWindow.getWidth() - videoPlayer.getWidth() - 40 ,videoContainerMaxHeight - 26);
-	    buttonBar2.add(buttonBar2Label,BorderLayout.CENTER);
+	    buttonBar2Label.setIcon(new ImageIcon(getScaledImage(backgroundClean.getImage(),playerWindow.getWidth() - videoPlayer.getWidth() - 40 ,videoContainerMaxHeight)));
+	    buttonBar2Label.setSize(playerWindow.getWidth() - videoPlayer.getWidth() - 40 ,videoContainerMaxHeight);
+	    
 	    
 	    
 	    
@@ -246,28 +255,44 @@ public class CameraManager {
 	    
 	    
 	    JPanel buttonBar2Panel = new JPanel();
-	    buttonBar2Panel.setSize(playerWindow.getWidth() - videoPlayer.getWidth() - 40 ,videoContainerMaxHeight - 26);
+	    buttonBar2Panel.setSize(playerWindow.getWidth() - videoPlayer.getWidth() - 40 ,videoContainerMaxHeight);
 	    buttonBar2Panel.setOpaque(false);
 	    buttonBar2Panel.setLayout(new BoxLayout(buttonBar2Panel, BoxLayout.Y_AXIS));  
 	    
+	    
+	    buttonBar2Panel.add(getEmptyLabel());
+	    
+	    JLabel commandPanelLabel = new JLabel("Commands");
+	    commandPanelLabel.setForeground(Color.white);
+	    commandPanelLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+	    buttonBar2Panel.add(commandPanelLabel);
+	    
+	    buttonBar2Panel.add(getEmptyLabel());
+	    
 	    JButton lockToTargetButton = new JButton("Target Lock");
 	    lockToTargetButton.setSize(buttonBarButtonWidth, buttonBarButtonHeight);
+	    lockToTargetButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    buttonBar2Panel.add(lockToTargetButton);
 	    
+	    buttonBar2Panel.add(getEmptyLabel());
 	    
-	    JButton goToTargetButton = new JButton("Target Lock");
+	    JButton goToTargetButton = new JButton("Go to Target");
 	    goToTargetButton.setSize(buttonBarButtonWidth, buttonBarButtonHeight);
+	    goToTargetButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    buttonBar2Panel.add(goToTargetButton);
 	    
-	    JButton cleanFeedtButton = new JButton("Target Lock");
+	    buttonBar2Panel.add(getEmptyLabel());
+	    
+	    JButton cleanFeedtButton = new JButton("Clean Feed");
 	    cleanFeedtButton.setSize(buttonBarButtonWidth, buttonBarButtonHeight);
+	    cleanFeedtButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    buttonBar2Panel.add(cleanFeedtButton);
 	    
 	    
 	    
 	    
-	    buttonBar2.add(buttonBar2Panel,BorderLayout.PAGE_START);   
-	    
+	    buttonBar2.add(buttonBar2Panel,BorderLayout.CENTER);   
+	    buttonBar2.add(buttonBar2Label,BorderLayout.CENTER);
 	    playerWindow.getContentPane().add(buttonBar2,c);
 	    
  
@@ -291,6 +316,11 @@ public class CameraManager {
 	    
    
 		
+	}
+	private JLabel getEmptyLabel() {
+		JLabel emptylLabel = new JLabel("     ");
+	    emptylLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		return emptylLabel;
 	}
 	private int videoWidth(int videoHeight) {
 		int videoWidth = (int) (1.333333333333333333333333*videoHeight);
