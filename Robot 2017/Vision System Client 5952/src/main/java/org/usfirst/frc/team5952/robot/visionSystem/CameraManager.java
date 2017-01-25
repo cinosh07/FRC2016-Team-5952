@@ -3,11 +3,11 @@ package org.usfirst.frc.team5952.robot.visionSystem;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.RenderingHints;
@@ -27,8 +27,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SpringLayout;
-
+import javax.swing.border.EmptyBorder;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 import edu.wpi.cscore.CvSink;
@@ -60,12 +59,25 @@ public class CameraManager {
 	private ImageIcon imageVideo = null;
 	private ImageIcon defaultImageVideo = null;
 	private ImageIcon backgroundClean = null;
+	
+	private ImageIcon target_YELLOW_ICON = null;
+	private ImageIcon target_RED_ICON = null;
+	private ImageIcon target_GREEN_ICON = null;	
+	private ImageIcon sight_ICON = null;	
+	private ImageIcon radarCompass_ICON = null;
+	private ImageIcon radarCompass_MOVABLE_ICON = null;	
+	private ImageIcon robotCompass_MOVABLE_ICON = null;
+	
+	
+	
 	private boolean cleanVideo = true;
 	private OSD osd = null;
-	private int buttonBar2ButtonWidth = 125;
+	private int buttonBar2ButtonWidth = 100;
 	private int buttonBar2ButtonHeight = 25;
-	private int buttonBarButtonWidth = 125;
-	private int buttonBarButtonHeight = 25;
+
+	
+	private String localPath = "/home/pi/Robot2017/";
+	private String debugPath = "c:\\temp\\";
 	
 	private int videoContainerMaxHeight = 423;
 	
@@ -84,41 +96,22 @@ public class CameraManager {
 	public void visibleOSD(ActionEvent e) {
 		
 	}
+	
 	public void init() {
 		
-		//Definir l'image d'arriere plan de la fenetre video
-		File sourceimage = null;
-		File sourcebackgroundClean = null;
-	    Image image = null;
-	    Image imagebackgroundClean = null;
-	    if (debug) {
-	    	sourceimage = new File("c:\\temp\\back.jpg");
-	    	sourcebackgroundClean = new File("c:\\temp\\back_clean.jpg");
-	    	try {
-				image = ImageIO.read(sourceimage);
-				imagebackgroundClean = ImageIO.read(sourcebackgroundClean);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	
-	    	backgroundClean = new ImageIcon(getScaledImage(imagebackgroundClean, videoWidth(videoContainerMaxHeight), videoContainerMaxHeight));
-	    	defaultImageVideo = new ImageIcon(getScaledImage(image, videoWidth(videoContainerMaxHeight), videoContainerMaxHeight));
-	    } else {
-	    	sourceimage = new File("/home/pi/Robot2017/back.png");
-	    	sourcebackgroundClean = new File("/home/pi/Robot2017/back_clean.jpg");
-	    	try {
-				image = ImageIO.read(sourceimage);
-				imagebackgroundClean = ImageIO.read(sourcebackgroundClean);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	backgroundClean = new ImageIcon(getScaledImage(imagebackgroundClean, videoWidth(videoContainerMaxHeight), videoContainerMaxHeight));
-	    	defaultImageVideo = new ImageIcon(getScaledImage(image, videoWidth(videoContainerMaxHeight), videoContainerMaxHeight));
-	    }
-	    
-	    
+		//Definir les images et les icones
+    	backgroundClean = getLocalImageIcon("back_clean.jpg");
+    	defaultImageVideo = getLocalImageIcon("back.jpg");
+    	target_YELLOW_ICON = getLocalImageIcon("target_jaune.png");
+    	target_RED_ICON = getLocalImageIcon("target_rouge.png");
+    	target_GREEN_ICON = getLocalImageIcon("target_verte.png");
+    	
+    	sight_ICON = getLocalImageIcon("mire_blanche.png");
+    	
+    	//radarCompass_ICON = getLocalImageIcon("TODO");
+    	//radarCompass_MOVABLE_ICON = getLocalImageIcon("TODO");
+    	//robotCompass_MOVABLE_ICON = getLocalImageIcon("TODO");
+
 	    //Construction du GUI
 	    GridBagConstraints c = new GridBagConstraints();
 	    playerWindow = new JFrame("");
@@ -132,6 +125,11 @@ public class CameraManager {
 	  	playerWindow.getContentPane().setBackground(Color.black);
 	  	playerWindow.setTitle(title);
 
+	  	//*********************************************************************************************
+  		//
+  		//          Barre de Bouton bas
+  		//
+  		//*********************************************************************************************
 	     
 	    //*********************************************************
 	    //TODO ajouter les boutons et controles du Video Player vers le robot
@@ -151,10 +149,7 @@ public class CameraManager {
 	    	   }
 	    	  }
 	    	});
-	    buttonBar.add(OSDButton);
-	    
-	    
-	    
+	    buttonBar.add(OSDButton);    
 	    
 	    JButton sightButton = new JButton("Sight");
 	    sightButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
@@ -176,30 +171,78 @@ public class CameraManager {
 	    cleanFeedtButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
 	    buttonBar.add(cleanFeedtButton);
 	    
-	    
-	    JButton fullscreenButton = new JButton("Fullscreen");
-	    fullscreenButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
-	    buttonBar.add(fullscreenButton);
-	    
 	    JButton mapButton = new JButton("Map");
 	    mapButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
 	    buttonBar.add(mapButton);
 	    
+	    JButton logButton = new JButton("Log");
+	    logButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
+	    buttonBar.add(logButton);
+	    
 	   //***********************************************
  
+	    
+	    //*********************************************************************************************
+  		//
+  		//         Videoplayer
+  		//
+  		//*********************************************************************************************
+	    
 	    //*********************************************************
 	    //TODO finaliser et synchroniser l'OSD du Video Player qui affiche les datas du robot avec la Network Tables
 	    JPanel videoContainer = new JPanel(new BorderLayout());
 	    
 	    videoContainer.setSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight );
 	    videoContainer.setOpaque(false);
+	    //*********************************************************************************************
+  		//
+  		//          Videoplayer - OSD - Text
+  		//
+  		//*********************************************************************************************
 	    osd = new OSD();
+	    osd.setScreenSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);	    
+//	    TODO
+//	    osd.setRadarCompass_MOVABLE_ICON(radarCompass_MOVABLE_ICON);
+//	    osd.setRadarCompass_MOVABLE_ICON(radarCompass_MOVABLE_ICON);
+//	    osd.setRobotCompass_MOVABLE_ICON(robotCompass_MOVABLE_ICON);
+	        
 	    
 	    osd.setSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);
 	    osd.setForeground(Color.white);
 	    osd.setOpaque(false);
 	    videoContainer.add(osd,BorderLayout.CENTER);
 	    
+	    //*********************************************************************************************
+  		//
+  		//          Videoplayer - OSD - TARGET
+  		//
+  		//*********************************************************************************************
+  		JPanel targetPanel = new JPanel(new GridLayout(0,1));
+  		targetPanel.setSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);
+  		targetPanel.setOpaque(false);
+  		JLabel target = new JLabel();
+  		target.setHorizontalAlignment(JLabel.CENTER);
+  		target.setIcon(CameraManager.getInstance().getTargetIcon("target_rouge.png"));
+  		target.setSize(videoWidth(64), 64);
+  		targetPanel.add(target, BorderLayout.CENTER);
+  		videoContainer.add(targetPanel);
+	    
+	    //*********************************************************************************************
+  		//
+  		//          Videoplayer - OSD - SIGHT
+  		//
+	  	//*********************************************************************************************
+	    JLabel sight = new JLabel();
+		sight.setIcon(CameraManager.getInstance().getLocalImageIcon("mire_blanche.png"));
+		sight.setSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);
+		videoContainer.add(sight,BorderLayout.CENTER);
+	    
+		
+		//*********************************************************************************************
+		//
+		//          Videoplayer - Video Image
+		//
+		//*********************************************************************************************
 	    videoPlayer = new JLabel(" ", imageVideo, JLabel.CENTER);
 	    videoPlayer.setSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);
 	    videoPlayer.setForeground(Color.white);
@@ -207,8 +250,13 @@ public class CameraManager {
 	    switchVidpanelBorderColor(Color.RED);
 	    
 	    videoContainer.add(videoPlayer,BorderLayout.CENTER);
-	    
+	    //*********************************************************************************************
+  		//
+  		//          Videoplayer - Background Image
+  		//
+  		//*********************************************************************************************
 	    JLabel backgroundImage = new JLabel(" ", defaultImageVideo, JLabel.CENTER);
+	   // JLabel backgroundImage = new JLabel(" ", sight_ICON, JLabel.CENTER);
 	    videoContainer.add(backgroundImage,BorderLayout.CENTER);
 	    
 	   
@@ -216,111 +264,94 @@ public class CameraManager {
 	    
 	    //***********************************************
 	    
+	   
+	    //inserer le video container dans le layout du gui
 	    
-	    
-	    
-	  //Ligne 1 colonne 1
+	    //Ligne 1 colonne 1
 	    
 	    c.gridx = 0;
 	    c.gridy = 0;
-	     /* une seule cellule sera disponible pour ce composant. */
+
 	    c.gridwidth = 1;
 	    c.gridheight = 1;
 	    c.fill = GridBagConstraints.NONE;
 	    c.anchor = GridBagConstraints.LINE_START;
-	    c.weighty = 1.0;   //request any extra vertical space
+	    c.weighty = 1.0;   
 	    c.insets = new Insets(5,5,0,0);  //padding
 	    playerWindow.getContentPane().add(videoContainer,c);
 	    
-	  //Ligne 1 colonne 2 
-
-	    c.gridx = 1; /* une position horizontalement à droite de l'étiquette */
-	    c.gridy = 0; /* sur la même ligne que l'étiquette */
-	    c.gridwidth = GridBagConstraints.REMAINDER; /* il est le dernier composant de sa ligne. */
-	    c.gridheight = 1; /* une seule cellule verticalement suffit */
-	    /* Le composant peut s'étendre sur tout l'espace qui lui est attribué horizontalement. */
+	    //Ligne 1 colonne 2 
+	    
+	    //*********************************************************************************************
+  		//
+  		//          Barre de Bouton droite
+  		//
+  		//*********************************************************************************************
+	    c.gridx = 1; 
+	    c.gridy = 0; 
+	    c.gridwidth = GridBagConstraints.REMAINDER; 
+	    c.gridheight = 1; 
+	
 	    c.fill = GridBagConstraints.HORIZONTAL;
-	    /* Alignons ce composant sur la même ligne d'écriture que son étiquette. */
+
 	    c.anchor = GridBagConstraints.BASELINE;
-	    c.insets = new Insets(5,0,0,5);  //top padding
+	    c.insets = new Insets(5,0,0,5);  
 	    
 	    buttonBar2.setSize(playerWindow.getWidth() - videoPlayer.getWidth() - 20 ,videoContainerMaxHeight);
 	    buttonBar2.setBorder(BorderFactory.createLineBorder(Color.BLUE, 1));
 	    JLabel buttonBar2Label = new JLabel("");
-	    
-	    
-	    
+	    buttonBar2.setOpaque(false);
 	    
 	    buttonBar2Label.setIcon(new ImageIcon(getScaledImage(backgroundClean.getImage(),playerWindow.getWidth() - videoPlayer.getWidth() - 20 ,videoContainerMaxHeight)));
 	    buttonBar2Label.setSize(playerWindow.getWidth() - videoPlayer.getWidth() - 20 ,videoContainerMaxHeight);
-	    
-	    
-	    
-	    
-	    
-	   
-	    
-	    
-	    
 	    
 	    JPanel buttonBar2Panel = new JPanel();
 	    buttonBar2Panel.setSize(playerWindow.getWidth() - videoPlayer.getWidth() - 20 ,videoContainerMaxHeight);
 	    buttonBar2Panel.setOpaque(false);
 	    buttonBar2Panel.setLayout(new BoxLayout(buttonBar2Panel, BoxLayout.Y_AXIS));  
-	    
-	    
-	    buttonBar2Panel.add(getEmptyLabel());
-	    
-	    JLabel commandPanelLabel = new JLabel("Commands");
+	    buttonBar2Panel.setLayout(new GridLayout(0,1,1,5)); 
+
+	    JLabel commandPanelLabel = new JLabel("Commands", JLabel.CENTER);
 	    commandPanelLabel.setForeground(Color.white);
 	    commandPanelLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    buttonBar2Panel.add(commandPanelLabel);
-	    
-	    buttonBar2Panel.add(getEmptyLabel());
+	    buttonBar2Panel.add(commandPanelLabel);	    
 	    
 	    JButton chooseTargetButton = new JButton("Choose Target");
-	    chooseTargetButton.setSize(buttonBarButtonWidth, buttonBarButtonHeight);
 	    chooseTargetButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    buttonBar2Panel.add(chooseTargetButton);
+	    buttonBar2Panel.add(chooseTargetButton);	  
 	    
-	    buttonBar2Panel.add(getEmptyLabel());
-	    
-	    JButton lockToTargetButton = new JButton("Radar Target Lock");
-	    lockToTargetButton.setSize(buttonBarButtonWidth, buttonBarButtonHeight);
+	    JButton lockToTargetButton = new JButton("Radar - Target Lock");
 	    lockToTargetButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    buttonBar2Panel.add(lockToTargetButton);
-	    
-	    buttonBar2Panel.add(getEmptyLabel());
-	    
-	    JButton goToTargetButton = new JButton("Robot Go to Target");
-	    goToTargetButton.setSize(buttonBarButtonWidth, buttonBarButtonHeight);
+    
+	    JButton cameraLockToTargetButton = new JButton("Cam - Target Lock");
+	    cameraLockToTargetButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+	    buttonBar2Panel.add(cameraLockToTargetButton);
+    
+	    JButton goToTargetButton = new JButton("Robot ==> Target");
 	    goToTargetButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    buttonBar2Panel.add(goToTargetButton);
-	    
-	    buttonBar2Panel.add(getEmptyLabel());
-	    
-	    JButton goToMaptButton = new JButton("Robot Go to Map Position");
-	    goToMaptButton.setSize(buttonBarButtonWidth, buttonBarButtonHeight);
+    
+	    JButton goToMaptButton = new JButton("Robot ==> Map Position");
 	    goToMaptButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    buttonBar2Panel.add(goToMaptButton);
+    
+	    JButton cameraSwitchButton = new JButton("Cam - SWITCH");
+	    cameraSwitchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+	    buttonBar2Panel.add(cameraSwitchButton);
+    
+	    JButton cameraJoystickButton = new JButton("Cam - Joystick CTRL");
+	    cameraJoystickButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+	    buttonBar2Panel.add(cameraJoystickButton);
 	    
-	    buttonBar2Panel.add(getEmptyLabel());
-	    
-	    JButton radarJoystickButton = new JButton("Radar Joystick");
-	    radarJoystickButton.setSize(buttonBarButtonWidth, buttonBarButtonHeight);
-	    radarJoystickButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    buttonBar2Panel.add(radarJoystickButton);
-	    
-	    buttonBar2Panel.add(getEmptyLabel());
-	    
-	    JButton pidControlsButton = new JButton("Navigation PID Controls");
-	    pidControlsButton.setSize(buttonBarButtonWidth, buttonBarButtonHeight);
+	    JButton pidControlsButton = new JButton("Nav - PID Controls");
 	    pidControlsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    buttonBar2Panel.add(pidControlsButton);
-	    
-	    
+    
+	    buttonBar2Panel.setBorder(new EmptyBorder(0, 5, 0, 5));
 	    buttonBar2.add(buttonBar2Panel,BorderLayout.CENTER);   
 	    buttonBar2.add(buttonBar2Label,BorderLayout.CENTER);
+    
 	    playerWindow.getContentPane().add(buttonBar2,c);
 	    
  
@@ -338,12 +369,86 @@ public class CameraManager {
 	    buttonBar.setOpaque(false);
 	    buttonBar.setSize(playerWindow.getWidth() - 5 ,playerWindow.getHeight() - videoPlayer.getHeight());
 	    playerWindow.getContentPane().add(buttonBar,c);
-	 
-
 	    playerWindow.setVisible(true);
-	    
-   
+  
 		
+	}
+	public ImageIcon getLocalImageIcon(String filename) {
+		ImageIcon icon = null;
+		
+		File sourceimage = null;
+		
+	    Image image = null;
+	   
+	    
+	    
+	    if (debug) {
+	    	sourceimage = new File(debugPath + filename);
+	    	
+	    	try {
+				image = ImageIO.read(sourceimage);
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	
+	    	
+	    	icon = new ImageIcon(getScaledImage(image, videoWidth(videoContainerMaxHeight), videoContainerMaxHeight));
+	    } else {
+	    	sourceimage = new File(localPath + filename);
+	    	
+	    	try {
+				image = ImageIO.read(sourceimage);
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	
+	    	icon = new ImageIcon(getScaledImage(image, videoWidth(videoContainerMaxHeight), videoContainerMaxHeight));
+	    }
+		
+		return icon;
+	}
+	
+	public ImageIcon getTargetIcon(String filename) {
+		ImageIcon icon = null;
+		
+		File sourceimage = null;
+		
+	    Image image = null;
+	   
+	    
+	    
+	    if (debug) {
+	    	sourceimage = new File(debugPath + filename);
+	    	
+	    	try {
+				image = ImageIO.read(sourceimage);
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	
+	    	
+	    	icon = new ImageIcon(getScaledImage(image, 64, 64));
+	    } else {
+	    	sourceimage = new File(localPath + filename);
+	    	
+	    	try {
+				image = ImageIO.read(sourceimage);
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	
+	    	icon = new ImageIcon(getScaledImage(image, 64, 64));
+	    }
+		
+		return icon;
 	}
 	private JLabel getEmptyLabel() {
 		JLabel emptylLabel = new JLabel("     ");
@@ -385,9 +490,7 @@ public class CameraManager {
 	}
 	
 	public void startPlayback() {
-		
-		
-		
+
 		// Connect NetworkTables, and get access to the publishing table
 		System.out.println("Initializing Network Table");
 		NetworkTable.setClientMode();
@@ -652,6 +755,22 @@ public class CameraManager {
 		url = url + ":1185/stream.mjpg";
 		
 		return url;
+	}
+
+	public String getLocalPath() {
+		return localPath;
+	}
+
+	public void setLocalPath(String localPath) {
+		this.localPath = localPath;
+	}
+
+	public String getDebugPath() {
+		return debugPath;
+	}
+
+	public void setDebugPath(String debugPath) {
+		this.debugPath = debugPath;
 	}
 
 	
