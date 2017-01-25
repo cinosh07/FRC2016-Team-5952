@@ -4,10 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -18,11 +20,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SpringLayout;
+
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 import edu.wpi.cscore.CvSink;
@@ -41,7 +46,7 @@ public class CameraManager {
 	private static String camera2URL = "http://192.168.1.54:1185/stream.mjpg";
 	// ***********************************************************************
 	
-	private String title = "Robuck Team 5962 - Navigation System";
+	private String title = "Robuck Team 5962 - Vision System Client";
 	private static CameraManager instance = null;
 	private int teamnumber = 5952;
 	private int inputstreamport = 1185;
@@ -53,8 +58,15 @@ public class CameraManager {
 	private JLabel videoPlayer = null;
 	private ImageIcon imageVideo = null;
 	private ImageIcon defaultImageVideo = null;
+	private ImageIcon backgroundClean = null;
 	private boolean cleanVideo = true;
 	private OSD osd = null;
+	private int buttonBar2ButtonWidth = 125;
+	private int buttonBar2ButtonHeight = 25;
+	private int buttonBarButtonWidth = 125;
+	private int buttonBarButtonHeight = 25;
+	
+	private int videoContainerMaxHeight = 375;
 	
 	
 	protected CameraManager() {
@@ -75,38 +87,44 @@ public class CameraManager {
 		
 		//Definir l'image d'arriere plan de la fenetre video
 		File sourceimage = null;
+		File sourcebackgroundClean = null;
 	    Image image = null;
+	    Image imagebackgroundClean = null;
 	    if (debug) {
 	    	sourceimage = new File("c:\\temp\\back.jpg");
-	    	
+	    	sourcebackgroundClean = new File("c:\\temp\\back_clean.jpg");
 	    	try {
 				image = ImageIO.read(sourceimage);
+				imagebackgroundClean = ImageIO.read(sourcebackgroundClean);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	    	
-	    	
-	    	defaultImageVideo = new ImageIcon(image);
+	    	backgroundClean = new ImageIcon(getScaledImage(imagebackgroundClean, videoWidth(videoContainerMaxHeight), videoContainerMaxHeight));
+	    	defaultImageVideo = new ImageIcon(getScaledImage(image, videoWidth(videoContainerMaxHeight), videoContainerMaxHeight));
 	    } else {
-	    	sourceimage = new File("/home/pi/Robot2017/default.png");
-	    	
+	    	sourceimage = new File("/home/pi/Robot2017/back.png");
+	    	sourcebackgroundClean = new File("/home/pi/Robot2017/back_clean.jpg");
 	    	try {
 				image = ImageIO.read(sourceimage);
+				imagebackgroundClean = ImageIO.read(sourcebackgroundClean);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	    	defaultImageVideo = new ImageIcon(image);
+	    	backgroundClean = new ImageIcon(getScaledImage(imagebackgroundClean, videoWidth(videoContainerMaxHeight), videoContainerMaxHeight));
+	    	defaultImageVideo = new ImageIcon(getScaledImage(image, videoWidth(videoContainerMaxHeight), videoContainerMaxHeight));
 	    }
 	    
 	    
 	    //Construction du GUI
 	    GridBagConstraints c = new GridBagConstraints();
 	    playerWindow = new JFrame("");
-	  	playerWindow.getContentPane().setLayout(new GridBagLayout());
-	  	playerWindow.setSize(800, 600);
+	    playerWindow.setSize(800, 480);
+	  	playerWindow.getContentPane().setLayout(new GridBagLayout()); 	
 	  	playerWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	  	playerWindow.getContentPane().setBackground(Color.black);
 	  	playerWindow.setTitle(title);
 
 	     
@@ -115,9 +133,8 @@ public class CameraManager {
 	    
 	    JPanel buttonBar = new JPanel(new FlowLayout());
 	    JButton OSDButton = new JButton("OSD");
-	    OSDButton.setSize(30, 20);
-	    OSDButton.setMaximumSize(new Dimension(30,
-                20));
+	    OSDButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
+	    
 	    OSDButton.addActionListener(new ActionListener()
 	    {
 	    	  public void actionPerformed(ActionEvent e)
@@ -130,9 +147,25 @@ public class CameraManager {
 	    	  }
 	    	});
 	    buttonBar.add(OSDButton);
-
 	    
 	    
+	    
+	    
+	    JButton sightButton = new JButton("Sight");
+	    sightButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
+	    buttonBar.add(sightButton);
+	    
+	    JButton targetButton = new JButton("Target");
+	    targetButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
+	    buttonBar.add(targetButton);
+	    
+	    JButton radarCompassButton = new JButton("Radar Compass");
+	    radarCompassButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
+	    buttonBar.add(radarCompassButton);
+	    
+	    JButton mapButton = new JButton("Map");
+	    mapButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
+	    buttonBar.add(mapButton);
 	    
 	   //***********************************************
  
@@ -140,18 +173,17 @@ public class CameraManager {
 	    //TODO finaliser et synchroniser l'OSD du Video Player qui affiche les datas du robot avec la Network Tables
 	    JPanel videoContainer = new JPanel(new BorderLayout());
 	    
-	    videoContainer.setSize(640, 480);
-	    
+	    videoContainer.setSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight );
+	    videoContainer.setOpaque(false);
 	    osd = new OSD();
 	    
-	    osd.setSize(640, 480);
+	    osd.setSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);
 	    osd.setForeground(Color.white);
 	    osd.setOpaque(false);
 	    videoContainer.add(osd,BorderLayout.CENTER);
 	    
 	    videoPlayer = new JLabel(" ", imageVideo, JLabel.CENTER);
-	    videoPlayer.setSize(640, 480);
-	    videoPlayer.setBackground(Color.BLACK);
+	    videoPlayer.setSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);
 	    videoPlayer.setForeground(Color.white);
 	    
 	    switchVidpanelBorderColor(Color.RED);
@@ -161,35 +193,97 @@ public class CameraManager {
 	    JLabel backgroundImage = new JLabel(" ", defaultImageVideo, JLabel.CENTER);
 	    videoContainer.add(backgroundImage,BorderLayout.CENTER);
 	    
+	   
+	    JPanel buttonBar2 = new JPanel(new BorderLayout());
+	    
 	    //***********************************************
 	    
 	    
 	    
 	    
+	  //Ligne 1 colonne 1
 	    
-	    
-	    
-	    //Placement des composantes dans le gui
-	    c.fill = GridBagConstraints.HORIZONTAL;
-	    c.ipady = 0;       //reset to default
+	    c.gridx = 0;
+	    c.gridy = 0;
+	     /* une seule cellule sera disponible pour ce composant. */
+	    c.gridwidth = 1;
+	    c.gridheight = 1;
+	    c.fill = GridBagConstraints.NONE;
+	    c.anchor = GridBagConstraints.LINE_START;
 	    c.weighty = 1.0;   //request any extra vertical space
-	    c.anchor = GridBagConstraints.PAGE_START; //bottom of space
-	    c.insets = new Insets(10,0,0,0);  //top padding
-	    c.gridx = 1;       //aligned with button 2
-	    c.gridwidth = 3;   //2 columns wide
-	    c.gridy = 0;       //third row
-	
+	    c.insets = new Insets(5,5,0,0);  //padding
 	    playerWindow.getContentPane().add(videoContainer,c);
 	    
+	  //Ligne 1 colonne 2 
+
+	    c.gridx = 1; /* une position horizontalement à droite de l'étiquette */
+	    c.gridy = 0; /* sur la même ligne que l'étiquette */
+	    c.gridwidth = GridBagConstraints.REMAINDER; /* il est le dernier composant de sa ligne. */
+	    c.gridheight = 1; /* une seule cellule verticalement suffit */
+	    /* Le composant peut s'étendre sur tout l'espace qui lui est attribué horizontalement. */
+	    c.fill = GridBagConstraints.HORIZONTAL;
+	    /* Alignons ce composant sur la même ligne d'écriture que son étiquette. */
+	    c.anchor = GridBagConstraints.BASELINE;
+	    c.insets = new Insets(5,0,0,5);  //top padding
+	    
+	    buttonBar2.setSize(playerWindow.getWidth() - videoPlayer.getWidth() - 40 ,videoContainerMaxHeight - 26);
+	    buttonBar2.setBorder(BorderFactory.createLineBorder(Color.BLUE, 1));
+	    JLabel buttonBar2Label = new JLabel("");
+	    
+	    
+	    
+	    
+	    buttonBar2Label.setIcon(new ImageIcon(getScaledImage(backgroundClean.getImage(),playerWindow.getWidth() - videoPlayer.getWidth() - 40 ,videoContainerMaxHeight - 26)));
+	    buttonBar2Label.setSize(playerWindow.getWidth() - videoPlayer.getWidth() - 40 ,videoContainerMaxHeight - 26);
+	    buttonBar2.add(buttonBar2Label,BorderLayout.CENTER);
+	    
+	    
+	    
+	    
+	   
+	    
+	    
+	    
+	    
+	    JPanel buttonBar2Panel = new JPanel();
+	    buttonBar2Panel.setSize(playerWindow.getWidth() - videoPlayer.getWidth() - 40 ,videoContainerMaxHeight - 26);
+	    buttonBar2Panel.setOpaque(false);
+	    buttonBar2Panel.setLayout(new BoxLayout(buttonBar2Panel, BoxLayout.Y_AXIS));  
+	    
+	    JButton lockToTargetButton = new JButton("Target Lock");
+	    lockToTargetButton.setSize(buttonBarButtonWidth, buttonBarButtonHeight);
+	    buttonBar2Panel.add(lockToTargetButton);
+	    
+	    
+	    JButton goToTargetButton = new JButton("Target Lock");
+	    goToTargetButton.setSize(buttonBarButtonWidth, buttonBarButtonHeight);
+	    buttonBar2Panel.add(goToTargetButton);
+	    
+	    JButton cleanFeedtButton = new JButton("Target Lock");
+	    cleanFeedtButton.setSize(buttonBarButtonWidth, buttonBarButtonHeight);
+	    buttonBar2Panel.add(cleanFeedtButton);
+	    
+	    
+	    
+	    
+	    buttonBar2.add(buttonBar2Panel,BorderLayout.PAGE_START);   
+	    
+	    playerWindow.getContentPane().add(buttonBar2,c);
+	    
+ 
+	    //Ligne 2 colonne 1
+	    
+	    c.gridy = 1; // Deuxieme ligne
+	    c.gridx = 0; // Premiere colonne
+	    c.gridwidth = GridBagConstraints.REMAINDER;;   //2 columns wide
 	    c.fill = GridBagConstraints.HORIZONTAL;
 	    c.ipady = 0;       //reset to default
 	    c.weighty = 1.0;   //request any extra vertical space
-	    c.anchor = GridBagConstraints.PAGE_END; //bottom of space
-	    c.insets = new Insets(10,0,0,0);  //top padding
-	    c.gridx = 1;       //aligned with button 2
-	    c.gridwidth = 3;   //2 columns wide
-	    c.gridy = 2;       //third row
-	    
+	    c.anchor = GridBagConstraints.CENTER; //bottom of space
+	    c.insets = new Insets(5,5,5,5);  //top padding
+	    buttonBar.setBorder(BorderFactory.createLineBorder(Color.BLUE, 1));
+	    buttonBar.setOpaque(false);
+	    buttonBar.setSize(playerWindow.getWidth() - 5 ,playerWindow.getHeight() - videoPlayer.getHeight() - 5);
 	    playerWindow.getContentPane().add(buttonBar,c);
 	 
 
@@ -198,7 +292,21 @@ public class CameraManager {
    
 		
 	}
+	private int videoWidth(int videoHeight) {
+		int videoWidth = (int) (1.333333333333333333333333*videoHeight);
+		return videoWidth;
+	}
 	
+	private Image getScaledImage(Image srcImg, int w, int h){
+	    BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	    Graphics2D g2 = resizedImg.createGraphics();
+
+	    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+	    g2.drawImage(srcImg, 0, 0, w, h, null);
+	    g2.dispose();
+
+	    return resizedImg;
+	}
 	private void switchVidpanelBorderColor(Color color) {
 
 		if (color == Color.RED) {
@@ -215,7 +323,7 @@ public class CameraManager {
 			
 			videoPlayer.setText("");
 		}
-	    videoPlayer.setBorder(BorderFactory.createLineBorder(color, 5));
+	    videoPlayer.setBorder(BorderFactory.createLineBorder(color, 1));
 	}
 	
 	public void startPlayback() {
