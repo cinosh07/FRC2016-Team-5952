@@ -7,7 +7,7 @@ import java.net.UnknownHostException;
 import java.util.Properties;
 
 
-import org.usfirst.frc.team5952.robot.visionSystem.CameraManager;
+import org.usfirst.frc.team5952.robot.visionSystem.StreamManager;
 
 
 public class Main {
@@ -44,9 +44,9 @@ public class Main {
 
 		if (prop != null) {
 
-			CameraManager.getInstance().setTeamnumber(Integer.parseInt(prop.getProperty("teamnumber")));
-			CameraManager.getInstance().setInputstreamport(Integer.parseInt(prop.getProperty("inputstreamport")));
-			CameraManager.getInstance().setCameraName(prop.getProperty("networktablename"));
+			StreamManager.getInstance().setTeamnumber(Integer.parseInt(prop.getProperty("teamnumber")));
+			StreamManager.getInstance().setInputstreamport(Integer.parseInt(prop.getProperty("inputstreamport")));
+			StreamManager.getInstance().setCameraName(prop.getProperty("networktablename"));
 			
 			try {
 				System.out.println(prop.getProperty("networktablename")+" IP Adress: "+InetAddress.getLocalHost().getHostAddress());
@@ -64,8 +64,8 @@ public class Main {
 			System.out.println("Cannot found Network Card");
 			e.printStackTrace();
 		}
-		CameraManager.getInstance().init();
-		CameraManager.getInstance().startPlayback();
+		StreamManager.getInstance().init();
+		StreamManager.getInstance().startPlayback();
 		
 	}
 
