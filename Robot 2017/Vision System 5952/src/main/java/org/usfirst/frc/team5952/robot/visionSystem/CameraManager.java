@@ -1,7 +1,10 @@
 package org.usfirst.frc.team5952.robot.visionSystem;
 
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
@@ -11,10 +14,19 @@ import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode;
+import edu.wpi.first.wpilibj.networktables.ConnectionInfo;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 public class CameraManager {
 
+	private Boolean debug = true;
+	
+	
+	
+	
+	
+	
+	
 	private static CameraManager instance = null;
 
 	private int teamnumber = 5952;
@@ -25,6 +37,7 @@ public class CameraManager {
 
 	private String cameraName = "Camera1";
 	private String robotIP = "10.1.90.2";
+	private String hotSpotAddress = "192.168.7.1";
 	private String ip = null;
 	private NetworkTable table = null;
 	
@@ -55,12 +68,99 @@ public class CameraManager {
 		NetworkTable.setTeam(teamnumber);
 
 		NetworkTable.initialize();
+	
+		if (!debug) {
+		
+		 	while (true) {
+		      try {
+		        if (NetworkTable.connections().length > 0) {
+		          break;
+		        }
+		        Thread.sleep(500);
+		        } catch (Exception e) {
+		            // TODO Auto-generated catch block
+		            e.printStackTrace();
+		        }
+		    }
+		}
+		
+		
+		
+		for (int i=0; i <= (NetworkTable.connections().length - 1); i++ ) {
+
+			robotIP = NetworkTable.connections()[i].remote_ip;
+			
+			System.out.println("Connections Protocol " + i + "::::: "  + NetworkTable.connections()[i].protocol_version);
+			System.out.println("Connections remote_id " + i + "::::: "  + NetworkTable.connections()[i].remote_id);
+			System.out.println("Connections remote_ip " + i + "::::: "  + NetworkTable.connections()[i].remote_ip);
+			System.out.println("Connections remote_port " + i + "::::: "  + NetworkTable.connections()[i].remote_port);
+			
+			try {
+				System.out.println("Local IP is :" + InetAddress.getLocalHost().getHostAddress());
+				System.out.println("Local Hostname is :" + InetAddress.getLocalHost().getHostName());
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+			
+		}
+		
 		
 		table = NetworkTable.getTable("Camera");
 		
 		table.addTableListener("SWITCH", new StreamingStateListener(), true);
 		
-		table.putString(cameraName+"IP", ip);
+		
+		
+	
+		Enumeration en = null;
+		try {
+			en = NetworkInterface.getNetworkInterfaces();
+		} catch (SocketException e1) {
+			
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		String networkInterfaceIP = null;
+		
+		String ips = "";
+		while (en.hasMoreElements()) {
+			
+			NetworkInterface ni = (NetworkInterface) en.nextElement();
+			Enumeration ee = ni.getInetAddresses();
+			
+			while (ee.hasMoreElements()) {
+				
+				
+				InetAddress ia = (InetAddress) ee.nextElement();
+				
+				ips = ips + ia.getHostName() + "||";
+				
+				if (!ia.isLoopbackAddress() && ia.getHostAddress().length() < 16 && !ia.getHostAddress().matches(hotSpotAddress) && ia.getHostName().matches(".local"))  {
+					System.out.println("CanonicalHostName ::::::: " + ia.getCanonicalHostName());
+					System.out.println("Adressse ::::::: " + ia.getHostAddress());
+					System.out.println("Is loopback ::::::: " + ia.isLoopbackAddress());
+					System.out.println("Hostname ::::::: " + ia.getHostName());
+					
+					networkInterfaceIP = ia.getHostName();
+					ip = ia.getHostName();
+					
+					
+					
+				}
+			}
+	
+			
+		}
+		System.out.println("OnBoard Network Card Address ::::::: " + ips.substring(0, ips.length() - 2));
+		
+		
+		
+		if (networkInterfaceIP!= null) {
+			table.putString(cameraName+"IP", networkInterfaceIP);
+		}
+
 	
 		// This is the network port you want to stream the raw received image to
 		// By rules, this has to be between 1180 and 1190, so 1185 is a good
@@ -102,6 +202,7 @@ public class CameraManager {
 		Mat inputImage = new Mat();
 		Mat hsv = new Mat();
 
+
 		System.out.println("Camera Streaming Starting at " + ip + ":" + inputstreamport);
 		// Infinitely process image
 		while (true) {
@@ -124,6 +225,7 @@ public class CameraManager {
 			// For now, we are just going to stream the HSV image
 			
 			//TODO Envoyer le data pour l'alignement sur la cible desirer
+			table.putString(cameraName+"IP", ip);
 			table.putString(cameraName+"DeltaFromTarget", "TODO delta corection");
 			table.putString(cameraName+"DistanceFromTarget", "TODO distance");
 			
@@ -201,6 +303,14 @@ public class CameraManager {
 
 	public void setTable(NetworkTable table) {
 		this.table = table;
+	}
+
+	public Boolean getDebug() {
+		return debug;
+	}
+
+	public void setDebug(Boolean debug) {
+		this.debug = debug;
 	}
 
 }
