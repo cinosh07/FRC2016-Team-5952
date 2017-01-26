@@ -18,6 +18,8 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -36,13 +38,14 @@ import edu.wpi.cscore.HttpCamera;
 import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.networktables2.type.StringArray;
 import edu.wpi.first.wpilibj.tables.ITable;
 
 public class CameraManager {
 
 	//TODO Pour Tester sur l'ordi mettre a true sinon a false
 	private boolean debug = true;
-	private static String camera1URL = "http://192.168.1.54:1185/stream.mjpg";
+	private static String camera1URL = "http://raspberrypi.local:1185/stream.mjpg";
 	private static String camera2URL = "http://192.168.1.54:1185/stream.mjpg";
 	// ***********************************************************************
 	
@@ -76,7 +79,8 @@ public class CameraManager {
 	private int buttonBar2ButtonHeight = 25;
 
 	
-	private String localPath = "/home/pi/Robot2017/";
+	//private String localPath = "/home/pi/Robot2017/";
+	private String localPath = "c:\\temp\\";
 	private String debugPath = "c:\\temp\\";
 	
 	private int videoContainerMaxHeight = 423;
@@ -119,7 +123,7 @@ public class CameraManager {
 	  	playerWindow.getContentPane().setLayout(new GridBagLayout()); 	
 	  	playerWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	  	if (!debug) {
-	  		playerWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	  		//playerWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
 	  	}
 	  	playerWindow.setUndecorated(true);
 	  	playerWindow.getContentPane().setBackground(Color.black);
@@ -499,6 +503,44 @@ public class CameraManager {
 
 		NetworkTable.initialize();
 		
+
+		
+		if (!debug ) {
+		 	while (true) {
+		      try {
+		        if (NetworkTable.connections().length > 0) {
+		          break;
+		        }
+		        Thread.sleep(500);
+		        } catch (Exception e) {
+		            // TODO Auto-generated catch block
+		            e.printStackTrace();
+		        }
+		    }
+		
+		}
+		
+		
+		for (int i=0; i <= (NetworkTable.connections().length - 1); i++ ) {
+
+			robotIP = NetworkTable.connections()[i].remote_ip;
+			
+			System.out.println("Connections Protocol " + i + "::::: "  + NetworkTable.connections()[i].protocol_version);
+			System.out.println("Connections remote_id " + i + "::::: "  + NetworkTable.connections()[i].remote_id);
+			System.out.println("Connections remote_ip " + i + "::::: "  + NetworkTable.connections()[i].remote_ip);
+			System.out.println("Connections remote_port " + i + "::::: "  + NetworkTable.connections()[i].remote_port);
+			
+			try {
+				System.out.println("Local IP is :" + InetAddress.getLocalHost().getHostAddress());
+				System.out.println("Local Hostname is :" + InetAddress.getLocalHost().getHostName());
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+			
+		}
+
+		
 		table = NetworkTable.getTable("Camera");
 		
 		table.addTableListener("SWITCH", new StreamingStateListener(), true);
@@ -530,7 +572,10 @@ public class CameraManager {
 		    // Note if this happens, no restream will be created
 		    if (camera == null) {
 		      switchVidpanelBorderColor(Color.YELLOW);
-		      camera = new HttpCamera("CoprocessorCamera", getCameraURL(table.getString("Camera1IP", ip),debug));
+		      //camera = new HttpCamera("CoprocessorCamera", getCameraURL(table.getString("Camera1IP", ip),debug))
+		      
+		      camera = setVisionSystemCamera(cameraName, inputStream,robotIP,debug);
+		      
 		      inputStream.setSource(camera);
 		    }
 	    	
@@ -597,18 +642,14 @@ public class CameraManager {
 			}
 			switchVidpanelBorderColor(Color.GREEN);
 			videoPlayer.setIcon(imageVideo);
-			videoPlayer.repaint();
-			
+			videoPlayer.repaint();		
 			
 		}
-		
-		
-		
+	
 	}
 	
 	public void stopPlaying() {
-		
-		
+				
 		//TODO Implementer la fonction d'arreter le playback
 		switchVidpanelBorderColor(Color.RED);
 		
@@ -671,6 +712,44 @@ public class CameraManager {
 		    server.setSource(camera);
 		    return camera;
 		  }
+	 
+	 
+	 private static HttpCamera setVisionSystemCamera(String cameraName, MjpegServer server,String robotIP, Boolean debug) {
+		    // Start by grabbing the camera from NetworkTables
+		    NetworkTable publishingTable = NetworkTable.getTable("Camera");
+
+		    // Wait for robot to connect. Allow this to be attempted indefinitely
+		    while (true) {
+		      try {
+		        if (publishingTable.isConnected()) {
+		          break;
+		        }
+		        Thread.sleep(500);
+		        } catch (Exception e) {
+		            // TODO Auto-generated catch block
+		            e.printStackTrace();
+		        }
+		    }
+
+
+		    HttpCamera camera = null;
+
+		    
+		    String camIP = publishingTable.getString("Camera1IP", null);
+		    if (camIP == null) {
+			      return null;
+			    }
+		    
+		    camera = new HttpCamera("CoprocessorCamera", getCameraURL(camIP,debug));
+		    if (camera != null) {
+		    	server.setSource(camera);
+			    }
+  
+		    return camera;
+		  }
+	 
+	 
+	 
 	
 	//Getters and Setters
 	public String getCameraName() {
