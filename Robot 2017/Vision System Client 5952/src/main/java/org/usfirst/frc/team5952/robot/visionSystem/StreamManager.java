@@ -71,6 +71,8 @@ public class StreamManager {
 	private ImageIcon radarCompass_MOVABLE_ICON = null;	
 	private ImageIcon robotCompass_MOVABLE_ICON = null;
 	
+	private Target targetPanel;
+	
 	
 	
 	private boolean cleanVideo = true;
@@ -161,6 +163,20 @@ public class StreamManager {
 	    
 	    JButton targetButton = new JButton("Target");
 	    targetButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
+	    targetButton.addActionListener(new ActionListener()
+	    {
+	    	  public void actionPerformed(ActionEvent e)
+	    	  {
+	    	   if (osd.isVisible()) {
+	    		   
+	    		   targetPanel.moveTarget(50, 175);
+	    	   } else {
+	    		   
+	    		   targetPanel.moveTarget(300, 75);
+	    		   
+	    	   }
+	    	  }
+	    	});
 	    buttonBar.add(targetButton);
 	    
 	    JButton robotCompassButton = new JButton("Robot Compass");
@@ -221,15 +237,20 @@ public class StreamManager {
   		//          Videoplayer - OSD - TARGET
   		//
   		//*********************************************************************************************
-  		JPanel targetPanel = new JPanel(new GridLayout(0,1));
-  		targetPanel.setSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);
+//  		JPanel targetPanel = new JPanel(new GridLayout(0,1));
+//  		targetPanel.setSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);
+//  		targetPanel.setOpaque(false);
+//  		JLabel target = new JLabel();
+//  		target.setHorizontalAlignment(JLabel.CENTER);
+//  		target.setIcon(StreamManager.getInstance().getTargetIcon("target_rouge.png"));
+//  		target.setSize(videoWidth(64), 64);
+//  		targetPanel.add(target, BorderLayout.CENTER);
+//  		videoContainer.add(targetPanel);
+	    
+	    targetPanel = new Target(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);
+  		//targetPanel.setSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);
   		targetPanel.setOpaque(false);
-  		JLabel target = new JLabel();
-  		target.setHorizontalAlignment(JLabel.CENTER);
-  		target.setIcon(StreamManager.getInstance().getTargetIcon("target_rouge.png"));
-  		target.setSize(videoWidth(64), 64);
-  		targetPanel.add(target, BorderLayout.CENTER);
-  		videoContainer.add(targetPanel);
+  		videoContainer.add(targetPanel,BorderLayout.CENTER);
 	    
 	    //*********************************************************************************************
   		//
@@ -565,6 +586,8 @@ public class StreamManager {
 	    HttpCamera camera = null;
 	    
 	    
+	    targetPanel.initialiseTarget();
+	    
 		if (!debug ) {
 	    	camera = setHttpCamera(cameraName, inputStream);
 		    // It is possible for the camera to be null. If it is, that means no camera could
@@ -850,6 +873,14 @@ public class StreamManager {
 
 	public void setDebugPath(String debugPath) {
 		this.debugPath = debugPath;
+	}
+
+	public Target getTargetPanel() {
+		return targetPanel;
+	}
+
+	public void setTargetPanel(Target targetPanel) {
+		this.targetPanel = targetPanel;
 	}
 
 	
