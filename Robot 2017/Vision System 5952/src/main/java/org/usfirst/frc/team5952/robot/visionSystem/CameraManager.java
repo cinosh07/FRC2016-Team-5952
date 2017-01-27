@@ -20,21 +20,10 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 public class CameraManager {
 
 	private Boolean debug = true;
-	
-	
-	
-	
-	
-	
-	
+
 	private static CameraManager instance = null;
-
 	private int teamnumber = 5952;
-	
-
 	private int inputstreamport = 1185;
-	
-
 	private String cameraName = "Camera1";
 	private String robotIP = "10.1.90.2";
 	private String hotSpotAddress = "192.168.7.1";
@@ -145,12 +134,9 @@ public class CameraManager {
 					
 					networkInterfaceIP = ia.getHostName();
 					ip = ia.getHostName();
-					
-					
-					
+			
 				}
-			}
-	
+			}	
 			
 		}
 		System.out.println("OnBoard Network Card Address ::::::: " + ips.substring(0, ips.length() - 2));
@@ -233,9 +219,7 @@ public class CameraManager {
 			//TODO Switcher entre les hsv et inputImage dans imageSource.putFrame(hsv) avec un bouton sur la console en changeant l<etat d<une valeur booleen dans la network table
 			imageSource.putFrame(hsv);
 			//imageSource.putFrame(inputImage);
-		}
-		
-		
+		}	
 		
 	}
 	
