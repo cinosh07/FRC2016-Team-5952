@@ -49,7 +49,7 @@ public class Robot extends IterativeRobot {
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
 
-		cameraTable = NetworkTable.getTable("Camera");
+		cameraTable = NetworkTable.getTable("VisionCamera");
 
 		camera1IP = cameraTable.getString("Camera1IP", "null");
 		camera2IP = cameraTable.getString("Camera2IP", "null");
