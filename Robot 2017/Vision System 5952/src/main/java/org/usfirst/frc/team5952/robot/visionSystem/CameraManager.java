@@ -95,7 +95,7 @@ public class CameraManager {
 		}
 		
 		
-		table = NetworkTable.getTable("Camera");
+		table = NetworkTable.getTable("VisionCamera");
 		
 		table.addTableListener("SWITCH", new StreamingStateListener(), true);
 		
