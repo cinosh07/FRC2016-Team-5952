@@ -13,7 +13,7 @@ public class OpenTrap extends Command {
     public OpenTrap() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(Robot.trap);
+    	//requires(trap);
     }
 
     // Called just before this Command runs the first time
