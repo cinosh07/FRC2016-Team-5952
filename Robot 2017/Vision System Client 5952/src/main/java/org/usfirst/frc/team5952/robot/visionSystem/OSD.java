@@ -18,12 +18,13 @@ public class OSD extends JPanel {
 	private Boolean targetLocked = false;
 	private BorderLayout layoutBorder = new BorderLayout();
 	
-
+	public JLabel robotCompassLabel;
+	public JLabel radarCompassLabel;
 
 	private JPanel osd_TEXT = new JPanel(new GridLayout(5, 5, 10, 10));
 
 	
-	private JLabel target = null;
+
 	
 	private JLabel sight = null;
 	
@@ -99,7 +100,7 @@ public class OSD extends JPanel {
 
 		// Second ROW
 
-		JLabel robotCompassLabel = new JLabel("Robot Compass", JLabel.CENTER);// Label Robot Compass
+		robotCompassLabel = new JLabel("Robot Compass", JLabel.CENTER);// Label Robot Compass
 		robotCompassLabel.setForeground(Color.GREEN);
 		osd_TEXT.add(robotCompassLabel);
 
@@ -109,7 +110,7 @@ public class OSD extends JPanel {
 
 		osd_TEXT.add(getEmptyLabel());// Label Vide
 
-		JLabel radarCompassLabel = new JLabel("Radar Compass", JLabel.CENTER);// Label Robot Compass
+		radarCompassLabel = new JLabel("Radar Compass", JLabel.CENTER);// Label Robot Compass
 		radarCompassLabel.setForeground(Color.GREEN);
 		osd_TEXT.add(radarCompassLabel);
 		//*********************************************************************************************
@@ -178,14 +179,6 @@ public class OSD extends JPanel {
 		this.osd_TEXT = osd_TEXT;
 	}
 
-
-	public JLabel getTarget() {
-		return target;
-	}
-
-	public void setTarget(JLabel target) {
-		this.target = target;
-	}
 	
 	public void setScreenSize(int width, int height) {
 	

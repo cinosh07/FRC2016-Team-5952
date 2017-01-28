@@ -3,6 +3,7 @@ package org.usfirst.frc.team5952.robot.visionSystem;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -45,17 +46,21 @@ public class StreamManager {
 
 	//TODO Pour Tester sur l'ordi mettre a true sinon a false
 	private boolean debug = true;
-	private static String camera1URL = "http://raspberrypi.local:1185/stream.mjpg";
-	private static String camera2URL = "http://192.168.1.54:1185/stream.mjpg";
-	// ***********************************************************************
 	
+	private static String camera1NetbiosName = "raspberrypi.local";
+	private static String camera2NetbiosName = "camera2.local";
+	private static int socketPort= 2000;
 	private String title = "Robuck Team 5962 - Vision System Client";
+	
+	// ***********************************************************************
+	private static String camera1URL = "http://"+camera1NetbiosName+":1185/stream.mjpg";
+	private static String camera2URL = "http://"+camera2NetbiosName+":1185/stream.mjpg";
 	private static StreamManager instance = null;
 	private int teamnumber = 5952;
 	private int inputstreamport = 1185;
 	private String cameraName = "Camera1";
 	private String robotIP = "10.59.52.2";
-	private String ip = "192.168.1.54";
+	private String ip = camera1NetbiosName;
 	private NetworkTable table = null;
 	private JFrame playerWindow = null;
 	private JLabel videoPlayer = null;
@@ -72,8 +77,10 @@ public class StreamManager {
 	private ImageIcon robotCompass_MOVABLE_ICON = null;
 	
 	private Target targetPanel;
+	private JLabel messageBox;
+	private JLabel sight;
 	
-	
+	private String message = "";
 	
 	private boolean cleanVideo = true;
 	private OSD osd = null;
@@ -102,6 +109,7 @@ public class StreamManager {
 	public void visibleOSD(ActionEvent e) {
 		
 	}
+	
 	
 	public void init() {
 		
@@ -159,6 +167,20 @@ public class StreamManager {
 	    
 	    JButton sightButton = new JButton("Sight");
 	    sightButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
+	    sightButton.addActionListener(new ActionListener()
+	    {
+	    	  public void actionPerformed(ActionEvent e)
+	    	  {
+	    	   if (sight.isVisible()) {
+	    		   
+	    		   sight.setVisible(false);
+	    	   } else {
+	    		   
+	    		   sight.setVisible(true);
+	    		   
+	    	   }
+	    	  }
+	    	});
 	    buttonBar.add(sightButton);
 	    
 	    JButton targetButton = new JButton("Target");
@@ -167,12 +189,12 @@ public class StreamManager {
 	    {
 	    	  public void actionPerformed(ActionEvent e)
 	    	  {
-	    	   if (osd.isVisible()) {
+	    	   if (targetPanel.isVisible()) {
 	    		   
-	    		   targetPanel.moveTarget(50, 175);
+	    		   targetPanel.setVisible(false);
 	    	   } else {
 	    		   
-	    		   targetPanel.moveTarget(300, 75);
+	    		   targetPanel.setVisible(true);
 	    		   
 	    	   }
 	    	  }
@@ -181,22 +203,85 @@ public class StreamManager {
 	    
 	    JButton robotCompassButton = new JButton("Robot Compass");
 	    robotCompassButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
+	    robotCompassButton.addActionListener(new ActionListener()
+	    {
+	    	  public void actionPerformed(ActionEvent e)
+	    	  {
+	    	   if (osd.robotCompassLabel.isVisible()) {
+	    		   
+	    		   osd.robotCompassLabel.setVisible(false);
+	    	   } else {
+	    		   
+	    		   osd.robotCompassLabel.setVisible(true);
+	    		   
+	    	   }
+	    	  }
+	    	});
 	    buttonBar.add(robotCompassButton);
 	    
 	    JButton radarCompassButton = new JButton("Radar Compass");
 	    radarCompassButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
+	    radarCompassButton.addActionListener(new ActionListener()
+	    {
+	    	  public void actionPerformed(ActionEvent e)
+	    	  {
+	    	   if (osd.radarCompassLabel.isVisible()) {
+	    		   
+	    		   osd.radarCompassLabel.setVisible(false);
+	    	   } else {
+	    		   
+	    		   osd.radarCompassLabel.setVisible(true);
+	    		   
+	    	   }
+	    	  }
+	    	});
 	    buttonBar.add(radarCompassButton);	    
 	    
 	    JButton cleanFeedtButton = new JButton("Clean Feed");
 	    cleanFeedtButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
+	    cleanFeedtButton.addActionListener(new ActionListener()
+	    {
+	    	  public void actionPerformed(ActionEvent e)
+	    	  {
+	    	   // TODO envoyer commande sur la network table cleanfeed or not
+	    	  }
+	    	});
 	    buttonBar.add(cleanFeedtButton);
 	    
 	    JButton mapButton = new JButton("Map");
 	    mapButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
+	    mapButton.addActionListener(new ActionListener()
+	    {
+	    	  public void actionPerformed(ActionEvent e)
+	    	  {
+//	    	   if (mapPanel.isVisible()) {
+//	    		   
+//	    		   mapPanel.setVisible(false);
+//	    	   } else {
+//	    		   
+//	    		   mapPanel.setVisible(true);
+//	    		   
+//	    	   }
+	    	  }
+	    	});
 	    buttonBar.add(mapButton);
 	    
 	    JButton logButton = new JButton("Log");
 	    logButton.setSize(buttonBar2ButtonWidth, buttonBar2ButtonHeight);
+	    logButton.addActionListener(new ActionListener()
+	    {
+	    	  public void actionPerformed(ActionEvent e)
+	    	  {
+//	    	   if (logPanel.isVisible()) {
+//	    		   
+//	    		   logPanel.setVisible(false);
+//	    	   } else {
+//	    		   
+//	    		   logPanel.setVisible(true);
+//	    		   
+//	    	   }
+	    	  }
+	    	});
 	    buttonBar.add(logButton);
 	    
 	   //***********************************************
@@ -214,6 +299,7 @@ public class StreamManager {
 	    
 	    videoContainer.setSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight );
 	    videoContainer.setOpaque(false);
+	    
 	    //*********************************************************************************************
   		//
   		//          Videoplayer - OSD - Text
@@ -237,15 +323,6 @@ public class StreamManager {
   		//          Videoplayer - OSD - TARGET
   		//
   		//*********************************************************************************************
-//  		JPanel targetPanel = new JPanel(new GridLayout(0,1));
-//  		targetPanel.setSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);
-//  		targetPanel.setOpaque(false);
-//  		JLabel target = new JLabel();
-//  		target.setHorizontalAlignment(JLabel.CENTER);
-//  		target.setIcon(StreamManager.getInstance().getTargetIcon("target_rouge.png"));
-//  		target.setSize(videoWidth(64), 64);
-//  		targetPanel.add(target, BorderLayout.CENTER);
-//  		videoContainer.add(targetPanel);
 	    
 	    targetPanel = new Target(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);
   		//targetPanel.setSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);
@@ -257,7 +334,7 @@ public class StreamManager {
   		//          Videoplayer - OSD - SIGHT
   		//
 	  	//*********************************************************************************************
-	    JLabel sight = new JLabel();
+	    sight = new JLabel();
 		sight.setIcon(StreamManager.getInstance().getLocalImageIcon("mire_blanche.png"));
 		sight.setSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);
 		videoContainer.add(sight,BorderLayout.CENTER);
@@ -335,12 +412,22 @@ public class StreamManager {
 	    buttonBar2Panel.setOpaque(false);
 	    buttonBar2Panel.setLayout(new BoxLayout(buttonBar2Panel, BoxLayout.Y_AXIS));  
 	    buttonBar2Panel.setLayout(new GridLayout(0,1,1,5)); 
+     
+	  //*********************************************************************************************
+  		//
+  		//         Barre de Bouton droite - Message Center
+  		//
+  		//********************************************************************************************* 
 
-	    JLabel commandPanelLabel = new JLabel("Commands", JLabel.CENTER);
-	    commandPanelLabel.setForeground(Color.white);
-	    commandPanelLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    buttonBar2Panel.add(commandPanelLabel);	    
+	    messageBox = new JLabel("", JLabel.CENTER);
+	    messageBox.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+	    messageBox.setForeground(Color.WHITE);
+	    messageBox.setText("<html>Initialization ...</html>");
+	    messageBox.setAlignmentX(Component.CENTER_ALIGNMENT);
+	    buttonBar2Panel.add(messageBox);	
 	    
+	  //*********************************************************************************************
+  
 	    JButton chooseTargetButton = new JButton("Choose Target");
 	    chooseTargetButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    buttonBar2Panel.add(chooseTargetButton);	  
@@ -396,6 +483,14 @@ public class StreamManager {
 	    playerWindow.getContentPane().add(buttonBar,c);
 	    playerWindow.setVisible(true);
   
+		
+	}
+	
+	private void sendMessage(String message) {
+		if (messageBox != null) {
+			messageBox.setText("<html>" + message +"</html>");
+		}
+		
 		
 	}
 	public ImageIcon getLocalImageIcon(String filename) {
@@ -499,17 +594,15 @@ public class StreamManager {
 
 		if (color == Color.RED) {
 			
-			videoPlayer.setText("Not Connected");
+			
 			
 		
 		} else if(color == Color.YELLOW) {
 			
-			videoPlayer.setText("Connecting to video stream ... " + getCameraURL(table.getString("Camera1IP", ip),debug));
 			
 		}else {
 		
 			
-			videoPlayer.setText("");
 		}
 	    videoPlayer.setBorder(BorderFactory.createLineBorder(color, 1));
 	}
@@ -562,10 +655,9 @@ public class StreamManager {
 		}
 
 		
-		table = NetworkTable.getTable("Camera");
+		table = NetworkTable.getTable("VisionCamera");
 		
 		table.addTableListener("SWITCH", new StreamingStateListener(), true);
-		
 		
 	
 		// This is the network port you want to stream the raw received image to
@@ -595,6 +687,8 @@ public class StreamManager {
 		    // Note if this happens, no restream will be created
 		    if (camera == null) {
 		      switchVidpanelBorderColor(Color.YELLOW);
+		      sendMessage("Connecting to video stream ... " + getCameraURL(table.getString("Camera1IP", ip),debug));
+		      
 		      //camera = new HttpCamera("CoprocessorCamera", getCameraURL(table.getString("Camera1IP", ip),debug))
 		      
 		      camera = setVisionSystemCamera(cameraName, inputStream,robotIP,debug);
@@ -605,6 +699,7 @@ public class StreamManager {
 	    } else {
 	    	
 	    	switchVidpanelBorderColor(Color.YELLOW);
+	    	sendMessage("Connecting to video stream ... " + getCameraURL(table.getString("Camera1IP", ip),debug));      
 	    	camera = new HttpCamera("CoprocessorCamera", getCameraURL(table.getString("Camera1IP", ip),debug));
 		    inputStream.setSource(camera);
 	    	
@@ -634,6 +729,7 @@ public class StreamManager {
 		Mat hsv = new Mat();
 
 		System.out.println("Camera Streaming Starting at " + ip + ":" + inputstreamport);
+		sendMessage("Waiting for connection .....");
 		// Infinitely process image
 		while (true) {
 			// Grab a frame. If it has a frame time of 0, there was an error.
@@ -665,7 +761,17 @@ public class StreamManager {
 			}
 			switchVidpanelBorderColor(Color.GREEN);
 			videoPlayer.setIcon(imageVideo);
-			videoPlayer.repaint();		
+			videoPlayer.repaint();	
+			
+			if (message.length() < 1) {
+				
+				sendMessage("Connected");
+				
+			} else {
+				
+				sendMessage(message);
+			}
+			
 			
 		}
 	
