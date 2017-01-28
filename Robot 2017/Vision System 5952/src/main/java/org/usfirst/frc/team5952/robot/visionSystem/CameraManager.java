@@ -19,8 +19,16 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 public class CameraManager {
 
+	//TODO Pour Tester sur l'ordi mettre a true sinon a false
 	private Boolean debug = true;
 
+	
+	
+	private static String camera1NetbiosName = "raspberrypi.local";
+	private static String camera2NetbiosName = "camera2.local";
+	private static int socketPort= 2000;
+	
+	// ***********************************************************************
 	private static CameraManager instance = null;
 	private int teamnumber = 5952;
 	private int inputstreamport = 1185;
@@ -29,6 +37,8 @@ public class CameraManager {
 	private String hotSpotAddress = "192.168.7.1";
 	private String ip = null;
 	private NetworkTable table = null;
+	
+	private int cameraOffset = 0;
 	
 	protected CameraManager() {
 	      // Exists only to defeat instantiation.
@@ -39,6 +49,11 @@ public class CameraManager {
 			instance = new CameraManager();
 		}
 		return instance;
+	}
+	public void readSocketCommant(String command) {
+		
+		//TODO Traiter les commandes recu sur le socket
+		
 	}
 	
 	public void startStreaming() {
@@ -145,8 +160,14 @@ public class CameraManager {
 		
 		if (networkInterfaceIP!= null) {
 			table.putString(cameraName+"IP", networkInterfaceIP);
+			table.putNumber(cameraName+"SocketPort", socketPort);
 		}
 
+		
+			
+		//SocketManager.getInstance().startServer( socketPort);
+		//SocketManager.getInstance().startClient("192.168.1.40", socketPort);	
+		
 	
 		// This is the network port you want to stream the raw received image to
 		// By rules, this has to be between 1180 and 1190, so 1185 is a good
@@ -211,10 +232,17 @@ public class CameraManager {
 			// For now, we are just going to stream the HSV image
 			
 			//TODO Envoyer le data pour l'alignement sur la cible desirer
+			
+			
 			table.putString(cameraName+"IP", ip);
+			table.putNumber(cameraName+"SocketPort", socketPort);
 			table.putString(cameraName+"DeltaFromTarget", "TODO delta corection");
 			table.putString(cameraName+"DistanceFromTarget", "TODO distance");
 			
+			table.putBoolean("cameraName"+"foundTarget", true);
+			table.putNumber("cameraName"+"offset", cameraOffset);  //TODO camera offset from centrer off robot
+			
+			//SocketManager.getInstance().sendCommand("DeltaFromTarget:34.1");
 			
 			//TODO Switcher entre les hsv et inputImage dans imageSource.putFrame(hsv) avec un bouton sur la console en changeant l<etat d<une valeur booleen dans la network table
 			imageSource.putFrame(hsv);
@@ -295,6 +323,14 @@ public class CameraManager {
 
 	public void setDebug(Boolean debug) {
 		this.debug = debug;
+	}
+
+	public int getCameraOffset() {
+		return cameraOffset;
+	}
+
+	public void setCameraOffset(int cameraOffset) {
+		this.cameraOffset = cameraOffset;
 	}
 
 }
