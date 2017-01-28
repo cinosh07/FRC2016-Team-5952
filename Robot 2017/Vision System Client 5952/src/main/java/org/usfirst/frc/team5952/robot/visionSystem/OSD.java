@@ -100,7 +100,8 @@ public class OSD extends JPanel {
 
 		// Second ROW
 
-		robotCompassLabel = new JLabel("Robot Compass", JLabel.CENTER);// Label Robot Compass
+		robotCompassLabel = new JLabel();// Label Robot Compass
+		robotCompassLabel.setIcon(StreamManager.getInstance().robotCompass_ICON);
 		robotCompassLabel.setForeground(Color.GREEN);
 		osd_TEXT.add(robotCompassLabel);
 

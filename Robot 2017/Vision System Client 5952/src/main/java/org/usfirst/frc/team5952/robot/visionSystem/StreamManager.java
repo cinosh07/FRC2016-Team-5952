@@ -72,9 +72,10 @@ public class StreamManager {
 	private ImageIcon target_RED_ICON = null;
 	private ImageIcon target_GREEN_ICON = null;	
 	private ImageIcon sight_ICON = null;	
-	private ImageIcon radarCompass_ICON = null;
-	private ImageIcon radarCompass_MOVABLE_ICON = null;	
-	private ImageIcon robotCompass_MOVABLE_ICON = null;
+	public ImageIcon radarCompass_ICON = null;
+	public ImageIcon radarCompass_MOVABLE_ICON = null;	
+	public ImageIcon robotCompass_MOVABLE_ICON = null;
+	public ImageIcon robotCompass_ICON = null;
 	
 	private Target targetPanel;
 	private JLabel messageBox;
@@ -122,9 +123,10 @@ public class StreamManager {
     	
     	sight_ICON = getLocalImageIcon("mire_blanche.png");
     	
-    	//radarCompass_ICON = getLocalImageIcon("TODO");
+    	radarCompass_ICON = getLocalImageIcon("compass_needle.png",64,64);
     	//radarCompass_MOVABLE_ICON = getLocalImageIcon("TODO");
     	//robotCompass_MOVABLE_ICON = getLocalImageIcon("TODO");
+    	robotCompass_ICON = getLocalImageIcon("compass.png",64,64);
 
 	    //Construction du GUI
 	    GridBagConstraints c = new GridBagConstraints();
@@ -492,6 +494,44 @@ public class StreamManager {
 		}
 		
 		
+	}
+	public ImageIcon getLocalImageIcon(String filename, int width, int height) {
+		ImageIcon icon = null;
+		
+		File sourceimage = null;
+		
+	    Image image = null;
+	   
+	    
+	    
+	    if (debug) {
+	    	sourceimage = new File(debugPath + filename);
+	    	
+	    	try {
+				image = ImageIO.read(sourceimage);
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	
+	    	
+	    	icon = new ImageIcon(getScaledImage(image, width, height));
+	    } else {
+	    	sourceimage = new File(localPath + filename);
+	    	
+	    	try {
+				image = ImageIO.read(sourceimage);
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	
+	    	icon = new ImageIcon(getScaledImage(image, width, height));
+	    }
+		
+		return icon;
 	}
 	public ImageIcon getLocalImageIcon(String filename) {
 		ImageIcon icon = null;
