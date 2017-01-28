@@ -163,6 +163,23 @@ public class StreamManager {
 	    	   } else {
 	    		   osd.setVisible(true);
 	    	   }
+	    	   if (sight.isVisible()) {
+	    		   
+	    		   sight.setVisible(false);
+	    	   } else {
+	    		   
+	    		   sight.setVisible(true);
+	    		   
+	    	   }
+	    	   if (targetPanel.isVisible()) {
+	    		   
+	    		   targetPanel.setVisible(false);
+	    	   } else {
+	    		   
+	    		   targetPanel.setVisible(true);
+	    		   
+	    	   }
+	    	   
 	    	  }
 	    	});
 	    buttonBar.add(OSDButton);    
