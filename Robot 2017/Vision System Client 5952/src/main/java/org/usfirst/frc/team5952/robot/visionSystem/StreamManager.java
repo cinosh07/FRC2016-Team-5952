@@ -45,10 +45,10 @@ import edu.wpi.first.wpilibj.tables.ITable;
 public class StreamManager {
 
 	//TODO Pour Tester sur l'ordi mettre a true sinon a false
-	private boolean debug = true;
+	private boolean debug = false;
 	
-	private static String camera1NetbiosName = "raspberrypi.local";
-	private static String camera2NetbiosName = "camera2.local";
+	private static String camera1NetbiosName = "team5952cam1.local";
+	private static String camera2NetbiosName = "team5952cam2.local";
 	private static int socketPort= 2000;
 	private String title = "Robuck Team 5962 - Vision System Client";
 	
@@ -738,20 +738,25 @@ public class StreamManager {
 	    targetPanel.initialiseTarget();
 	    
 		if (!debug ) {
-	    	camera = setHttpCamera(cameraName, inputStream);
-		    // It is possible for the camera to be null. If it is, that means no camera could
-		    // be found using NetworkTables to connect to. Create an HttpCamera by giving a specified stream
-		    // Note if this happens, no restream will be created
-		    if (camera == null) {
-		      switchVidpanelBorderColor(Color.YELLOW);
-		      sendMessage("Connecting to video stream ... " + getCameraURL(table.getString("Camera1IP", ip),debug));
-		      
-		      //camera = new HttpCamera("CoprocessorCamera", getCameraURL(table.getString("Camera1IP", ip),debug))
-		      
-		      camera = setVisionSystemCamera(cameraName, inputStream,robotIP,debug);
-		      
-		      inputStream.setSource(camera);
-		    }
+//	    	camera = setHttpCamera(cameraName, inputStream);
+//		    // It is possible for the camera to be null. If it is, that means no camera could
+//		    // be found using NetworkTables to connect to. Create an HttpCamera by giving a specified stream
+//		    // Note if this happens, no restream will be created
+//		    if (camera == null) {
+//		      switchVidpanelBorderColor(Color.YELLOW);
+//		      sendMessage("Connecting to video stream ... " + getCameraURL(table.getString("Camera1IP", ip),debug));
+//		      
+//		      //camera = new HttpCamera("CoprocessorCamera", getCameraURL(table.getString("Camera1IP", ip),debug))
+//		      
+//		      camera = setVisionSystemCamera(cameraName, inputStream,robotIP,debug);
+//		      
+//		      inputStream.setSource(camera);
+//		    }
+			
+			switchVidpanelBorderColor(Color.YELLOW);
+	    	sendMessage("Connecting to video stream ... " + getCameraURL(table.getString("Camera1IP", ip),debug));      
+	    	camera = new HttpCamera("CoprocessorCamera", camera1URL);
+		    inputStream.setSource(camera);
 	    	
 	    } else {
 	    	
@@ -901,32 +906,11 @@ public class StreamManager {
 	 
 	 
 	 private static HttpCamera setVisionSystemCamera(String cameraName, MjpegServer server,String robotIP, Boolean debug) {
-		    // Start by grabbing the camera from NetworkTables
-		    NetworkTable publishingTable = NetworkTable.getTable("Camera");
-
-		    // Wait for robot to connect. Allow this to be attempted indefinitely
-		    while (true) {
-		      try {
-		        if (publishingTable.isConnected()) {
-		          break;
-		        }
-		        Thread.sleep(500);
-		        } catch (Exception e) {
-		            // TODO Auto-generated catch block
-		            e.printStackTrace();
-		        }
-		    }
-
+	
 
 		    HttpCamera camera = null;
 
-		    
-		    String camIP = publishingTable.getString("Camera1IP", null);
-		    if (camIP == null) {
-			      return null;
-			    }
-		    
-		    camera = new HttpCamera("CoprocessorCamera", getCameraURL(camIP,debug));
+		    camera = new HttpCamera("CoprocessorCamera", getCameraURL(debug));
 		    if (camera != null) {
 		    	server.setSource(camera);
 			    }
@@ -1016,7 +1000,20 @@ public class StreamManager {
 		}
 		
 		String url = "http://";
-		url = url + ip;
+		url = url + camera1NetbiosName;
+		url = url + ":1185/stream.mjpg";
+		
+		return url;
+	}
+	
+	private static String getCameraURL(Boolean debug) {
+		
+		if (debug) {
+			return camera1URL;
+		}
+		
+		String url = "http://";
+		url = url + camera1NetbiosName;
 		url = url + ":1185/stream.mjpg";
 		
 		return url;
