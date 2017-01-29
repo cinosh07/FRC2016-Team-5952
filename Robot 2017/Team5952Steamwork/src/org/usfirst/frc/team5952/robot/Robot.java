@@ -10,9 +10,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team5952.robot.commands.ExampleCommand;
+import org.usfirst.frc.team5952.robot.commands.VisionCommunication;
 import org.usfirst.frc.team5952.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team5952.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team5952.robot.subsystems.MonteCorde;
+import org.usfirst.frc.team5952.robot.subsystems.OnBoardAccelerometer;
 import org.usfirst.frc.team5952.robot.subsystems.Trap;
 
 /**
@@ -31,6 +33,9 @@ public class Robot extends IterativeRobot {
 	public static Trap trap;
 	public static NetworkTable cameraTable;
     public static MonteCorde montecorde;
+    public static OnBoardAccelerometer onBoardAccelerometer;
+    public static VisionCommunication visionCommunication;
+    
 	private static String camera1IP;
 	private static String camera2IP;
 
@@ -45,26 +50,28 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		oi = new OI();
 		drivetrain = new DriveTrain();
+		onBoardAccelerometer = new OnBoardAccelerometer();
 		chooser.addDefault("Default Auto", new ExampleCommand());
+		visionCommunication = new VisionCommunication();
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
 
-		cameraTable = NetworkTable.getTable("VisionCamera");
+		cameraTable = NetworkTable.getTable(VisionCommunication.TABLE_NAME);
 
-		camera1IP = cameraTable.getString("Camera1IP", "null");
-		camera2IP = cameraTable.getString("Camera2IP", "null");
+		camera1IP = cameraTable.getString(VisionCommunication.CAMERA1_IP, "null");
+		camera2IP = cameraTable.getString(VisionCommunication.CAMERA2_IP, "null");
 
 		// Show what command your subsystem is running on the SmartDashboard
 		SmartDashboard.putData(drivetrain);
 
-		SmartDashboard.putString("Camera1IP", camera1IP);
-		SmartDashboard.putString("Camera2IP", camera2IP);
+		SmartDashboard.putString(VisionCommunication.CAMERA1_IP, camera1IP);
+		SmartDashboard.putString(VisionCommunication.CAMERA2_IP, camera2IP);
 
-		SmartDashboard.putString("Camera1IPDeltaFromTarget", cameraTable.getString("Camera1IPDeltaFromTarget", "null"));
-		SmartDashboard.putString("Camera2IPDeltaFromTarget", cameraTable.getString("Camera2IPDeltaFromTarget", "null"));
+		SmartDashboard.putNumber(VisionCommunication.CAMERA1_DELTA_TARGET, visionCommunication.getCamera1DeltaTarget());
+		SmartDashboard.putNumber(VisionCommunication.CAMERA2_DELTA_TARGET, visionCommunication.getCamera2DeltaTarget());
 
-		SmartDashboard.putString("Camera1IPDistanceFromTarget",cameraTable.getString("Camera1IPDistanceFromTarget", "null"));
-		SmartDashboard.putString("Camera2IPDistanceFromTarget",cameraTable.getString("Camera2IPDistanceFromTarget", "null"));
+		SmartDashboard.putNumber(VisionCommunication.CAMERA1_DIST_TARGET, visionCommunication.getCamera1DistTarget());
+		SmartDashboard.putNumber("Camera2IPDistanceFromTarget", visionCommunication.getCamera2DistTarget());
 
 	}
 
@@ -115,8 +122,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+	
+		visionCommunication.updateData();
 		Scheduler.getInstance().run();
 		log();
+		
 	}
 
 	@Override
@@ -135,6 +145,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		
+		visionCommunication.updateData();
 		Scheduler.getInstance().run();
 		log();
 	}
@@ -144,6 +155,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		visionCommunication.updateData();
 		LiveWindow.run();
 	}
 
