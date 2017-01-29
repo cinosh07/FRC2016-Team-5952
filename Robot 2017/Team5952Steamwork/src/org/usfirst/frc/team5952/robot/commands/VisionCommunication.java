@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5952.robot.commands;
 
-import org.usfirst.frc.team5952.robot.Robot;
+import org.usfirst.frc.team5952.robot.subsystems.OnBoardAccelerometer;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 
 
@@ -27,17 +28,15 @@ public class VisionCommunication {
 	
 	
 	//TODO definition des listeners sur la network table
+	private NetworkTable cameraTable;
 	
-	
-	public VisionCommunication() {
-		// TODO Auto-generated constructor stub
+	public VisionCommunication(NetworkTable cameraTable) {
+		this.cameraTable = cameraTable;
 	}
 	
 	public void updateData() {
     	// Data qui doit etre change sur la NetworkTable a chaque loop du robot
-    	Robot.cameraTable.putNumber(ONBOARD_ACCEL_X, Robot.onBoardAccelerometer.readValue()[0]);
-    	Robot.cameraTable.putNumber(ONBOARD_ACCEL_Y, Robot.onBoardAccelerometer.readValue()[1]);
-    	Robot.cameraTable.putNumber(ONBOARD_ACCEL_Z, Robot.onBoardAccelerometer.readValue()[2]);
+    	
     	
     }
 	//***************************************************************************************
@@ -45,44 +44,44 @@ public class VisionCommunication {
 	//***************************************************************************************
 	public Double getCamera1DistTarget() {
 		
-		return Robot.cameraTable.getNumber(CAMERA1_DIST_TARGET,0);
+		return cameraTable.getNumber(CAMERA1_DIST_TARGET,0);
 	}
 	public Double getCamera2DistTarget() {
 		
-		return Robot.cameraTable.getNumber(CAMERA2_DIST_TARGET,0);
+		return cameraTable.getNumber(CAMERA2_DIST_TARGET,0);
 	}
 	
 	public Double getCamera1DeltaTarget() {
 		
-		return Robot.cameraTable.getNumber(CAMERA1_DELTA_TARGET,0);
+		return cameraTable.getNumber(CAMERA1_DELTA_TARGET,0);
 	}
 	public Double getCamera2DeltaTarget() {
 		
-		return Robot.cameraTable.getNumber(CAMERA2_DELTA_TARGET,0);
+		return cameraTable.getNumber(CAMERA2_DELTA_TARGET,0);
 	}
 	public Boolean getRobotTargetLocked() {
 		
-		return Robot.cameraTable.getBoolean(ROBOT_TARGET_LOCKED, false);
+		return cameraTable.getBoolean(ROBOT_TARGET_LOCKED, false);
 	}
 	public Boolean getRadarTargetLocked() {
 		
-		return Robot.cameraTable.getBoolean(RADAR_TARGET_LOCKED, false);
+		return cameraTable.getBoolean(RADAR_TARGET_LOCKED, false);
 		
 	}
-	public String getCamera1IP(String ip) {
+	public String getCamera1IP() {
 		
-		return  Robot.cameraTable.getString(CAMERA1_IP,null);
+		return  cameraTable.getString(CAMERA1_IP,null);
 	}
-	public String getCamera2IP(String ip) {
+	public String getCamera2IP() {
 		
-		return Robot.cameraTable.getString(CAMERA2_IP,null);
+		return cameraTable.getString(CAMERA2_IP,null);
 	}
 	public Double[] getOnBoardAccelData() {
     	
 		Double[] accelData = new Double[3];
-		accelData[0] = Robot.cameraTable.getNumber(ONBOARD_ACCEL_X,0);
-		accelData[1] = Robot.cameraTable.getNumber(ONBOARD_ACCEL_Y,0);
-		accelData[2] = Robot.cameraTable.getNumber(ONBOARD_ACCEL_Z,0);
+		accelData[0] = cameraTable.getNumber(ONBOARD_ACCEL_X,0);
+		accelData[1] = cameraTable.getNumber(ONBOARD_ACCEL_Y,0);
+		accelData[2] = cameraTable.getNumber(ONBOARD_ACCEL_Z,0);
     	
     	return accelData;
     }
@@ -93,44 +92,38 @@ public class VisionCommunication {
 	//***************************************************************************************
 	public void putRobotTargetLocked(Boolean locked) {
 		
-		Robot.cameraTable.putBoolean(ROBOT_TARGET_LOCKED, locked);
+		cameraTable.putBoolean(ROBOT_TARGET_LOCKED, locked);
 	}
 	public void putRadarTargetLocked(Boolean locked) {
 		
-		Robot.cameraTable.putBoolean(RADAR_TARGET_LOCKED, locked);
+		cameraTable.putBoolean(RADAR_TARGET_LOCKED, locked);
 	}
 	
 	public void putCamera1DistTarget(Double distance) {
 		
-		Robot.cameraTable.putNumber(CAMERA1_DIST_TARGET,distance);
+		cameraTable.putNumber(CAMERA1_DIST_TARGET,distance);
 	}
 	public void putCamera2DistTarget(Double distance) {
 		
-		Robot.cameraTable.putNumber(CAMERA2_DIST_TARGET,distance);
+		cameraTable.putNumber(CAMERA2_DIST_TARGET,distance);
 	}
 	
 	public void putCamera1DeltaTarget(Double delta) {
 		
-		Robot.cameraTable.putNumber(CAMERA1_DELTA_TARGET,delta);
+		cameraTable.putNumber(CAMERA1_DELTA_TARGET,delta);
 	}
 	public void putCamera2DeltaTarget(Double delta) {
 		
-		Robot.cameraTable.putNumber(CAMERA2_DELTA_TARGET,delta);
+		cameraTable.putNumber(CAMERA2_DELTA_TARGET,delta);
 	}
 	public void putCamera1IP(String ip) {
 		
-		Robot.cameraTable.putString(CAMERA1_IP,ip);
+		cameraTable.putString(CAMERA1_IP,ip);
 	}
 	public void putCamera2IP(String ip) {
 		
-		Robot.cameraTable.putString(CAMERA2_IP,ip);
+		cameraTable.putString(CAMERA2_IP,ip);
 	}
-	public void putOnBoardAccelData() {
-    	
-    	Robot.cameraTable.putNumber(ONBOARD_ACCEL_X, Robot.onBoardAccelerometer.readValue()[0]);
-    	Robot.cameraTable.putNumber(ONBOARD_ACCEL_Y, Robot.onBoardAccelerometer.readValue()[1]);
-    	Robot.cameraTable.putNumber(ONBOARD_ACCEL_Z, Robot.onBoardAccelerometer.readValue()[2]);
-    	
-    }
+	
 
 }
