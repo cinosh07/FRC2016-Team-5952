@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 public class CameraManager {
 
 	//TODO Pour Tester sur l'ordi mettre a true sinon a false
-	private Boolean debug = true;
+	private Boolean debug = false;
 
 	
 	
