@@ -8,9 +8,12 @@ import java.util.Enumeration;
 
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
+import org.usfirst.frc.team5952.robot.commands.CameraVisionCommunication;
+import org.usfirst.frc.team5952.robot.commands.VisionCommunication;
 
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.HttpCamera;
 import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode;
@@ -18,14 +21,29 @@ import edu.wpi.first.wpilibj.networktables.ConnectionInfo;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 public class CameraManager {
+	
+
 
 	//TODO Pour Tester sur l'ordi mettre a true sinon a false
+	public final String DEFAULT_CAMERA_1_NAME = "Camera1";
+	public final String DEFAULT_CAMERA_2_NAME = "Camera2";
+	
 	private Boolean debug = false;
+	public boolean multiCamera = true;
+	private String currentCamera = DEFAULT_CAMERA_1_NAME;
+	public Boolean cleanfeed = true;
 
 	
 	
-	private static String camera1NetbiosName = "raspberrypi.local";
-	private static String camera2NetbiosName = "camera2.local";
+	public int cameraToBroadcast = 1;
+	
+	
+	private static String camera1NetbiosName = "team5952cam1.local";
+	private static String camera2NetbiosName = "team5952cam2.local";
+	
+	private static String camera1URL = "http://"+camera1NetbiosName+":1185/stream.mjpg";
+	private static String camera2URL = "http://"+camera2NetbiosName+":1185/stream.mjpg";
+	
 	private static int socketPort= 2000;
 	
 	// ***********************************************************************
@@ -37,6 +55,8 @@ public class CameraManager {
 	private String hotSpotAddress = "192.168.7.1";
 	private String ip = null;
 	private NetworkTable table = null;
+	
+	public CameraVisionCommunication visionCommunication; 
 	
 	private int cameraOffset = 0;
 	
@@ -110,9 +130,10 @@ public class CameraManager {
 		}
 		
 		
-		table = NetworkTable.getTable("VisionCamera");
+		table = NetworkTable.getTable(VisionCommunication.TABLE_NAME);
 		
-		table.addTableListener("SWITCH", new StreamingStateListener(), true);
+		
+		visionCommunication = new CameraVisionCommunication(table);
 		
 		
 		
@@ -178,6 +199,10 @@ public class CameraManager {
 		// image
 		MjpegServer inputStream = new MjpegServer("MJPEG Server", streamPort);
 		
+		
+		MjpegServer inputStream2;
+		HttpCamera camera2;
+		CvSink imageSink2 = null;
 		// USB Camera
 
 		// This gets the image from a USB camera
@@ -188,6 +213,18 @@ public class CameraManager {
 		// Set the resolution for our camera, since this is over USB
 		camera.setResolution(640, 480);
 
+		
+		if (cameraName == DEFAULT_CAMERA_1_NAME && multiCamera) {
+			inputStream2 = new MjpegServer("MJPEG Server", streamPort);
+			camera2 = new HttpCamera("CoprocessorCamera", camera2URL);
+		    inputStream2.setSource(camera2);
+		    imageSink2 = new CvSink("CV Image Grabber");
+			imageSink2.setSource(camera2);
+			
+		}
+		
+		
+		
 		// This creates a CvSink for us to use. This grabs images from our
 		// selected camera,
 		// and will allow us to use those images in opencv
@@ -207,6 +244,7 @@ public class CameraManager {
 		// allocations
 		// as they are expensive to create
 		Mat inputImage = new Mat();
+		Mat inputImage2 = new Mat();
 		Mat hsv = new Mat();
 
 
@@ -223,8 +261,13 @@ public class CameraManager {
 			// Below is where you would do your OpenCV operations on the
 			// provided image
 			// The sample below just changes color source to HSV
+			if (cameraName == DEFAULT_CAMERA_1_NAME && currentCamera == DEFAULT_CAMERA_2_NAME) {
+				frameTime = imageSink2.grabFrame(inputImage2);
+				if (frameTime == 0)
+					continue;
+			}
+			
 			Imgproc.cvtColor(inputImage, hsv, Imgproc.COLOR_BGR2HSV);
-
 			// Here is where you would write a processed image that you want to
 			// restreams
 			// This will most likely be a marked up image of what the camera
@@ -232,22 +275,57 @@ public class CameraManager {
 			// For now, we are just going to stream the HSV image
 			
 			//TODO Envoyer le data pour l'alignement sur la cible desirer
-			
-			
-			table.putString(cameraName+"IP", ip);
-			table.putNumber(cameraName+"SocketPort", socketPort);
-			table.putString(cameraName+"DeltaFromTarget", "TODO delta corection");
-			table.putString(cameraName+"DistanceFromTarget", "TODO distance");
-			
-			table.putBoolean("cameraName"+"foundTarget", true);
-			table.putNumber("cameraName"+"offset", cameraOffset);  //TODO camera offset from centrer off robot
-			
-			//SocketManager.getInstance().sendCommand("DeltaFromTarget:34.1");
+			if (cameraName == DEFAULT_CAMERA_1_NAME) {
+				
+				visionCommunication.putCamera1IP(ip);
+				visionCommunication.putCamera1DeltaTarget(0.0); // "TODO delta corection"
+				visionCommunication.putCamera1DistTarget(0.0); //"TODO distace to target"
+//				visionCommunication.putCamera1TargetLocked(TODO true or false)				
+//				visionCommunication.putCamera1Offset(TOTO offset)
+				
+		
+				
+				
+			} else {
+				
+				visionCommunication.putCamera2IP(ip);
+				visionCommunication.putCamera2DeltaTarget( 0.0); //"TODO delta corection"
+				visionCommunication.putCamera2DistTarget(0.0);	//"TODO distace to target"
+//				visionCommunication.putCamera2TargetLocked(TODO true or false)		//TODO camera offset from centrer off robot		
+//				visionCommunication.putCamera2Offset(TOTO offset)
+				
+			}
+
 			
 			//TODO Switcher entre les hsv et inputImage dans imageSource.putFrame(hsv) avec un bouton sur la console en changeant l<etat d<une valeur booleen dans la network table
-			imageSource.putFrame(hsv);
+			if (cameraName == DEFAULT_CAMERA_1_NAME && currentCamera == DEFAULT_CAMERA_1_NAME) {
+				if (cleanfeed) {
+					imageSource.putFrame(inputImage);
+				} else {
+					imageSource.putFrame(hsv);
+				}
+			} else if (cameraName == DEFAULT_CAMERA_1_NAME && currentCamera == DEFAULT_CAMERA_2_NAME) {
+				imageSource.putFrame(inputImage2);
+			} if (cameraName == DEFAULT_CAMERA_2_NAME) {
+				if (cleanfeed) {
+					imageSource.putFrame(inputImage);
+				} else {
+					imageSource.putFrame(hsv);
+				}			
+			}
+			
+			
 			//imageSource.putFrame(inputImage);
 		}	
+		
+	}
+	public void setCurrentCamera (int camera) {
+		if (camera == 1) {
+			currentCamera = DEFAULT_CAMERA_1_NAME;
+		} else if(camera == 2) {
+			currentCamera = DEFAULT_CAMERA_2_NAME;
+			
+		}
 		
 	}
 	
