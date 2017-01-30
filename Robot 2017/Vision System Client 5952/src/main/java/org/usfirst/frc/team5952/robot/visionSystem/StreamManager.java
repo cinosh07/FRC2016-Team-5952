@@ -33,6 +33,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
+import org.usfirst.frc.team5952.robot.commands.CameraVisionCommunication;
+import org.usfirst.frc.team5952.robot.commands.ClientVisionCommunication;
+import org.usfirst.frc.team5952.robot.commands.VisionCommunication;
+
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.HttpCamera;
@@ -67,6 +71,8 @@ public class StreamManager {
 	private ImageIcon imageVideo = null;
 	private ImageIcon defaultImageVideo = null;
 	private ImageIcon backgroundClean = null;
+	public final String DEFAULT_CAMERA_1_NAME = "Camera1";
+	public final String DEFAULT_CAMERA_2_NAME = "Camera2";
 	
 	private ImageIcon target_YELLOW_ICON = null;
 	private ImageIcon target_RED_ICON = null;
@@ -84,9 +90,11 @@ public class StreamManager {
 	private String message = "";
 	
 	private boolean cleanVideo = true;
-	private OSD osd = null;
+	public OSD osd = null;
 	private int buttonBar2ButtonWidth = 100;
 	private int buttonBar2ButtonHeight = 25;
+	
+	public ClientVisionCommunication visionCommunication; 
 
 	
 	//private String localPath = "/home/pi/Robot2017/";
@@ -468,6 +476,22 @@ public class StreamManager {
 	    buttonBar2Panel.add(goToMaptButton);
     
 	    JButton cameraSwitchButton = new JButton("Cam - SWITCH");
+	    cameraSwitchButton.addActionListener(new ActionListener()
+	    {
+	    	  public void actionPerformed(ActionEvent e)
+	    	  {    		  
+	    		 if( visionCommunication.getCurrentCamera() == 1) {
+	    			 
+	    			 visionCommunication.putCurrentCamera(2);
+	    			 visionCommunication.switchCamera(2);
+	    			 
+	    		 } else if (visionCommunication.getCurrentCamera() == 2 ) {
+	    			 
+	    			 visionCommunication.putCurrentCamera(1);
+	    			 visionCommunication.switchCamera(1);
+	    		 }    		  
+	    	  }
+	    	});
 	    cameraSwitchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    buttonBar2Panel.add(cameraSwitchButton);
     
@@ -712,9 +736,11 @@ public class StreamManager {
 		}
 
 		
-		table = NetworkTable.getTable("VisionCamera");
+		table = NetworkTable.getTable(VisionCommunication.TABLE_NAME);
+	
 		
-		table.addTableListener("SWITCH", new StreamingStateListener(), true);
+		
+		visionCommunication = new ClientVisionCommunication(table);
 		
 	
 		// This is the network port you want to stream the raw received image to

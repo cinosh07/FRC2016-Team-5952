@@ -12,11 +12,12 @@ import javax.swing.border.EmptyBorder;
 
 public class OSD extends JPanel {
 
-	private String distanceToTarget = null;
-	private JLabel distanceToTargetLabel = null;
-	private JLabel targetLockedLabel = null;
-	private Boolean targetLocked = false;
-	private BorderLayout layoutBorder = new BorderLayout();
+	public String distanceToTarget = null;
+	public JLabel distanceToTargetLabel = null;
+	public JLabel cameraNameLabel = null;
+	public JLabel targetLockedLabel = null;
+	public Boolean targetLocked = false;
+	public BorderLayout layoutBorder = new BorderLayout();
 	
 	public JLabel robotCompassLabel;
 	public JLabel radarCompassLabel;
@@ -54,7 +55,9 @@ public class OSD extends JPanel {
 
 		osd_TEXT.add(getEmptyLabel());// Label Vide
 
-		osd_TEXT.add(getEmptyLabel());// Label Vide
+		cameraNameLabel = new JLabel("Searching ...", JLabel.CENTER);// Label target
+		cameraNameLabel.setForeground(Color.GREEN);
+		osd_TEXT.add(cameraNameLabel);
 
 		osd_TEXT.add(getEmptyLabel());// Label Vide
 
