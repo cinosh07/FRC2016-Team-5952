@@ -163,13 +163,13 @@ public class Robot extends IterativeRobot {
 
 	private void log() {
 
-		SmartDashboard.putString("Camera1IP", camera1IP);
-		SmartDashboard.putString("Camera2IP", camera2IP);
-		SmartDashboard.putString("Camera2IPDeltaFromTarget", cameraTable.getString("Camera2IPDeltaFromTarget", "null"));
-		SmartDashboard.putString("Camera2IPDistanceFromTarget",cameraTable.getString("Camera2IPDistanceFromTarget", "null"));
+		SmartDashboard.putString(VisionCommunication.CAMERA1_IP, visionCommunication.getCamera1IP());
+		SmartDashboard.putString(VisionCommunication.CAMERA2_IP, visionCommunication.getCamera2IP());
+		SmartDashboard.putNumber(VisionCommunication.CAMERA2_DELTA_TARGET, visionCommunication.getCamera2DeltaTarget());
+		SmartDashboard.putNumber(VisionCommunication.CAMERA2_DIST_TARGET,visionCommunication.getCamera2DistTarget());
 		
-		SmartDashboard.putString("Camera1IPDeltaFromTarget", cameraTable.getString("Camera1IPDeltaFromTarget", "null"));
-		SmartDashboard.putString("Camera1IPDistanceFromTarget", cameraTable.getString("Camera1IPDistanceFromTarget", "null"));
+		SmartDashboard.putNumber(VisionCommunication.CAMERA1_DELTA_TARGET, visionCommunication.getCamera1DeltaTarget());
+		SmartDashboard.putNumber(VisionCommunication.CAMERA1_DIST_TARGET, visionCommunication.getCamera1DistTarget());
 		drivetrain.log();
 	}
 }

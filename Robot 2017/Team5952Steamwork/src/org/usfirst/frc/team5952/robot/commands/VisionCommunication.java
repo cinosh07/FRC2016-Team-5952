@@ -1,6 +1,5 @@
 package org.usfirst.frc.team5952.robot.commands;
 
-import org.usfirst.frc.team5952.robot.subsystems.OnBoardAccelerometer;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 
@@ -21,10 +20,16 @@ public class VisionCommunication {
 	public static final String ROBOT_TARGET_LOCKED = "robottargetlocked";
 	public static final String RADAR_TARGET_LOCKED = "radartargetlocked";
 	
-	public static final String CAMERA1_DIST_TARGET = "Camera1DistanceFromTarget";
-	public static final String CAMERA1_DELTA_TARGET = "Camera1DeltaFromTarget";
-	public static final String CAMERA2_DIST_TARGET = "Camera2DistanceFromTarget";
-	public static final String CAMERA2_DELTA_TARGET = "Camera2DeltaFromTarget";
+	public static final String CAMERA1_DIST_TARGET = "camera1distancefromtarget";
+	public static final String CAMERA1_DELTA_TARGET = "camera1deltafromtarget";
+	public static final String CAMERA2_DIST_TARGET = "camera2distancefromtarget";
+	public static final String CAMERA2_DELTA_TARGET = "camera2deltafromtarget";
+	
+	//TODO Definition des constantes de commandes du Vision System.
+	public static final String SWITCH_CAMERA = "switchcamera";
+	public static final String CURRENT_CAMERA = "currentcamera";
+	
+	
 	
 	
 	//TODO definition des listeners sur la network table
@@ -85,6 +90,11 @@ public class VisionCommunication {
     	
     	return accelData;
     }
+	public int getCurrentCamera() {
+		int currentCam = (int) cameraTable.getNumber(CURRENT_CAMERA,0);
+		return currentCam;
+	}
+	
 	
 	
 	//***************************************************************************************
@@ -123,6 +133,14 @@ public class VisionCommunication {
 	public void putCamera2IP(String ip) {
 		
 		cameraTable.putString(CAMERA2_IP,ip);
+	}
+	public void putCurrentCamera(int cameraNumber) {
+		cameraTable.putNumber(CURRENT_CAMERA,cameraNumber);
+		
+	}
+	public void switchCamera(int cameraNumber) {
+		cameraTable.putNumber(SWITCH_CAMERA,cameraNumber);
+		
 	}
 	
 
