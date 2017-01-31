@@ -33,7 +33,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
-import org.usfirst.frc.team5952.robot.commands.CameraVisionCommunication;
 import org.usfirst.frc.team5952.robot.commands.ClientVisionCommunication;
 import org.usfirst.frc.team5952.robot.commands.VisionCommunication;
 
