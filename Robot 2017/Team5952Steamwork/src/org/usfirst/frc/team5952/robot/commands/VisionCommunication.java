@@ -2,8 +2,6 @@ package org.usfirst.frc.team5952.robot.commands;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
-
-
 public class VisionCommunication {
 
 	//TODO Definition des constantes du reseau Vision System. Chaque constante represente le nom d'une une valeur a lire ou a ecrire
