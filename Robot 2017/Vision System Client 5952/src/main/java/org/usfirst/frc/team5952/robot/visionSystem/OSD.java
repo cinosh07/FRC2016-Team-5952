@@ -31,9 +31,12 @@ public class OSD extends JPanel {
 	
 	private int osdWidth;
 	private int osdHeight;
+	
+	private String path = "";
 
-	public OSD() {
+	public OSD(String path) {
 
+		this.path = path;
 		this.setLayout(layoutBorder);
 		this.setSize(osdWidth, osdHeight);
 		osd_TEXT.setOpaque(false);
@@ -103,7 +106,7 @@ public class OSD extends JPanel {
 
 		// Second ROW
 
-		robotCompassLabel = new Compass(64,64);// Label Robot Compass
+		robotCompassLabel = new Compass(64,64,path);// Label Robot Compass
 		
 		robotCompassLabel.setForeground(Color.GREEN);
 		osd_TEXT.add(robotCompassLabel);

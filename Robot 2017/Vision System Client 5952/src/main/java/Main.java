@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -6,14 +7,15 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
-
+import org.usfirst.frc.team5952.robot.commands.VisionCommunication;
 import org.usfirst.frc.team5952.robot.visionSystem.StreamManager;
 
 
 public class Main {
 
+	private static Boolean debug = false;
 	static {
-		//loadProperties();
+		loadProperties();
 	}
 	static Properties prop;
 
@@ -21,13 +23,16 @@ public class Main {
 		prop = new Properties();
 		InputStream in = null;
 		try {
-			in = new FileInputStream("/home/pi/Robot2017/config.properties");
 			
+			//in = new FileInputStream("/home/pi/Robot2017/config.properties");
+			in = new FileInputStream("c:\\temp\\config.properties");
+	
 		} catch (FileNotFoundException e1) {
 			System.out.println("Cannot found properties files");
 			e1.printStackTrace();
 		}
 		try {
+			System.out.println("Inputstream available::::: " + in.available());
 			prop.load(in);
 			in.close();
 		} catch (IOException e) {
@@ -42,9 +47,16 @@ public class Main {
 		
 		// Loads our OpenCV library. This MUST be included
 		//System.loadLibrary("opencv_java310");		
+		System.out.println("Properties isEmpty::::: " + prop.isEmpty());
+		
+		
 
 		if (prop != null) {
 
+			System.out.println("Localpath ::::: " + prop.getProperty("localpath"));
+			StreamManager.getInstance(prop.getProperty("localpath")).setLocalPath(prop.getProperty("localpath"));
+			
+			
 			StreamManager.getInstance().setTeamnumber(Integer.parseInt(prop.getProperty("teamnumber")));
 			StreamManager.getInstance().setInputstreamport(Integer.parseInt(prop.getProperty("inputstreamport")));
 			
@@ -54,13 +66,38 @@ public class Main {
 			
 			StreamManager.getInstance().setMulticam(prop.getProperty("multicam").equals("true"));
 			
+			StreamManager.getInstance().init();
+			
+			StreamManager.getInstance().startPlayback();
 			
 			
+			
+		} else if (prop == null && debug) {
+			
+			System.out.println("Localpath ::::: NOT FOUND");
+			StreamManager.getInstance("c:\\temp\\").setLocalPath("c:\\temp\\");
+			
+			
+			StreamManager.getInstance().setTeamnumber(5952);
+			StreamManager.getInstance().setInputstreamport(1185);
+			
+			StreamManager.getInstance().setCamera1Ip(VisionCommunication.DEFAULT_CAMERA_1_NAME);
+			
+			StreamManager.getInstance().setCamera2Ip(VisionCommunication.DEFAULT_CAMERA_1_NAME);
+			
+			StreamManager.getInstance().setMulticam(false);
+			
+			StreamManager.getInstance().init();
+			
+			StreamManager.getInstance().startPlayback();
+			
+		} else {
+			System.out.println("CONFIGURATION FILE ::::: NOT FOUND");
+			System.exit(0);
 			
 		}
 		
-		StreamManager.getInstance().init();
-		StreamManager.getInstance().startPlayback();
+		
 		
 	}
 

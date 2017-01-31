@@ -22,11 +22,12 @@ public class Target extends JPanel {
     Image targetRed, targetYellow, targetGreen, offScreenImage;
     Graphics offScreenGraphics;
 	
-	private String debugPath = "c:\\temp\\";
+	private String path = "";
 	
 	
-	public Target(int width, int height) {
+	public Target(int width, int height, String path) {
 		
+		this.path = path;
 		try{
 			targetRed = getLocalImageIcon("target_rouge.png"); 
 			targetYellow = getLocalImageIcon("target_jaune.png"); 
@@ -36,19 +37,17 @@ public class Target extends JPanel {
 	       setSize(width,height);
 	       setVisible(true);
 	       setOpaque(false);
-	      // moveImage();
 	}
 	
 	public Target(String targetText, boolean useBgImage, boolean allowAnimate, ImageIcon icon) {
 		
 		try{
-	          //myImage = getLocalImageIcon("target_rouge.png"); 
+	          
 	        }
 	        catch(Exception e){}
 	       setSize(200,200);
 	       setVisible(true);
 	       setOpaque(false);
-	       //moveImage();
 	}
 
 
@@ -80,8 +79,6 @@ public class Target extends JPanel {
    
    public void initialiseTarget(){
 	   for ( int i = 0 ; i < 300 ; i++ ){
-           
-           //System.out.println("next set of Pixels " + xPixel);
             
 		   if (i > 50 && i < 100) {
 			   setState(CAM_LOCK_STATE);
@@ -115,16 +112,13 @@ public class Target extends JPanel {
            repaint();
             
            // then sleep for a bit for your animation
-           try { Thread.sleep(20); }   /* this will pause for 50 milliseconds */
+           try { Thread.sleep(10); }   /* this will pause for X milliseconds */
            catch (InterruptedException e) { System.err.println("sleep exception"); }
             
        }
    }
    
    public void moveTarget(int x, int y){
-	   
-           
-           //System.out.println("next set of Pixels " + xPixel);
                         
 		   xPixel =x;
            yPixel =y;
@@ -142,7 +136,7 @@ public class Target extends JPanel {
 	    
 	    
 	    
-	    	sourceimage = new File(debugPath + filename);
+	    	sourceimage = new File(path + filename);
 	    	
 	    	try {
 				image = ImageIO.read(sourceimage);

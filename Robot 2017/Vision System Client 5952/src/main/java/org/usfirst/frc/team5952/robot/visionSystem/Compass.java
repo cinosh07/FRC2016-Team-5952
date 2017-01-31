@@ -24,10 +24,12 @@ public class Compass extends JPanel {
     Image compass, compassNeedle, offScreenImage;
     Graphics offScreenGraphics;
     
-    private String debugPath = "c:\\temp\\";
+    private String path = "";
     
-	public Compass(int width, int height) {
+	public Compass(int width, int height, String path) {
 
+		this.path = path;
+		
 		try{
 			compass = getLocalImageIcon("compass.png"); 
 			compassNeedle = getLocalImageIcon("compass_needle.png"); 
@@ -37,7 +39,6 @@ public class Compass extends JPanel {
 	       setSize(width,height);
 	       setVisible(true);
 	       setOpaque(false);
-	      // moveImage();
 	}
 	
 	public void paint(Graphics g){
@@ -53,13 +54,10 @@ public class Compass extends JPanel {
 	
 	public static BufferedImage rotate(BufferedImage image, double angle) {
 	    double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
-	    int w = image.getWidth(), h = image.getHeight();
-	    int neww = (int)Math.floor(w*cos+h*sin), newh = (int) Math.floor(h * cos + w * sin);
 	    GraphicsConfiguration gc = getDefaultConfiguration();
-	    BufferedImage result = gc.createCompatibleImage(neww, newh, Transparency.TRANSLUCENT);
+	    BufferedImage result = gc.createCompatibleImage(64, 64, Transparency.TRANSLUCENT);
 	    Graphics2D g = result.createGraphics();
-	    g.translate((neww - w) / 2, (newh - h) / 2);
-	    g.rotate(angle, w / 2, h / 2);
+	    g.rotate(angle, 64 / 2, 64 / 2);
 	    g.drawRenderedImage(image, null);
 	    g.dispose();
 	    return result;
@@ -88,16 +86,17 @@ public class Compass extends JPanel {
 	    return bimage;
 	}
 	public void initialiseCompass(){
-		   for ( int i = 0 ; i < 360 ; i++ ){
-	           
-	           //System.out.println("next set of Pixels " + xPixel);
+		   for ( double i = 0 ; i < 360 ; i++ ){
 	            
-			   angle = ((double)i);
+			   double degrees = i;
+			   double radians = Math.toRadians(degrees);
+			   
+			   angle =  Math.toDegrees(Math.asin(Math.sin(radians)));
 	          
 	           repaint();
 	            
 	           // then sleep for a bit for your animation
-	           try { Thread.sleep(20); }   /* this will pause for 50 milliseconds */
+	           try { Thread.sleep(10); }   /* this will pause for X milliseconds */
 	           catch (InterruptedException e) { System.err.println("sleep exception"); }
 	            
 	       }
@@ -120,7 +119,7 @@ public class Compass extends JPanel {
 	    
 	    
 	    
-	    	sourceimage = new File(debugPath + filename);
+	    	sourceimage = new File(path + filename);
 	    	
 	    	try {
 				image = ImageIO.read(sourceimage);

@@ -83,25 +83,29 @@ public class StreamManager {
 	
 	public ClientVisionCommunication visionCommunication; 
 
-	
-	//private String localPath = "/home/pi/Robot2017/";
-	private String localPath = "c:\\temp\\";
-	private String debugPath = "c:\\temp\\";
+	public static String localPath = "";
 	
 	private int videoContainerMaxHeight = 423;
 	
 	
-	protected StreamManager() {
+	protected StreamManager(String path) {
+		
+		localPath = path;
 	      // Exists only to defeat instantiation.
 	   }
 
 	public static StreamManager getInstance() {
 		if (instance == null) {
-			instance = new StreamManager();
+			instance = new StreamManager(localPath);
 		}
 		return instance;
 	}
-	
+	public static StreamManager getInstance(String path) {
+		if (instance == null) {
+			instance = new StreamManager(path);
+		}
+		return instance;
+	}
 	public void visibleOSD(ActionEvent e) {
 		
 	}
@@ -307,14 +311,13 @@ public class StreamManager {
   		//          Videoplayer - OSD - Text
   		//
   		//*********************************************************************************************
-	    osd = new OSD();
+	    osd = new OSD(localPath);
 	    osd.setScreenSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);	    
 //	    TODO
 //	    osd.setRadarCompass_MOVABLE_ICON(radarCompass_MOVABLE_ICON);
 //	    osd.setRadarCompass_MOVABLE_ICON(radarCompass_MOVABLE_ICON);
 //	    osd.setRobotCompass_MOVABLE_ICON(robotCompass_MOVABLE_ICON);
 	        
-	    
 	    osd.setSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);
 	    osd.setForeground(Color.white);
 	    osd.setOpaque(false);
@@ -326,8 +329,7 @@ public class StreamManager {
   		//
   		//*********************************************************************************************
 	    
-	    targetPanel = new Target(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);
-  		//targetPanel.setSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);
+	    targetPanel = new Target(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight, localPath);
   		targetPanel.setOpaque(false);
   		videoContainer.add(targetPanel,BorderLayout.CENTER);
 	    
@@ -425,7 +427,7 @@ public class StreamManager {
 	    messageBox.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 	    Font font = null;
 		try {
-			font = Font.createFont(Font.TRUETYPE_FONT, new File(debugPath + "DIGITALDREAM.TTF"));
+			font = Font.createFont(Font.TRUETYPE_FONT, new File(localPath + "DIGITALDREAM.TTF"));
 		} catch (FontFormatException e1) {
 			System.out.println("System Font Not Found !!!!!!" );
 			// TODO Auto-generated catch block
@@ -538,7 +540,7 @@ public class StreamManager {
 	    
 	    
 	    if (debug) {
-	    	sourceimage = new File(debugPath + filename);
+	    	sourceimage = new File(localPath + filename);
 	    	
 	    	try {
 				image = ImageIO.read(sourceimage);
@@ -576,7 +578,7 @@ public class StreamManager {
 	    
 	    
 	    if (debug) {
-	    	sourceimage = new File(debugPath + filename);
+	    	sourceimage = new File(localPath + filename);
 	    	
 	    	try {
 				image = ImageIO.read(sourceimage);
@@ -615,7 +617,7 @@ public class StreamManager {
 	    
 	    
 	    if (debug) {
-	    	sourceimage = new File(debugPath + filename);
+	    	sourceimage = new File(localPath + filename);
 	    	
 	    	try {
 				image = ImageIO.read(sourceimage);
@@ -687,7 +689,7 @@ public class StreamManager {
 		sendMessage("Init Compass...");
 		
 	    osd.robotCompassLabel.initialiseCompass();
-	    osd.robotCompassLabel.setAngle(0.0);
+	    osd.robotCompassLabel.setAngle(90.0);
 	    sendMessage("Init Radar...");
 	    //TODO Radar widget
 	    
@@ -1011,14 +1013,6 @@ public class StreamManager {
 
 	public void setLocalPath(String localPath) {
 		this.localPath = localPath;
-	}
-
-	public String getDebugPath() {
-		return debugPath;
-	}
-
-	public void setDebugPath(String debugPath) {
-		this.debugPath = debugPath;
 	}
 
 	public Target getTargetPanel() {
