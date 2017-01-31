@@ -681,10 +681,11 @@ public class StreamManager {
 	}
 	
 	public void startPlayback() {
-		
+		osd.robotCompassLabel.setAngle(0.0);
 		sendMessage("Init Target...");
 		targetPanel.initialiseTarget();
 		sendMessage("Init Compass...");
+		
 	    osd.robotCompassLabel.initialiseCompass();
 	    osd.robotCompassLabel.setAngle(0.0);
 	    sendMessage("Init Radar...");
