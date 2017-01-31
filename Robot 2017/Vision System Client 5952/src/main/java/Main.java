@@ -25,14 +25,14 @@ public class Main {
 		try {
 			
 			//in = new FileInputStream("/home/pi/Robot2017/config.properties");
-			in = new FileInputStream("c:\\temp\\config.properties");
-	
+			in = new FileInputStream("C:\\Users\\ares-b02\\robot_workspace\\Vision System Client 5952\\output\\config.properties");
+			
 		} catch (FileNotFoundException e1) {
 			System.out.println("Cannot found properties files");
 			e1.printStackTrace();
 		}
 		try {
-			System.out.println("Inputstream available::::: " + in.available());
+			
 			prop.load(in);
 			in.close();
 		} catch (IOException e) {
@@ -47,17 +47,14 @@ public class Main {
 		
 		// Loads our OpenCV library. This MUST be included
 		//System.loadLibrary("opencv_java310");		
-		System.out.println("Properties isEmpty::::: " + prop.isEmpty());
-		
-		
+	
 
 		if (prop != null) {
 
-			System.out.println("Localpath ::::: " + prop.getProperty("localpath"));
 			StreamManager.getInstance(prop.getProperty("localpath")).setLocalPath(prop.getProperty("localpath"));
 			
-			
 			StreamManager.getInstance().setTeamnumber(Integer.parseInt(prop.getProperty("teamnumber")));
+			
 			StreamManager.getInstance().setInputstreamport(Integer.parseInt(prop.getProperty("inputstreamport")));
 			
 			StreamManager.getInstance().setCamera1Ip(prop.getProperty("networktnameCam1"));
@@ -75,10 +72,11 @@ public class Main {
 		} else if (prop == null && debug) {
 			
 			System.out.println("Localpath ::::: NOT FOUND");
+			
 			StreamManager.getInstance("c:\\temp\\").setLocalPath("c:\\temp\\");
 			
-			
 			StreamManager.getInstance().setTeamnumber(5952);
+			
 			StreamManager.getInstance().setInputstreamport(1185);
 			
 			StreamManager.getInstance().setCamera1Ip("raspberrypi.local");
@@ -92,6 +90,7 @@ public class Main {
 			StreamManager.getInstance().startPlayback();
 			
 		} else {
+			
 			System.out.println("CONFIGURATION FILE ::::: NOT FOUND");
 			System.exit(0);
 			
