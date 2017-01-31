@@ -36,9 +36,7 @@ public class Robot extends IterativeRobot {
     public static MonteCorde montecorde;
     public static OnBoardAccelerometer onBoardAccelerometer;
     public static RobotVisionCommunication visionCommunication;
-    
-	private static String camera1IP;
-	private static String camera2IP;
+
 
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
@@ -64,7 +62,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData(drivetrain);
 
 		SmartDashboard.putString(VisionCommunication.CAMERA1_IP, visionCommunication.getCamera1IP());
-		SmartDashboard.putString(VisionCommunication.CAMERA2_IP, visionCommunication.getCamera1IP());
+		SmartDashboard.putString(VisionCommunication.CAMERA2_IP, visionCommunication.getCamera2IP());
 
 		SmartDashboard.putNumber(VisionCommunication.CAMERA1_DELTA_TARGET, visionCommunication.getCamera1DeltaTarget());
 		SmartDashboard.putNumber(VisionCommunication.CAMERA2_DELTA_TARGET, visionCommunication.getCamera2DeltaTarget());

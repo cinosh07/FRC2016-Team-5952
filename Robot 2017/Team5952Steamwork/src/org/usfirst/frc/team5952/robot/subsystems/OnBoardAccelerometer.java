@@ -31,7 +31,7 @@ public class OnBoardAccelerometer extends Subsystem {
     	values[1] = builtInAccelerometer.getY();
     	values[2] = builtInAccelerometer.getZ();
     	
-    	System.out.println(builtInAccelerometer.getX() + ", " + builtInAccelerometer.getY() + ", " + builtInAccelerometer.getZ());
+    	//System.out.println(builtInAccelerometer.getX() + ", " + builtInAccelerometer.getY() + ", " + builtInAccelerometer.getZ());
     	
     	return values;
     }
