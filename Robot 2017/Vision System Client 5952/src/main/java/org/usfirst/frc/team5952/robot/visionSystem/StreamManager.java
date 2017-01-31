@@ -21,8 +21,6 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -48,12 +46,12 @@ import edu.wpi.first.wpilibj.tables.ITable;
 public class StreamManager {
 
 	//TODO Pour Tester sur l'ordi mettre a true sinon a false
-	private boolean debug = false;
-	//private String camera1IP = "team5952cam1.local";
-	private String camera1IP = "raspberrypi.local";
-	private String camera2IP = "team5952cam2.local";
+	public boolean debug = false;
+
+	private String camera1IP = "";
+	private String camera2IP = "";
 	
-	private String title = "Robuck Team 5962 - Vision System Client";
+	public String title = "";
 	
 	// ***********************************************************************
 	
@@ -61,8 +59,7 @@ public class StreamManager {
 	private int teamnumber = 5952;
 	private int inputstreamport = 1185;
 	private Boolean multicam = false;
-
-	
+	public Boolean fullscreen = false;
 	private NetworkTable table = null;
 	private JFrame playerWindow = null;
 	private JLabel videoPlayer = null;
@@ -122,8 +119,8 @@ public class StreamManager {
 	    playerWindow.setSize(800, 480);
 	  	playerWindow.getContentPane().setLayout(new GridBagLayout()); 	
 	  	playerWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	  	if (!debug) {
-	  		//playerWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	  	if (fullscreen) {
+	  		playerWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
 	  	}
 	  	playerWindow.setUndecorated(true);
 	  	playerWindow.getContentPane().setBackground(Color.black);
@@ -719,26 +716,6 @@ public class StreamManager {
 		    }
 		
 		}
-		
-		
-		for (int i=0; i <= (NetworkTable.connections().length - 1); i++ ) {
-
-			
-			
-			System.out.println("Connections Protocol " + i + "::::: "  + NetworkTable.connections()[i].protocol_version);
-			System.out.println("Connections remote_id " + i + "::::: "  + NetworkTable.connections()[i].remote_id);
-			System.out.println("Connections remote_ip " + i + "::::: "  + NetworkTable.connections()[i].remote_ip);
-			System.out.println("Connections remote_port " + i + "::::: "  + NetworkTable.connections()[i].remote_port);
-			
-			try {
-				System.out.println("Local IP is :" + InetAddress.getLocalHost().getHostAddress());
-				System.out.println("Local Hostname is :" + InetAddress.getLocalHost().getHostName());
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}		
-			
-		}
 
 		
 		table = NetworkTable.getTable(VisionCommunication.TABLE_NAME);
@@ -762,26 +739,18 @@ public class StreamManager {
 	    // This is our camera name from the robot. this can be set in your robot code with the following command
 	    // CameraServer.getInstance().startAutomaticCapture("YourCameraNameHere");
 	    // "USB Camera 0" is the default if no string is specified
-	    String cameraName = "USB Camera 0";
+
 	    HttpCamera camera = null;
 
-		if (!debug ) {
-
-			
-			switchVidpanelBorderColor(Color.YELLOW);
-	    	sendMessage("Connecting to video stream ... " + getCameraURL(camera1IP));      
-	    	camera = new HttpCamera("CoprocessorCamera", getCameraURL(camera1IP));
-		    inputStream.setSource(camera);
+		
 	    	
-	    } else {
-	    	
-	    	switchVidpanelBorderColor(Color.YELLOW);
-	    	sendMessage("Connecting to video stream ... " + getCameraURL(camera1IP));      
-	    	camera = new HttpCamera("CoprocessorCamera", getCameraURL(camera1IP));
-		    inputStream.setSource(camera);
+	    switchVidpanelBorderColor(Color.YELLOW);
+	    sendMessage("Connecting to video stream ... " + getCameraURL(camera1IP));      
+	    camera = new HttpCamera("CoprocessorCamera", getCameraURL(camera1IP));
+		inputStream.setSource(camera);
 	    	
 	    	
-	    }
+	    
 
 	    
 		// This creates a CvSink for us to use. This grabs images from our

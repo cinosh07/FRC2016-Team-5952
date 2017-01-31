@@ -45,13 +45,25 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		// Loads our OpenCV library. This MUST be included
-		//System.loadLibrary("opencv_java310");		
-	
+		
+		
 
 		if (prop != null) {
 
+			if (!prop.getProperty("windowsos").equals("true")) {
+				
+				// Loads our OpenCV library. This MUST be included
+				System.loadLibrary("opencv_java310");
+				
+			}
+			
 			StreamManager.getInstance(prop.getProperty("localpath")).setLocalPath(prop.getProperty("localpath"));
+			
+			StreamManager.getInstance().debug = prop.getProperty("debug").equals("true");
+
+			StreamManager.getInstance().title = prop.getProperty("title");
+			
+			StreamManager.getInstance().fullscreen = prop.getProperty("fullscreen").equals("true");
 			
 			StreamManager.getInstance().setTeamnumber(Integer.parseInt(prop.getProperty("teamnumber")));
 			
@@ -71,9 +83,17 @@ public class Main {
 			
 		} else if (prop == null && debug) {
 			
+			//System.loadLibrary("opencv_java310");
+			
 			System.out.println("Localpath ::::: NOT FOUND");
 			
 			StreamManager.getInstance("c:\\temp\\").setLocalPath("c:\\temp\\");
+			
+			StreamManager.getInstance().debug = true;
+			
+			StreamManager.getInstance().title = "Robuck Team 5952 - Vision System Client";
+			
+			StreamManager.getInstance().fullscreen = false;
 			
 			StreamManager.getInstance().setTeamnumber(5952);
 			
