@@ -81,9 +81,9 @@ public class Main {
 			StreamManager.getInstance().setTeamnumber(5952);
 			StreamManager.getInstance().setInputstreamport(1185);
 			
-			StreamManager.getInstance().setCamera1Ip(VisionCommunication.DEFAULT_CAMERA_1_NAME);
+			StreamManager.getInstance().setCamera1Ip("raspberrypi.local");
 			
-			StreamManager.getInstance().setCamera2Ip(VisionCommunication.DEFAULT_CAMERA_1_NAME);
+			StreamManager.getInstance().setCamera2Ip("raspberrypi2.local");
 			
 			StreamManager.getInstance().setMulticam(false);
 			
