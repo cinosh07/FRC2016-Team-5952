@@ -122,7 +122,7 @@ public class Target extends JPanel {
    }
    
    public void moveTarget(int x, int y){
-	   for ( int i = 0 ; i < 175 ; i++ ){
+	   
            
            //System.out.println("next set of Pixels " + xPixel);
                         
@@ -130,7 +130,7 @@ public class Target extends JPanel {
            yPixel =y;
            repaint();
        
-       }
+       
    }
 	public Image getLocalImageIcon(String filename) {
 		ImageIcon icon = null;

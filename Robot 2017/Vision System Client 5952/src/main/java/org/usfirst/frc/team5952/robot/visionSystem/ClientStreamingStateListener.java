@@ -9,8 +9,8 @@ public class ClientStreamingStateListener implements ITableListener {
 
 	@Override
 	public void valueChanged(ITable source, String key, Object value, boolean isNew) {
-		Double valDouble = (Double) value;
 		
+		Double valDouble = (Double) value;
 		
 		switch (key) {
       
@@ -28,20 +28,20 @@ public class ClientStreamingStateListener implements ITableListener {
             break;
             
 		 case VisionCommunication.ONBOARD_ACCEL_X: 
-			 System.out.println("Command received ONBOARD_ACCEL_X : "  + value);
+			 
 			 break;
 		 case VisionCommunication.ONBOARD_ACCEL_Y: 
-			 System.out.println("Command received ONBOARD_ACCEL_Y : "  + value);
+			 
 			 break;
 		 case VisionCommunication.ONBOARD_ACCEL_Z: 
-			 System.out.println("Command received ONBOARD_ACCEL_Z : "  + value);
+			 
 			 break;
           //TODO Ajouter quoi faire aux autres commande recu
 		 
 		 
 		 }
 		
-		System.out.println("Raw Command received from robot: " + key + " Value: " + value);
+		
 	}
 
 }

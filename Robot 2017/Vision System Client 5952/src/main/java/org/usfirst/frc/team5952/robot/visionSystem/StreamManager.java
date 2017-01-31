@@ -3,9 +3,11 @@ package org.usfirst.frc.team5952.robot.visionSystem;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -35,14 +37,12 @@ import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team5952.robot.commands.ClientVisionCommunication;
 import org.usfirst.frc.team5952.robot.commands.VisionCommunication;
-
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.HttpCamera;
 import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.networktables2.type.StringArray;
 import edu.wpi.first.wpilibj.tables.ITable;
 
 public class StreamManager {
@@ -69,16 +69,7 @@ public class StreamManager {
 	private ImageIcon imageVideo = null;
 	private ImageIcon defaultImageVideo = null;
 	private ImageIcon backgroundClean = null;
-	
-	private ImageIcon target_YELLOW_ICON = null;
-	private ImageIcon target_RED_ICON = null;
-	private ImageIcon target_GREEN_ICON = null;	
-	private ImageIcon sight_ICON = null;	
-	public ImageIcon radarCompass_ICON = null;
-	public ImageIcon radarCompass_MOVABLE_ICON = null;	
-	public ImageIcon robotCompass_MOVABLE_ICON = null;
-	public ImageIcon robotCompass_ICON = null;
-	
+
 	private Target targetPanel;
 	private JLabel messageBox;
 	private JLabel sight;
@@ -121,17 +112,6 @@ public class StreamManager {
 		//Definir les images et les icones
     	backgroundClean = getLocalImageIcon("back_clean.jpg");
     	defaultImageVideo = getLocalImageIcon("back.jpg");
-    	target_YELLOW_ICON = getLocalImageIcon("target_jaune.png");
-    	target_RED_ICON = getLocalImageIcon("target_rouge.png");
-    	target_GREEN_ICON = getLocalImageIcon("target_verte.png");
-    	
-    	sight_ICON = getLocalImageIcon("mire_blanche.png");
-    	
-    	radarCompass_ICON = getLocalImageIcon("compass_needle.png",64,64);
-    	//radarCompass_MOVABLE_ICON = getLocalImageIcon("TODO");
-    	//robotCompass_MOVABLE_ICON = getLocalImageIcon("TODO");
-    	robotCompass_ICON = getLocalImageIcon("compass.png",64,64);
-
 	    //Construction du GUI
 	    GridBagConstraints c = new GridBagConstraints();
 	    playerWindow = new JFrame("");
@@ -152,7 +132,6 @@ public class StreamManager {
   		//*********************************************************************************************
 	     
 	    //*********************************************************
-	    //TODO ajouter les boutons et controles du Video Player vers le robot
 	    
 	    JPanel buttonBar = new JPanel(new FlowLayout());
 	    JButton OSDButton = new JButton("OSD");
@@ -444,7 +423,24 @@ public class StreamManager {
 
 	    messageBox = new JLabel("", JLabel.CENTER);
 	    messageBox.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
-	    messageBox.setForeground(Color.WHITE);
+	    Font font = null;
+		try {
+			font = Font.createFont(Font.TRUETYPE_FONT, new File(debugPath + "DIGITALDREAM.TTF"));
+		} catch (FontFormatException e1) {
+			System.out.println("System Font Not Found !!!!!!" );
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			System.out.println("System Font Not Found !!!!!!" );
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		genv.registerFont(font);
+		// makesure to derive the size
+		font = font.deriveFont(10f);
+        messageBox.setFont(font.deriveFont(Font.BOLD, 10f));
+	    messageBox.setForeground(Color.GREEN);
 	    messageBox.setText("<html>Initialization ...</html>");
 	    messageBox.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    buttonBar2Panel.add(messageBox);	
@@ -685,9 +681,19 @@ public class StreamManager {
 	}
 	
 	public void startPlayback() {
-
+		
+		sendMessage("Init Target...");
+		targetPanel.initialiseTarget();
+		sendMessage("Init Compass...");
+	    osd.robotCompassLabel.initialiseCompass();
+	    osd.robotCompassLabel.setAngle(0.0);
+	    sendMessage("Init Radar...");
+	    //TODO Radar widget
+	    
+	    
 		// Connect NetworkTables, and get access to the publishing table
 		System.out.println("Initializing Network Table");
+		sendMessage("Init Network Table...");
 		NetworkTable.setClientMode();
 		
 		NetworkTable.setTeam(teamnumber);
@@ -755,25 +761,9 @@ public class StreamManager {
 	    // "USB Camera 0" is the default if no string is specified
 	    String cameraName = "USB Camera 0";
 	    HttpCamera camera = null;
-	    
-	    
-	    targetPanel.initialiseTarget();
-	    
+
 		if (!debug ) {
-//	    	camera = setHttpCamera(cameraName, inputStream);
-//		    // It is possible for the camera to be null. If it is, that means no camera could
-//		    // be found using NetworkTables to connect to. Create an HttpCamera by giving a specified stream
-//		    // Note if this happens, no restream will be created
-//		    if (camera == null) {
-//		      switchVidpanelBorderColor(Color.YELLOW);
-//		      sendMessage("Connecting to video stream ... " + getCameraURL(table.getString("Camera1IP", ip),debug));
-//		      
-//		      //camera = new HttpCamera("CoprocessorCamera", getCameraURL(table.getString("Camera1IP", ip),debug))
-//		      
-//		      camera = setVisionSystemCamera(cameraName, inputStream,robotIP,debug);
-//		      
-//		      inputStream.setSource(camera);
-//		    }
+
 			
 			switchVidpanelBorderColor(Color.YELLOW);
 	    	sendMessage("Connecting to video stream ... " + getCameraURL(camera1IP));      
@@ -866,13 +856,6 @@ public class StreamManager {
 			
 		}
 	
-	}
-	
-	public void stopPlaying() {
-				
-		//TODO Implementer la fonction d'arreter le playback
-		switchVidpanelBorderColor(Color.RED);
-		
 	}
 
 	private BufferedImage createAwtImage(Mat mat) {

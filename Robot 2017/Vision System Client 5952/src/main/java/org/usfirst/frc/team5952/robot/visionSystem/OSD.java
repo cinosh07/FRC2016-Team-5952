@@ -19,7 +19,7 @@ public class OSD extends JPanel {
 	public Boolean targetLocked = false;
 	public BorderLayout layoutBorder = new BorderLayout();
 	
-	public JLabel robotCompassLabel;
+	public Compass robotCompassLabel;
 	public JLabel radarCompassLabel;
 
 	private JPanel osd_TEXT = new JPanel(new GridLayout(5, 5, 10, 10));
@@ -103,8 +103,8 @@ public class OSD extends JPanel {
 
 		// Second ROW
 
-		robotCompassLabel = new JLabel();// Label Robot Compass
-		robotCompassLabel.setIcon(StreamManager.getInstance().robotCompass_ICON);
+		robotCompassLabel = new Compass(64,64);// Label Robot Compass
+		
 		robotCompassLabel.setForeground(Color.GREEN);
 		osd_TEXT.add(robotCompassLabel);
 
