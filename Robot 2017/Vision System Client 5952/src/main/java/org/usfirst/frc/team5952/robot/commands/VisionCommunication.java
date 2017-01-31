@@ -7,10 +7,14 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 public class VisionCommunication {
 
 	//TODO Definition des constantes du reseau Vision System. Chaque constante represente le nom d'une une valeur a lire ou a ecrire
+	
+	
+	public static final String DEFAULT_CAMERA_1_NAME = "camera1";
+	public static final String DEFAULT_CAMERA_2_NAME = "camera2";
 	public static final String TABLE_NAME = "visioncamera";
 	
 	public static final String CAMERA1_IP = "camera1ip";
-	public static final String CAMERA2_IP = "camera12p";
+	public static final String CAMERA2_IP = "camera2ip";
 	
 	
 	public static final String ONBOARD_ACCEL_X = "onBoardaccelerometerX";
@@ -75,11 +79,11 @@ public class VisionCommunication {
 	}
 	public String getCamera1IP() {
 		
-		return  cameraTable.getString(CAMERA1_IP,null);
+		return  cameraTable.getString(CAMERA1_IP,"");
 	}
 	public String getCamera2IP() {
 		
-		return cameraTable.getString(CAMERA2_IP,null);
+		return cameraTable.getString(CAMERA2_IP,"");
 	}
 	public Double[] getOnBoardAccelData() {
     	

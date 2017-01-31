@@ -49,29 +49,26 @@ public class StreamManager {
 
 	//TODO Pour Tester sur l'ordi mettre a true sinon a false
 	private boolean debug = false;
+	//private String camera1IP = "team5952cam1.local";
+	private String camera1IP = "raspberrypi.local";
+	private String camera2IP = "team5952cam2.local";
 	
-	private static String camera1NetbiosName = "team5952cam1.local";
-	private static String camera2NetbiosName = "team5952cam2.local";
-	private static int socketPort= 2000;
 	private String title = "Robuck Team 5962 - Vision System Client";
 	
 	// ***********************************************************************
-	private static String camera1URL = "http://"+camera1NetbiosName+":1185/stream.mjpg";
-	private static String camera2URL = "http://"+camera2NetbiosName+":1185/stream.mjpg";
+	
 	private static StreamManager instance = null;
 	private int teamnumber = 5952;
 	private int inputstreamport = 1185;
-	private String cameraName = "Camera1";
-	private String robotIP = "10.59.52.2";
-	private String ip = camera1NetbiosName;
+	private Boolean multicam = false;
+
+	
 	private NetworkTable table = null;
 	private JFrame playerWindow = null;
 	private JLabel videoPlayer = null;
 	private ImageIcon imageVideo = null;
 	private ImageIcon defaultImageVideo = null;
 	private ImageIcon backgroundClean = null;
-	public final String DEFAULT_CAMERA_1_NAME = "Camera1";
-	public final String DEFAULT_CAMERA_2_NAME = "Camera2";
 	
 	private ImageIcon target_YELLOW_ICON = null;
 	private ImageIcon target_RED_ICON = null;
@@ -717,7 +714,7 @@ public class StreamManager {
 		
 		for (int i=0; i <= (NetworkTable.connections().length - 1); i++ ) {
 
-			robotIP = NetworkTable.connections()[i].remote_ip;
+			
 			
 			System.out.println("Connections Protocol " + i + "::::: "  + NetworkTable.connections()[i].protocol_version);
 			System.out.println("Connections remote_id " + i + "::::: "  + NetworkTable.connections()[i].remote_id);
@@ -779,15 +776,15 @@ public class StreamManager {
 //		    }
 			
 			switchVidpanelBorderColor(Color.YELLOW);
-	    	sendMessage("Connecting to video stream ... " + getCameraURL(table.getString("Camera1IP", ip),debug));      
-	    	camera = new HttpCamera("CoprocessorCamera", camera1URL);
+	    	sendMessage("Connecting to video stream ... " + getCameraURL(camera1IP));      
+	    	camera = new HttpCamera("CoprocessorCamera", getCameraURL(camera1IP));
 		    inputStream.setSource(camera);
 	    	
 	    } else {
 	    	
 	    	switchVidpanelBorderColor(Color.YELLOW);
-	    	sendMessage("Connecting to video stream ... " + getCameraURL(table.getString("Camera1IP", ip),debug));      
-	    	camera = new HttpCamera("CoprocessorCamera", getCameraURL(table.getString("Camera1IP", ip),debug));
+	    	sendMessage("Connecting to video stream ... " + getCameraURL(camera1IP));      
+	    	camera = new HttpCamera("CoprocessorCamera", getCameraURL(camera1IP));
 		    inputStream.setSource(camera);
 	    	
 	    	
@@ -815,7 +812,7 @@ public class StreamManager {
 		Mat inputImage = new Mat();
 		Mat hsv = new Mat();
 
-		System.out.println("Camera Streaming Starting at " + ip + ":" + inputstreamport);
+		System.out.println("Camera Streaming Starting at " + camera1IP + ":" + inputstreamport);
 		sendMessage("Waiting for connection .....");
 		// Infinitely process image
 		while (true) {
@@ -853,6 +850,13 @@ public class StreamManager {
 			if (message.length() < 1) {
 				
 				sendMessage("Connected");
+				if (visionCommunication.getCurrentCamera() == 1) {
+					
+					osd.cameraNameLabel.setText(VisionCommunication.DEFAULT_CAMERA_1_NAME);
+				} else {
+					osd.cameraNameLabel.setText(VisionCommunication.DEFAULT_CAMERA_2_NAME);
+				}
+				
 				
 			} else {
 				
@@ -930,45 +934,34 @@ public class StreamManager {
 		  }
 	 
 	 
-	 private static HttpCamera setVisionSystemCamera(String cameraName, MjpegServer server,String robotIP, Boolean debug) {
+	 private static HttpCamera setVisionSystemCamera(String ip, MjpegServer server) {
 	
 
 		    HttpCamera camera = null;
 
-		    camera = new HttpCamera("CoprocessorCamera", getCameraURL(debug));
+		    camera = new HttpCamera("CoprocessorCamera", getCameraURL(ip));
 		    if (camera != null) {
 		    	server.setSource(camera);
 			    }
   
 		    return camera;
 		  }
-	 
-	 
-	 
+
+
+	public String getCamera1Ip() {
+		return camera1IP;
+	}
+
+	public void setCamera1Ip(String ip) {
+		this.camera1IP = ip;
+	}
 	
-	//Getters and Setters
-	public String getCameraName() {
-		return cameraName;
+	public String getCamera2Ip() {
+		return camera2IP;
 	}
 
-	public void setCameraName(String cameraName) {
-		this.cameraName = cameraName;
-	}
-
-	public String getRobotIP() {
-		return robotIP;
-	}
-
-	public void setRobotIP(String robotIP) {
-		this.robotIP = robotIP;
-	}
-
-	public String getIp() {
-		return ip;
-	}
-
-	public void setIp(String ip) {
-		this.ip = ip;
+	public void setCamera2Ip(String ip) {
+		this.camera2IP = ip;
 	}
 	
 	public int getInputstreamport() {
@@ -1018,31 +1011,15 @@ public class StreamManager {
 		this.cleanVideo = cleanVideo;
 	}
 
-	private static String getCameraURL(String ip, Boolean debug) {
-		
-		if (debug) {
-			return camera1URL;
-		}
-		
+	private static String getCameraURL(String ip) {
+
 		String url = "http://";
-		url = url + camera1NetbiosName;
+		url = url + ip;
 		url = url + ":1185/stream.mjpg";
 		
 		return url;
 	}
 	
-	private static String getCameraURL(Boolean debug) {
-		
-		if (debug) {
-			return camera1URL;
-		}
-		
-		String url = "http://";
-		url = url + camera1NetbiosName;
-		url = url + ":1185/stream.mjpg";
-		
-		return url;
-	}
 
 	public String getLocalPath() {
 		return localPath;
@@ -1066,6 +1043,14 @@ public class StreamManager {
 
 	public void setTargetPanel(Target targetPanel) {
 		this.targetPanel = targetPanel;
+	}
+
+	public Boolean getMulticam() {
+		return multicam;
+	}
+
+	public void setMulticam(Boolean multicam) {
+		this.multicam = multicam;
 	}
 
 	

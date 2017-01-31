@@ -16,6 +16,9 @@ public class ClientVisionCommunication extends VisionCommunication {
 		this.cameraTable = cameraTable;
 		
 		cameraTable.addTableListener(VisionCommunication.SWITCH_CAMERA, new ClientStreamingStateListener(), true);
+		cameraTable.addTableListener(VisionCommunication.ONBOARD_ACCEL_X, new ClientStreamingStateListener(), true);
+		cameraTable.addTableListener(VisionCommunication.ONBOARD_ACCEL_Y, new ClientStreamingStateListener(), true);
+		cameraTable.addTableListener(VisionCommunication.ONBOARD_ACCEL_Z, new ClientStreamingStateListener(), true);
 		// TODO Ajouter les lister qu'il faut suivre
 	}
 	

@@ -22,6 +22,7 @@ public class Main {
 		InputStream in = null;
 		try {
 			in = new FileInputStream("/home/pi/Robot2017/config.properties");
+			
 		} catch (FileNotFoundException e1) {
 			System.out.println("Cannot found properties files");
 			e1.printStackTrace();
@@ -46,24 +47,18 @@ public class Main {
 
 			StreamManager.getInstance().setTeamnumber(Integer.parseInt(prop.getProperty("teamnumber")));
 			StreamManager.getInstance().setInputstreamport(Integer.parseInt(prop.getProperty("inputstreamport")));
-			StreamManager.getInstance().setCameraName(prop.getProperty("networktablename"));
 			
-			try {
-				System.out.println(prop.getProperty("networktablename")+" IP Adress: "+InetAddress.getLocalHost().getHostAddress());
-				System.out.println("System Hostname: "+InetAddress.getLocalHost().getHostName());
-			} catch (UnknownHostException e) {
-				System.out.println("Cannot found Network Card");
-				e.printStackTrace();
-			}
+			StreamManager.getInstance().setCamera1Ip(prop.getProperty("networktnameCam1"));
+			
+			StreamManager.getInstance().setCamera2Ip(prop.getProperty("networktnameCam2"));
+			
+			StreamManager.getInstance().setMulticam(prop.getProperty("multicam").equals("true"));
+			
+			
+			
 			
 		}
-		try {
-			System.out.println("System IP Adress: "+InetAddress.getLocalHost().getHostAddress());
-			System.out.println("System Hostname: "+InetAddress.getLocalHost().getHostName());
-		} catch (UnknownHostException e) {
-			System.out.println("Cannot found Network Card");
-			e.printStackTrace();
-		}
+		
 		StreamManager.getInstance().init();
 		StreamManager.getInstance().startPlayback();
 		
