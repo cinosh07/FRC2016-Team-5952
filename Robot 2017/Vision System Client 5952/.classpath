@@ -5,7 +5,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.swt"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Vision System 5952"/>
 	<classpathentry kind="lib" path="C:/Users/ares-b02/wpilib/java/current/lib/cscore.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ares-b02/wpilib/java/current/lib/cscore-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ares-b02/wpilib/java/current/lib/NetworkTables.jar"/>
