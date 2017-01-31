@@ -10,6 +10,7 @@ import java.util.Properties;
 import org.usfirst.frc.team5952.robot.visionSystem.CameraManager;
 
 
+
 public class Main {
 
 	static {
@@ -47,19 +48,20 @@ public class Main {
 			CameraManager.getInstance().setTeamnumber(Integer.parseInt(prop.getProperty("teamnumber")));
 			CameraManager.getInstance().setInputstreamport(Integer.parseInt(prop.getProperty("inputstreamport")));
 			CameraManager.getInstance().setCameraName(prop.getProperty("networktablename"));
-			CameraManager.getInstance().startStreaming();
 
+			CameraManager.getInstance().setCamera1IP(prop.getProperty("networktnameCam1"));
+			
+			CameraManager.getInstance().setCamera2IP(prop.getProperty("networktnameCam2"));
+			
+			CameraManager.getInstance().multiCamera = prop.getProperty("multicam").equals("true");
+			
+			CameraManager.getInstance().startStreaming();
+			
 			System.out.println("Team number = " + prop.getProperty("teamnumber"));
 			System.out.println("Streaming Port = " + prop.getProperty("inputstreamport"));
 			System.out.println("Camera Networktable Name = " + prop.getProperty("networktablename"));
 
-			try {
-				System.out.println(prop.getProperty("networktablename")+" IP Adress: "+InetAddress.getLocalHost().getHostAddress());
-				System.out.println("System Hostname: "+InetAddress.getLocalHost().getHostName());
-			} catch (UnknownHostException e) {
-				System.out.println("Cannot found Network Card");
-				e.printStackTrace();
-			}
+			
 		}
 
 		

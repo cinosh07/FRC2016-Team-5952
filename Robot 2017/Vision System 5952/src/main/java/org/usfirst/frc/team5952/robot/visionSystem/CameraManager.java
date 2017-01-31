@@ -25,35 +25,29 @@ public class CameraManager {
 
 
 	//TODO Pour Tester sur l'ordi mettre a true sinon a false
-	public final String DEFAULT_CAMERA_1_NAME = "Camera1";
-	public final String DEFAULT_CAMERA_2_NAME = "Camera2";
+
 	
 	private Boolean debug = false;
-	public boolean multiCamera = true;
-	private String currentCamera = DEFAULT_CAMERA_1_NAME;
+	public boolean multiCamera = false;
+	private String currentCamera = VisionCommunication.DEFAULT_CAMERA_1_NAME;
 	public Boolean cleanfeed = true;
 
 	
 	
 	public int cameraToBroadcast = 1;
+
 	
+	private String camera1IP = "";
+	private String camera2IP = "";
 	
-	private static String camera1NetbiosName = "team5952cam1.local";
-	private static String camera2NetbiosName = "team5952cam2.local";
-	
-	private static String camera1URL = "http://"+camera1NetbiosName+":1185/stream.mjpg";
-	private static String camera2URL = "http://"+camera2NetbiosName+":1185/stream.mjpg";
-	
-	private static int socketPort= 2000;
 	
 	// ***********************************************************************
 	private static CameraManager instance = null;
 	private int teamnumber = 5952;
 	private int inputstreamport = 1185;
-	private String cameraName = "Camera1";
-	private String robotIP = "10.1.90.2";
+	private String cameraName = "";
+
 	private String hotSpotAddress = "192.168.7.1";
-	private String ip = null;
 	private NetworkTable table = null;
 	
 	public CameraVisionCommunication visionCommunication; 
@@ -78,12 +72,6 @@ public class CameraManager {
 	
 	public void startStreaming() {
 		
-		try {
-			ip = InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
-			System.out.println("Cannot found Network Card");
-			e.printStackTrace();
-		}
 		
 		// Connect NetworkTables, and get access to the publishing table
 		System.out.println("Initializing Network Table");
@@ -112,20 +100,13 @@ public class CameraManager {
 		
 		for (int i=0; i <= (NetworkTable.connections().length - 1); i++ ) {
 
-			robotIP = NetworkTable.connections()[i].remote_ip;
 			
 			System.out.println("Connections Protocol " + i + "::::: "  + NetworkTable.connections()[i].protocol_version);
 			System.out.println("Connections remote_id " + i + "::::: "  + NetworkTable.connections()[i].remote_id);
 			System.out.println("Connections remote_ip " + i + "::::: "  + NetworkTable.connections()[i].remote_ip);
 			System.out.println("Connections remote_port " + i + "::::: "  + NetworkTable.connections()[i].remote_port);
 			
-			try {
-				System.out.println("Local IP is :" + InetAddress.getLocalHost().getHostAddress());
-				System.out.println("Local Hostname is :" + InetAddress.getLocalHost().getHostName());
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}		
+					
 			
 		}
 		
@@ -147,48 +128,10 @@ public class CameraManager {
 			e1.printStackTrace();
 		}
 		
-		String networkInterfaceIP = null;
+		
 		
 		String ips = "";
-		while (en.hasMoreElements()) {
-			
-			NetworkInterface ni = (NetworkInterface) en.nextElement();
-			Enumeration ee = ni.getInetAddresses();
-			
-			while (ee.hasMoreElements()) {
-				
-				
-				InetAddress ia = (InetAddress) ee.nextElement();
-				
-				ips = ips + ia.getHostName() + "||";
-				
-				if (!ia.isLoopbackAddress() && ia.getHostAddress().length() < 16 && !ia.getHostAddress().matches(hotSpotAddress) && ia.getHostName().matches(".local"))  {
-					System.out.println("CanonicalHostName ::::::: " + ia.getCanonicalHostName());
-					System.out.println("Adressse ::::::: " + ia.getHostAddress());
-					System.out.println("Is loopback ::::::: " + ia.isLoopbackAddress());
-					System.out.println("Hostname ::::::: " + ia.getHostName());
-					
-					networkInterfaceIP = ia.getHostName();
-					ip = ia.getHostName();
-			
-				}
-			}	
-			
-		}
-		System.out.println("OnBoard Network Card Address ::::::: " + ips.substring(0, ips.length() - 2));
-		
-		
-		
-		if (networkInterfaceIP!= null) {
-			table.putString(cameraName+"IP", networkInterfaceIP);
-			table.putNumber(cameraName+"SocketPort", socketPort);
-		}
 
-		
-			
-		//SocketManager.getInstance().startServer( socketPort);
-		//SocketManager.getInstance().startClient("192.168.1.40", socketPort);	
-		
 	
 		// This is the network port you want to stream the raw received image to
 		// By rules, this has to be between 1180 and 1190, so 1185 is a good
@@ -214,9 +157,9 @@ public class CameraManager {
 		camera.setResolution(640, 480);
 
 		
-		if (cameraName == DEFAULT_CAMERA_1_NAME && multiCamera) {
+		if (cameraName.equals(VisionCommunication.DEFAULT_CAMERA_1_NAME) && multiCamera) {
 			inputStream2 = new MjpegServer("MJPEG Server", streamPort);
-			camera2 = new HttpCamera("CoprocessorCamera", camera2URL);
+			camera2 = new HttpCamera("CoprocessorCamera", getCameraURL(camera2IP, ""+inputstreamport+""));
 		    inputStream2.setSource(camera2);
 		    imageSink2 = new CvSink("CV Image Grabber");
 			imageSink2.setSource(camera2);
@@ -247,8 +190,8 @@ public class CameraManager {
 		Mat inputImage2 = new Mat();
 		Mat hsv = new Mat();
 
-
-		System.out.println("Camera Streaming Starting at " + ip + ":" + inputstreamport);
+		visionCommunication.putCurrentCamera(1);
+		System.out.println("Camera Streaming Starting at " + getCameraURL(camera1IP, ""+inputstreamport+""));
 		// Infinitely process image
 		while (true) {
 			// Grab a frame. If it has a frame time of 0, there was an error.
@@ -261,7 +204,7 @@ public class CameraManager {
 			// Below is where you would do your OpenCV operations on the
 			// provided image
 			// The sample below just changes color source to HSV
-			if (cameraName == DEFAULT_CAMERA_1_NAME && currentCamera == DEFAULT_CAMERA_2_NAME) {
+			if (cameraName.equals(VisionCommunication.DEFAULT_CAMERA_1_NAME) && currentCamera.equals(VisionCommunication.DEFAULT_CAMERA_2_NAME ) && multiCamera) {
 				frameTime = imageSink2.grabFrame(inputImage2);
 				if (frameTime == 0)
 					continue;
@@ -275,9 +218,9 @@ public class CameraManager {
 			// For now, we are just going to stream the HSV image
 			
 			//TODO Envoyer le data pour l'alignement sur la cible desirer
-			if (cameraName == DEFAULT_CAMERA_1_NAME) {
+			if (cameraName.equals(VisionCommunication.DEFAULT_CAMERA_1_NAME)) {
 				
-				visionCommunication.putCamera1IP(ip);
+				visionCommunication.putCamera1IP(camera1IP);
 				visionCommunication.putCamera1DeltaTarget(0.0); // "TODO delta corection"
 				visionCommunication.putCamera1DistTarget(0.0); //"TODO distace to target"
 //				visionCommunication.putCamera1TargetLocked(TODO true or false)				
@@ -288,7 +231,7 @@ public class CameraManager {
 				
 			} else {
 				
-				visionCommunication.putCamera2IP(ip);
+				visionCommunication.putCamera2IP(camera2IP);
 				visionCommunication.putCamera2DeltaTarget( 0.0); //"TODO delta corection"
 				visionCommunication.putCamera2DistTarget(0.0);	//"TODO distace to target"
 //				visionCommunication.putCamera2TargetLocked(TODO true or false)		//TODO camera offset from centrer off robot		
@@ -298,20 +241,22 @@ public class CameraManager {
 
 			
 			//TODO Switcher entre les hsv et inputImage dans imageSource.putFrame(hsv) avec un bouton sur la console en changeant l<etat d<une valeur booleen dans la network table
-			if (cameraName == DEFAULT_CAMERA_1_NAME && currentCamera == DEFAULT_CAMERA_1_NAME) {
+			if (cameraName.equals(VisionCommunication.DEFAULT_CAMERA_1_NAME) && currentCamera.equals(VisionCommunication.DEFAULT_CAMERA_1_NAME)) {
 				if (cleanfeed) {
 					imageSource.putFrame(inputImage);
 				} else {
 					imageSource.putFrame(hsv);
 				}
-			} else if (cameraName == DEFAULT_CAMERA_1_NAME && currentCamera == DEFAULT_CAMERA_2_NAME) {
+			} else if (cameraName.equals(VisionCommunication.DEFAULT_CAMERA_1_NAME) && currentCamera.equals( VisionCommunication.DEFAULT_CAMERA_2_NAME) && multiCamera) {
 				imageSource.putFrame(inputImage2);
-			} if (cameraName == DEFAULT_CAMERA_2_NAME) {
+			} else if (cameraName.equals(VisionCommunication.DEFAULT_CAMERA_2_NAME)) {
 				if (cleanfeed) {
 					imageSource.putFrame(inputImage);
 				} else {
 					imageSource.putFrame(hsv);
 				}			
+			} else {
+				imageSource.putFrame(inputImage);
 			}
 			
 			
@@ -321,12 +266,22 @@ public class CameraManager {
 	}
 	public void setCurrentCamera (int camera) {
 		if (camera == 1) {
-			currentCamera = DEFAULT_CAMERA_1_NAME;
+			currentCamera = VisionCommunication.DEFAULT_CAMERA_1_NAME;
 		} else if(camera == 2) {
-			currentCamera = DEFAULT_CAMERA_2_NAME;
+			currentCamera = VisionCommunication.DEFAULT_CAMERA_2_NAME;
 			
 		}
 		
+	}
+	private static String getCameraURL(String ip,String port) {
+		
+		
+		
+		String url = "http://";
+		url = url + ip;
+		url = url + ":"+port+"/stream.mjpg";
+		
+		return url;
 	}
 	
 	public void stopStreaming() {
@@ -356,21 +311,6 @@ public class CameraManager {
 		this.cameraName = cameraName;
 	}
 
-	public String getRobotIP() {
-		return robotIP;
-	}
-
-	public void setRobotIP(String robotIP) {
-		this.robotIP = robotIP;
-	}
-
-	public String getIp() {
-		return ip;
-	}
-
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
 	
 	public int getInputstreamport() {
 		return inputstreamport;
@@ -409,6 +349,22 @@ public class CameraManager {
 
 	public void setCameraOffset(int cameraOffset) {
 		this.cameraOffset = cameraOffset;
+	}
+
+	public String getCamera1IP() {
+		return camera1IP;
+	}
+
+	public void setCamera1IP(String camera1ip) {
+		camera1IP = camera1ip;
+	}
+
+	public String getCamera2IP() {
+		return camera2IP;
+	}
+
+	public void setCamera2IP(String camera2ip) {
+		camera2IP = camera2ip;
 	}
 
 }
