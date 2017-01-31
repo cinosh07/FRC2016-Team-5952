@@ -22,7 +22,7 @@ public class CameraManager {
 	//TODO Pour Tester sur l'ordi mettre a true sinon a false
 
 	
-	private Boolean debug = false;
+	public Boolean debug = false;
 	public boolean multiCamera = false;
 	private String currentCamera = VisionCommunication.DEFAULT_CAMERA_1_NAME;
 	public Boolean cleanfeed = true;

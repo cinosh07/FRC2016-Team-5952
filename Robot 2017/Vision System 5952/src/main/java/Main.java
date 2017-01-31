@@ -45,7 +45,9 @@ public class Main {
 
 		if (prop != null) {
 
+			
 			CameraManager.getInstance().setTeamnumber(Integer.parseInt(prop.getProperty("teamnumber")));
+			CameraManager.getInstance().debug = prop.getProperty("debug").equals("true");
 			CameraManager.getInstance().setInputstreamport(Integer.parseInt(prop.getProperty("inputstreamport")));
 			CameraManager.getInstance().setCameraName(prop.getProperty("networktablename"));
 
