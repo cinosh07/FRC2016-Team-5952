@@ -45,7 +45,6 @@ import edu.wpi.first.wpilibj.tables.ITable;
 
 public class StreamManager {
 
-	//TODO Pour Tester sur l'ordi mettre a true sinon a false
 	public boolean debug = false;
 
 	private String camera1IP = "";
@@ -67,7 +66,7 @@ public class StreamManager {
 	private ImageIcon defaultImageVideo = null;
 	private ImageIcon backgroundClean = null;
 
-	private Target targetPanel;
+	public Target targetPanel;
 	private JLabel messageBox;
 	private JLabel sight;
 	
@@ -103,10 +102,6 @@ public class StreamManager {
 		}
 		return instance;
 	}
-	public void visibleOSD(ActionEvent e) {
-		
-	}
-	
 	
 	public void init() {
 		
@@ -309,7 +304,7 @@ public class StreamManager {
   		//
   		//*********************************************************************************************
 	    osd = new OSD(localPath);
-	    osd.setScreenSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);	    
+	    osd.putScreenSize(videoWidth(videoContainerMaxHeight), videoContainerMaxHeight);	    
 //	    TODO
 //	    osd.setRadarCompass_MOVABLE_ICON(radarCompass_MOVABLE_ICON);
 //	    osd.setRadarCompass_MOVABLE_ICON(radarCompass_MOVABLE_ICON);
@@ -527,7 +522,7 @@ public class StreamManager {
 		
 		
 	}
-	public ImageIcon getLocalImageIcon(String filename, int width, int height) {
+	private ImageIcon getLocalImageIcon(String filename, int width, int height) {
 		ImageIcon icon = null;
 		
 		File sourceimage = null;
@@ -565,7 +560,7 @@ public class StreamManager {
 		
 		return icon;
 	}
-	public ImageIcon getLocalImageIcon(String filename) {
+	private ImageIcon getLocalImageIcon(String filename) {
 		ImageIcon icon = null;
 		
 		File sourceimage = null;
@@ -604,44 +599,6 @@ public class StreamManager {
 		return icon;
 	}
 	
-	public ImageIcon getTargetIcon(String filename) {
-		ImageIcon icon = null;
-		
-		File sourceimage = null;
-		
-	    Image image = null;
-	   
-	    
-	    
-	    if (debug) {
-	    	sourceimage = new File(localPath + filename);
-	    	
-	    	try {
-				image = ImageIO.read(sourceimage);
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	
-	    	
-	    	icon = new ImageIcon(getScaledImage(image, 64, 64));
-	    } else {
-	    	sourceimage = new File(localPath + filename);
-	    	
-	    	try {
-				image = ImageIO.read(sourceimage);
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	
-	    	icon = new ImageIcon(getScaledImage(image, 64, 64));
-	    }
-		
-		return icon;
-	}
 	private JLabel getEmptyLabel() {
 		JLabel emptylLabel = new JLabel("     ");
 	    emptylLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -718,9 +675,7 @@ public class StreamManager {
 		}
 
 		
-		table = NetworkTable.getTable(VisionCommunication.TABLE_NAME);
-	
-		
+		table = NetworkTable.getTable(VisionCommunication.TABLE_NAME);		
 		
 		visionCommunication = new ClientVisionCommunication(table);
 		
@@ -735,24 +690,14 @@ public class StreamManager {
 		MjpegServer inputStream = new MjpegServer("MJPEG Server", streamPort);
 		
 		 // HTTP Camera
-	    
-	    // This is our camera name from the robot. this can be set in your robot code with the following command
-	    // CameraServer.getInstance().startAutomaticCapture("YourCameraNameHere");
-	    // "USB Camera 0" is the default if no string is specified
 
 	    HttpCamera camera = null;
 
-		
-	    	
 	    switchVidpanelBorderColor(Color.YELLOW);
 	    sendMessage("Connecting to video stream ... " + getCameraURL(camera1IP));      
 	    camera = new HttpCamera("CoprocessorCamera", getCameraURL(camera1IP));
 		inputStream.setSource(camera);
-	    	
-	    	
-	    
-
-	    
+    
 		// This creates a CvSink for us to use. This grabs images from our
 		// selected camera,
 		// and will allow us to use those images in opencv
@@ -849,122 +794,23 @@ public class StreamManager {
 
 	    return image;
 	}
-
-	
-	 private static HttpCamera setHttpCamera(String cameraName, MjpegServer server) {
-		    // Start by grabbing the camera from NetworkTables
-		    NetworkTable publishingTable = NetworkTable.getTable("CameraPublisher");
-		    // Wait for robot to connect. Allow this to be attempted indefinitely
-		    while (true) {
-		      try {
-		        if (publishingTable.getSubTables().size() > 0) {
-		          break;
-		        }
-		        Thread.sleep(500);
-		        } catch (Exception e) {
-		            // TODO Auto-generated catch block
-		            e.printStackTrace();
-		        }
-		    }
-
-
-		    HttpCamera camera = null;
-		    if (!publishingTable.containsSubTable(cameraName)) {
-		      return null;
-		    }
-		    ITable cameraTable = publishingTable.getSubTable(cameraName);
-		    String[] urls = cameraTable.getStringArray("streams", null);
-		    if (urls == null) {
-		      return null;
-		    }
-		    ArrayList<String> fixedUrls = new ArrayList<String>();
-		    for (String url : urls) {
-		      if (url.startsWith("mjpg")) {
-		        fixedUrls.add(url.split(":", 2)[1]);
-		      }
-		    }
-		    camera = new HttpCamera("CoprocessorCamera", fixedUrls.toArray(new String[0]));
-		    server.setSource(camera);
-		    return camera;
-		  }
 	 
-	 
-	 private static HttpCamera setVisionSystemCamera(String ip, MjpegServer server) {
-	
-
-		    HttpCamera camera = null;
-
-		    camera = new HttpCamera("CoprocessorCamera", getCameraURL(ip));
-		    if (camera != null) {
-		    	server.setSource(camera);
-			    }
-  
-		    return camera;
-		  }
-
-
-	public String getCamera1Ip() {
-		return camera1IP;
-	}
-
 	public void setCamera1Ip(String ip) {
 		this.camera1IP = ip;
 	}
 	
-	public String getCamera2Ip() {
-		return camera2IP;
-	}
-
 	public void setCamera2Ip(String ip) {
 		this.camera2IP = ip;
-	}
-	
-	public int getInputstreamport() {
-		return inputstreamport;
 	}
 
 	public void setInputstreamport(int inputstreamport) {
 		this.inputstreamport = inputstreamport;
-	}
-	public int getTeamnumber() {
-		return teamnumber;
 	}
 
 	public void setTeamnumber(int teamnumber) {
 		this.teamnumber = teamnumber;
 	}
 
-	public NetworkTable getTable() {
-		return table;
-	}
-
-	public void setTable(NetworkTable table) {
-		this.table = table;
-	}
-
-	public JFrame getJframe() {
-		return playerWindow;
-	}
-
-	public void setJframe(JFrame playerWindow) {
-		this.playerWindow = playerWindow;
-	}
-
-	public JLabel getVidpanel() {
-		return videoPlayer;
-	}
-
-	public void setVidpanel(JLabel videoPlayer) {
-		this.videoPlayer = videoPlayer;
-	}
-
-	public boolean isCleanVideo() {
-		return cleanVideo;
-	}
-
-	public void setCleanVideo(boolean cleanVideo) {
-		this.cleanVideo = cleanVideo;
-	}
 
 	private static String getCameraURL(String ip) {
 
@@ -974,27 +820,11 @@ public class StreamManager {
 		
 		return url;
 	}
-	
-
-	public String getLocalPath() {
-		return localPath;
-	}
 
 	public void setLocalPath(String localPath) {
 		this.localPath = localPath;
 	}
 
-	public Target getTargetPanel() {
-		return targetPanel;
-	}
-
-	public void setTargetPanel(Target targetPanel) {
-		this.targetPanel = targetPanel;
-	}
-
-	public Boolean getMulticam() {
-		return multicam;
-	}
 
 	public void setMulticam(Boolean multicam) {
 		this.multicam = multicam;

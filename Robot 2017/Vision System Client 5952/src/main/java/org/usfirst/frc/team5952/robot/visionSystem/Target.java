@@ -81,13 +81,13 @@ public class Target extends JPanel {
 	   for ( int i = 0 ; i < 300 ; i++ ){
             
 		   if (i > 50 && i < 100) {
-			   setState(CAM_LOCK_STATE);
+			   putState(CAM_LOCK_STATE);
 		   }
 		   if (i > 100 && i < 150) {
-			   setState(ROBOT_LOCK_STATE);
+			   putState(ROBOT_LOCK_STATE);
 		   }
 		   if (i > 150 && i < 175) {
-			   setState(UNLOCK_STATE);
+			   putState(UNLOCK_STATE);
 		   }
            
           
@@ -171,9 +171,12 @@ public class Target extends JPanel {
 		return state;
 	}
 
-	public static void setState(String state) {
-		Target.state = state;
+	private static void putState(String targetState) {
+		state = targetState;
 	}
 
+	public void putTargetState(String targetState) {
+		state = targetState;
+	}
 	
 }

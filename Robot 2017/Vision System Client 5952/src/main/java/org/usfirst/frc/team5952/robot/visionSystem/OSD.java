@@ -133,15 +133,7 @@ public class OSD extends JPanel {
 
 	}
 
-	public void putGForce(double gForce) {
-		gForceLabel.setText(G_FORCE_OVERLOAD_LABEL_HEADER + gForce);
-	}
-	public void putCompassAngle(double angle) {
-		robotCompassLabel.putAngle(angle);
-	}
-	public void putRadarAngle(double angle) {
-		radarCompassLabel.putAngle(angle);
-	}
+	
 	public OSD(LayoutManager layout) {
 		super(layout);
 		// TODO Auto-generated constructor stub
@@ -157,10 +149,7 @@ public class OSD extends JPanel {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void putDistanceToTarget(String distanceToTarget) {
-		this.distanceToTarget = distanceToTarget;
-		distanceToTargetLabel.setText("DistTarg: " + this.distanceToTarget);
-	}
+	
 
 	private JLabel getEmptyLabel() {
 		JLabel emptylLabel = new JLabel("     ");
@@ -169,12 +158,12 @@ public class OSD extends JPanel {
 	}
 
 	/**
-	 * Set the status of the targetLockedLabel in the osd The label is red when
-	 * not locked and green when locked
+	 * Set the color to red of the G Force Label in the osd. The label is red when
+	 * is overloadded G and green when not
 	 * <p>
 	 *
-	 * @param targetLocked
-	 *            Set the OSD targetLockedLabel to locked true or false
+	 * @param gForceOverload
+	 *            Set the G Force Label apperance to Overloaded true or false
 	 * @return VOID
 	 * @see
 	 */
@@ -190,22 +179,117 @@ public class OSD extends JPanel {
 
 		}
 	}
-
-	public JPanel getOsd_TEXT() {
-		return osd_TEXT;
-	}
-
-	public void setOsd_TEXT(JPanel osd_TEXT) {
-		this.osd_TEXT = osd_TEXT;
-	}
-
 	
-	public void setScreenSize(int width, int height) {
+	/**
+	 * Set the G Force value to the G Forece Label 
+	 * <p>
+	 *
+	 * @param gForce
+	 *            Double GForce. Set the G Force value to label
+	 * @return VOID
+	 * @see
+	 */
+	public void putGForce(double gForce) {
+		gForceLabel.setText(G_FORCE_OVERLOAD_LABEL_HEADER + gForce);
+	}
+	
+	/**
+	 * Set the Robot Compass Angle Widget. 
+	 * <p>
+	 *
+	 * @param angle
+	 *            Double angle
+	 * @return VOID
+	 * @see
+	 */
+	
+	public void putCompassAngle(double angle) {
+		robotCompassLabel.putAngle(angle);
+	}
+	
+	/**
+	 *Set the Radar Compass Angle Widget. 
+	 * <p>
+	 *
+	 * @param angle
+	 *            Double angle
+	 * @return VOID
+	 * @see
+	 */
+	
+	public void putRadarAngle(double angle) {
+		radarCompassLabel.putAngle(angle);
+	}
+	
+	/**
+	 * Set Distance to Target label text to the distance value between the camera and the target
+	 * <p>
+	 *
+	 * @param putDistanceToTarget
+	 *            String distance
+	 * @return VOID
+	 * @see
+	 */
+
+	public void putDistanceToTarget(String distanceToTarget) {
+		this.distanceToTarget = distanceToTarget;
+		distanceToTargetLabel.setText("DistTarg: " + this.distanceToTarget);
+	}
+	
+	/**
+	 * Set the size of the osd to fit the actual video screen
+	 * <p>
+	 *
+	 * @param width
+	 *            int width
+	 * @param height
+	 *            int height
+	 * @return VOID
+	 * @see
+	 */
+	
+	public void putScreenSize(int width, int height) {
 	
 		this.osdWidth = width;
 		this.osdHeight = height;
 		
 	}
 
+	/**
+	 * Set the position of the target in the OSD
+	 * <p>
+	 *
+	 * @param x
+	 *            int x
+	 * @param y
+	 *            int y
+	 * @return VOID
+	 * @see
+	 */
+	
+	public void putTargetPosition(int x, int y) {
+	
+		StreamManager.getInstance().targetPanel.moveTarget(x, y);
+		
+	}
+	/**
+	 * Set the size of the osd to fit the actual video screen
+	 * 
+	 * 		Target.UNLOCK_STATE // Target appear in red
+	 *  	Target.CAM_LOCK_STATE // Target appear in yellow
+	 *  	Target.ROBOT_LOCK_STATE // Target appear in green
+	 * <p>
+	 *
+	 * @param state
+	 *            String state
+	 * @return VOID
+	 * @see
+	 */
+	
+	public void putTargetState(String state) {
+	
+		StreamManager.getInstance().targetPanel.putTargetState(state);
+		
+	}
 
 }
