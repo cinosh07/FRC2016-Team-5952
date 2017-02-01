@@ -2,9 +2,12 @@ package org.usfirst.frc.team5952.robot.visionSystem;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
+
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -12,15 +15,16 @@ import javax.swing.border.EmptyBorder;
 
 public class OSD extends JPanel {
 
+	public final String G_FORCE_OVERLOAD_LABEL_HEADER = "G Force ";
 	public String distanceToTarget = null;
 	public JLabel distanceToTargetLabel = null;
 	public JLabel cameraNameLabel = null;
-	public JLabel targetLockedLabel = null;
-	public Boolean targetLocked = false;
+	public JLabel gForceLabel = null;
+	public Boolean gForceOverload = false;
 	public BorderLayout layoutBorder = new BorderLayout();
 	
 	public Compass robotCompassLabel;
-	public JLabel radarCompassLabel;
+	public Radar radarCompassLabel;
 
 	private JPanel osd_TEXT = new JPanel(new GridLayout(5, 5, 10, 10));
 
@@ -64,9 +68,9 @@ public class OSD extends JPanel {
 
 		osd_TEXT.add(getEmptyLabel());// Label Vide
 
-		targetLockedLabel = new JLabel("Target Locked", JLabel.CENTER);// Label Target Locked
-		targetLockedLabel.setForeground(Color.RED);
-		osd_TEXT.add(targetLockedLabel);
+		gForceLabel = new JLabel(G_FORCE_OVERLOAD_LABEL_HEADER + "0.0", JLabel.CENTER);// Label Target Locked
+		gForceLabel.setForeground(Color.GREEN);
+		osd_TEXT.add(gForceLabel);
 
 		// Second ROW
 
@@ -117,7 +121,7 @@ public class OSD extends JPanel {
 
 		osd_TEXT.add(getEmptyLabel());// Label Vide
 
-		radarCompassLabel = new JLabel("Radar Compass", JLabel.CENTER);// Label Robot Compass
+		radarCompassLabel = new Radar(64,64,path);// Label Robot Compass
 		radarCompassLabel.setForeground(Color.GREEN);
 		osd_TEXT.add(radarCompassLabel);
 		//*********************************************************************************************
@@ -129,6 +133,15 @@ public class OSD extends JPanel {
 
 	}
 
+	public void putGForce(double gForce) {
+		gForceLabel.setText(G_FORCE_OVERLOAD_LABEL_HEADER + gForce);
+	}
+	public void putCompassAngle(double angle) {
+		robotCompassLabel.putAngle(angle);
+	}
+	public void putRadarAngle(double angle) {
+		radarCompassLabel.putAngle(angle);
+	}
 	public OSD(LayoutManager layout) {
 		super(layout);
 		// TODO Auto-generated constructor stub
@@ -144,7 +157,7 @@ public class OSD extends JPanel {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void setDistanceToTarget(String distanceToTarget) {
+	public void putDistanceToTarget(String distanceToTarget) {
 		this.distanceToTarget = distanceToTarget;
 		distanceToTargetLabel.setText("DistTarg: " + this.distanceToTarget);
 	}
@@ -165,15 +178,15 @@ public class OSD extends JPanel {
 	 * @return VOID
 	 * @see
 	 */
-	public void setTargetLocked(Boolean targetLocked) {
-		this.targetLocked = targetLocked;
-		if (this.targetLocked) {
+	public void putGForceOverloadLabel(Boolean gForceOverload) {
+		this.gForceOverload = gForceOverload;
+		if (this.gForceOverload) {
 
-			targetLockedLabel.setForeground(Color.GREEN);
-
+			gForceLabel.setForeground(Color.RED);
+			
 		} else {
 
-			targetLockedLabel.setForeground(Color.RED);
+			gForceLabel.setForeground(Color.GREEN);
 
 		}
 	}

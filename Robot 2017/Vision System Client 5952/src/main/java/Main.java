@@ -25,6 +25,7 @@ public class Main {
 		try {
 			
 			//in = new FileInputStream("/home/pi/Robot2017/config.properties");
+			//in = new FileInputStream("/home/pi/FRCVisionClient/config.properties");
 			in = new FileInputStream("C:\\Users\\ares-b02\\robot_workspace\\Vision System Client 5952\\output\\config.properties");
 			
 		} catch (FileNotFoundException e1) {

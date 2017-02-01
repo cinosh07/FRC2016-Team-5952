@@ -680,16 +680,16 @@ public class StreamManager {
 	}
 	
 	public void startPlayback() {
-		osd.robotCompassLabel.setAngle(0.0);
+		osd.robotCompassLabel.putAngle(0.0);
 		sendMessage("Init Target...");
 		targetPanel.initialiseTarget();
 		sendMessage("Init Compass...");
 		
 	    osd.robotCompassLabel.initialiseCompass();
-	    osd.robotCompassLabel.setAngle(90.0);
+	    osd.robotCompassLabel.putAngle(90.0);
 	    sendMessage("Init Radar...");
-	    //TODO Radar widget
-	    
+	    osd.radarCompassLabel.initialiseRadar();
+	    osd.radarCompassLabel.putAngle(90.0);
 	    
 		// Connect NetworkTables, and get access to the publishing table
 		System.out.println("Initializing Network Table");

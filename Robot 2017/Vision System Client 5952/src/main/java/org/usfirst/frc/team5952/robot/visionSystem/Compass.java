@@ -102,7 +102,7 @@ public class Compass extends JPanel {
 	       }
 	   }
 	   
-   public void setAngle(double angleToSet){
+   public void putAngle(double angleToSet){
 
 		   angle = angleToSet;
            repaint();
