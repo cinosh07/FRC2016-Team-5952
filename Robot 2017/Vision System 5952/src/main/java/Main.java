@@ -55,6 +55,8 @@ public class Main {
 			
 			CameraManager.getInstance().setCamera2IP(prop.getProperty("networktnameCam2"));
 			
+			CameraManager.getInstance().networkName = (prop.getProperty("networktname")); 
+			
 			CameraManager.getInstance().multiCamera = prop.getProperty("multicam").equals("true");
 			
 			CameraManager.getInstance().startStreaming();

@@ -17,17 +17,12 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 public class CameraManager {
 	
-
-
-	//TODO Pour Tester sur l'ordi mettre a true sinon a false
-
-	
 	public Boolean debug = false;
 	public boolean multiCamera = false;
 	private String currentCamera = VisionCommunication.DEFAULT_CAMERA_1_NAME;
-	public Boolean cleanfeed = true;
+	private Boolean cleanfeed = true;
 
-	
+	public String networkName = "";
 	
 	public int cameraToBroadcast = 1;
 
@@ -40,7 +35,7 @@ public class CameraManager {
 	private static CameraManager instance = null;
 	private int teamnumber = 5952;
 	private int inputstreamport = 1185;
-	private String cameraName = "";
+	public String cameraName = "";
 
 	private String hotSpotAddress = "192.168.7.1";
 	private NetworkTable table = null;
@@ -59,11 +54,7 @@ public class CameraManager {
 		}
 		return instance;
 	}
-	public void readSocketCommant(String command) {
-		
-		//TODO Traiter les commandes recu sur le socket
-		
-	}
+	
 	
 	public void startStreaming() {
 		
@@ -90,9 +81,7 @@ public class CameraManager {
 		        }
 		    }
 		}
-		
-		
-		
+
 		for (int i=0; i <= (NetworkTable.connections().length - 1); i++ ) {
 
 			
@@ -100,9 +89,7 @@ public class CameraManager {
 			System.out.println("Connections remote_id " + i + "::::: "  + NetworkTable.connections()[i].remote_id);
 			System.out.println("Connections remote_ip " + i + "::::: "  + NetworkTable.connections()[i].remote_ip);
 			System.out.println("Connections remote_port " + i + "::::: "  + NetworkTable.connections()[i].remote_port);
-			
-					
-			
+		
 		}
 		
 		
@@ -110,10 +97,7 @@ public class CameraManager {
 		
 		
 		visionCommunication = new CameraVisionCommunication(table);
-		
-		
-		
-	
+
 		Enumeration en = null;
 		try {
 			en = NetworkInterface.getNetworkInterfaces();
@@ -122,8 +106,6 @@ public class CameraManager {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-		
 		
 		String ips = "";
 
@@ -186,7 +168,7 @@ public class CameraManager {
 		Mat hsv = new Mat();
 
 		visionCommunication.putCurrentCamera(1);
-		System.out.println("Camera Streaming Starting at " + getCameraURL(camera1IP, ""+inputstreamport+""));
+		System.out.println("Camera Streaming Starting at " + getCameraURL(networkName, ""+inputstreamport+""));
 		// Infinitely process image
 		while (true) {
 			// Grab a frame. If it has a frame time of 0, there was an error.
@@ -253,21 +235,11 @@ public class CameraManager {
 			} else {
 				imageSource.putFrame(inputImage);
 			}
-			
-			
-			//imageSource.putFrame(inputImage);
+		
 		}	
 		
 	}
-	public void setCurrentCamera (int camera) {
-		if (camera == 1) {
-			currentCamera = VisionCommunication.DEFAULT_CAMERA_1_NAME;
-		} else if(camera == 2) {
-			currentCamera = VisionCommunication.DEFAULT_CAMERA_2_NAME;
-			
-		}
-		
-	}
+	
 	private static String getCameraURL(String ip,String port) {
 		
 		
@@ -277,13 +249,6 @@ public class CameraManager {
 		url = url + ":"+port+"/stream.mjpg";
 		
 		return url;
-	}
-	
-	public void stopStreaming() {
-		
-		
-		//TODO Implementer la fonction d'arreter le streaming de la camera
-		
 	}
 	
 	private UsbCamera setUsbCamera(int cameraId, MjpegServer server) {
@@ -298,64 +263,42 @@ public class CameraManager {
 	
 	
 	//Getters and Setters
-	public String getCameraName() {
-		return cameraName;
+	public void setCurrentCamera (int camera) {
+		if (camera == 1) {
+			currentCamera = VisionCommunication.DEFAULT_CAMERA_1_NAME;
+		} else if(camera == 2) {
+			currentCamera = VisionCommunication.DEFAULT_CAMERA_2_NAME;
+			
+		}
+		
 	}
-
 	public void setCameraName(String cameraName) {
 		this.cameraName = cameraName;
 	}
 
-	
-	public int getInputstreamport() {
-		return inputstreamport;
-	}
 
 	public void setInputstreamport(int inputstreamport) {
 		this.inputstreamport = inputstreamport;
 	}
-	public int getTeamnumber() {
-		return teamnumber;
-	}
+	
 
 	public void setTeamnumber(int teamnumber) {
 		this.teamnumber = teamnumber;
 	}
 
-	public NetworkTable getTable() {
-		return table;
-	}
-
-	public void setTable(NetworkTable table) {
-		this.table = table;
-	}
-
-	public Boolean getDebug() {
-		return debug;
-	}
+	
 
 	public void setDebug(Boolean debug) {
 		this.debug = debug;
 	}
 
-	public int getCameraOffset() {
-		return cameraOffset;
-	}
 
 	public void setCameraOffset(int cameraOffset) {
 		this.cameraOffset = cameraOffset;
 	}
 
-	public String getCamera1IP() {
-		return camera1IP;
-	}
-
 	public void setCamera1IP(String camera1ip) {
 		camera1IP = camera1ip;
-	}
-
-	public String getCamera2IP() {
-		return camera2IP;
 	}
 
 	public void setCamera2IP(String camera2ip) {
