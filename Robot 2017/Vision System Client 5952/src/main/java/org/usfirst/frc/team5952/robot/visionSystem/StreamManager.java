@@ -679,7 +679,7 @@ public class StreamManager {
 		
 		visionCommunication = new ClientVisionCommunication(table);
 		
-	
+		sendMessage("Network Table Initialized...");
 		// This is the network port you want to stream the raw received image to
 		// By rules, this has to be between 1180 and 1190, so 1185 is a good
 		// choice
