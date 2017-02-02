@@ -21,12 +21,11 @@ public class CameraManager {
 	public boolean multiCamera = false;
 	private String currentCamera = VisionCommunication.DEFAULT_CAMERA_1_NAME;
 	private Boolean cleanfeed = true;
-
+	private MjpegServer inputStream  = null;
 	public String networkName = "";
-	
+	private UsbCamera camera = null;
 	public int cameraToBroadcast = 1;
-
-	
+	private HttpCamera camera2;
 	private String camera1IP = "";
 	private String camera2IP = "";
 	
@@ -117,11 +116,11 @@ public class CameraManager {
 
 		// This stores our reference to our mjpeg server for streaming the input
 		// image
-		MjpegServer inputStream = new MjpegServer("MJPEG Server", streamPort);
+		inputStream = new MjpegServer("MJPEG Server", streamPort);
 		
 		
 		MjpegServer inputStream2;
-		HttpCamera camera2;
+		
 		CvSink imageSink2 = null;
 		// USB Camera
 
@@ -129,7 +128,7 @@ public class CameraManager {
 		// Usually this will be on device 0, but there are other overloads
 		// that can be used
 		System.out.println("Initializing USB Camera");
-		UsbCamera camera = setUsbCamera(0, inputStream);
+		camera = setUsbCamera(0, inputStream);
 		// Set the resolution for our camera, since this is over USB
 		camera.setResolution(640, 480);
 
@@ -178,14 +177,6 @@ public class CameraManager {
 			if (frameTime == 0)
 				continue;
 
-			// Below is where you would do your OpenCV operations on the
-			// provided image
-			// The sample below just changes color source to HSV
-			if (cameraName.equals(VisionCommunication.DEFAULT_CAMERA_1_NAME) && currentCamera.equals(VisionCommunication.DEFAULT_CAMERA_2_NAME ) && multiCamera) {
-				frameTime = imageSink2.grabFrame(inputImage2);
-				if (frameTime == 0)
-					continue;
-			}
 			
 			Imgproc.cvtColor(inputImage, hsv, Imgproc.COLOR_BGR2HSV);
 			// Here is where you would write a processed image that you want to
@@ -201,10 +192,7 @@ public class CameraManager {
 				visionCommunication.putCamera1DeltaTarget(0.0); // "TODO delta corection"
 				visionCommunication.putCamera1DistTarget(0.0); //"TODO distace to target"
 //				visionCommunication.putCamera1TargetLocked(TODO true or false)				
-//				visionCommunication.putCamera1Offset(TOTO offset)
-				
-		
-				
+//				visionCommunication.putCamera1Offset(TOTO offset)		
 				
 			} else {
 				
@@ -217,33 +205,18 @@ public class CameraManager {
 			}
 
 			
-			//TODO Switcher entre les hsv et inputImage dans imageSource.putFrame(hsv) avec un bouton sur la console en changeant l<etat d<une valeur booleen dans la network table
-			if (cameraName.equals(VisionCommunication.DEFAULT_CAMERA_1_NAME) && currentCamera.equals(VisionCommunication.DEFAULT_CAMERA_1_NAME)) {
-				if (cleanfeed) {
-					imageSource.putFrame(inputImage);
-				} else {
-					imageSource.putFrame(hsv);
-				}
-			} else if (cameraName.equals(VisionCommunication.DEFAULT_CAMERA_1_NAME) && currentCamera.equals( VisionCommunication.DEFAULT_CAMERA_2_NAME) && multiCamera) {
-				imageSource.putFrame(inputImage2);
-			} else if (cameraName.equals(VisionCommunication.DEFAULT_CAMERA_2_NAME)) {
-				if (cleanfeed) {
-					imageSource.putFrame(inputImage);
-				} else {
-					imageSource.putFrame(hsv);
-				}			
-			} else {
+			if (cleanfeed) {
 				imageSource.putFrame(inputImage);
+			} else {
+				imageSource.putFrame(hsv);
 			}
-		
+	
 		}	
 		
 	}
 	
 	private static String getCameraURL(String ip,String port) {
-		
-		
-		
+
 		String url = "http://";
 		url = url + ip;
 		url = url + ":"+port+"/stream.mjpg";
@@ -257,18 +230,38 @@ public class CameraManager {
 		// that can be used
 		UsbCamera camera = new UsbCamera("CoprocessorCamera", cameraId);
 		server.setSource(camera);
+		
 		return camera;
 	}
+	
+	private void switchCam () {
+	
+		if (currentCamera.equals(VisionCommunication.DEFAULT_CAMERA_1_NAME)) {
+			if (camera != null) {
+				inputStream.setSource(camera);
+			}
+			
+		} else if (currentCamera.equals(VisionCommunication.DEFAULT_CAMERA_2_NAME)) {
+			
+			if (camera2 != null) {
+				inputStream.setSource(camera2);
+			}
+		}
+		
+	}
 
-	
-	
 	//Getters and Setters
 	public void setCurrentCamera (int camera) {
-		if (camera == 1) {
-			currentCamera = VisionCommunication.DEFAULT_CAMERA_1_NAME;
-		} else if(camera == 2) {
-			currentCamera = VisionCommunication.DEFAULT_CAMERA_2_NAME;
+		
+		if (cameraName.equals(VisionCommunication.DEFAULT_CAMERA_1_NAME) && multiCamera) {
 			
+			if (camera == 1) {
+				currentCamera = VisionCommunication.DEFAULT_CAMERA_1_NAME;
+			} else if(camera == 2) {
+				currentCamera = VisionCommunication.DEFAULT_CAMERA_2_NAME;
+				
+			}
+			switchCam ();
 		}
 		
 	}
