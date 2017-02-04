@@ -165,6 +165,7 @@ public class CameraManager {
 		Mat inputImage = new Mat();
 		Mat inputImage2 = new Mat();
 		Mat hsv = new Mat();
+		ImageAnalysis analyse = new ImageAnalysis();
 
 		visionCommunication.putCurrentCamera(1);
 		System.out.println("Camera Streaming Starting at " + getCameraURL(networkName, ""+inputstreamport+""));
@@ -178,12 +179,22 @@ public class CameraManager {
 				continue;
 
 			
-			Imgproc.cvtColor(inputImage, hsv, Imgproc.COLOR_BGR2HSV);
+			
+			
+			
+			
 			// Here is where you would write a processed image that you want to
 			// restreams
 			// This will most likely be a marked up image of what the camera
 			// sees
 			// For now, we are just going to stream the HSV image
+		
+			
+			imageSource.putFrame(analyse.analyse(inputImage, hsv));
+			
+			
+			
+			
 			
 			//TODO Envoyer le data pour l'alignement sur la cible desirer
 			if (cameraName.equals(VisionCommunication.DEFAULT_CAMERA_1_NAME)) {
@@ -202,13 +213,6 @@ public class CameraManager {
 //				visionCommunication.putCamera2TargetLocked(TODO true or false)		//TODO camera offset from centrer off robot		
 //				visionCommunication.putCamera2Offset(TOTO offset)
 				
-			}
-
-			
-			if (cleanfeed) {
-				imageSource.putFrame(inputImage);
-			} else {
-				imageSource.putFrame(hsv);
 			}
 	
 		}	
