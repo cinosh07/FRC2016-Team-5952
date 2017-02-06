@@ -3,24 +3,27 @@
 String separator = "::";
 int baudrate = 9600;
 int loopDelay = 100;
+
 String defaultDisplayLine1 = "Robuck Team #5952";
 String defaultDisplayLine2 = "Vision System Remote";
 String defaultDisplayLine3 = "Version: 1.0";
 String defaultDisplayLine4 = "... initializing";
+String ready = "Ready !";
+String connected = "Connected to Robot!";
 
 
-int pot1MaxVal = 1023;       //
-int pot2MaxVal = 1023;       //
-int pot3MaxVal = 1023;       //
-int pot1MinVal = 0;       //
-int pot2MinVal = 0;       //
-int pot3MinVal = 0;       //
-int tiltMaxDegrees = 45;       //
-int panMaxDegrees = 360;       //
-int tiltMaxValRaw = 933;       //
-int panMaxValRaw = 961;       //
-int tiltMinValRaw = 143;       //
-int panMinValRaw = 15;       //
+int pot1MaxVal = 1023;
+int pot2MaxVal = 1023;
+int pot3MaxVal = 1023;
+int pot1MinVal = 0;
+int pot2MinVal = 0;
+int pot3MinVal = 0;
+int tiltMaxDegrees = 45;
+int panMaxDegrees = 360;
+int tiltMaxValRaw = 933;
+int panMaxValRaw = 961;
+int tiltMinValRaw = 143;
+int panMinValRaw = 15;
 int pot1ScaledRange = 255;
 int pot2ScaledRange = 255;
 int pot3ScaledRange = 255;
@@ -31,8 +34,8 @@ int pot2Pin = 1;    // min 0 - max 1023
 int pot3Pin = 2;    // min 0 - max 1023
 int panPin = 3;    // min 15 trim centered 86 - max 961 trim centered 892
 int tiltPin = 4;    // min 143 trim centered 207 - max 933 trim centered 869
-int camSwitchPin = 5;
-int modeSwitchPin = 6;
+int camSwitchPin = 5;  // Pull UP Switch 1
+int modeSwitchPin = 6; // Pull UP Switch 2
 int ledPin = 13;   // select the pin for the LED
 
 
@@ -43,10 +46,10 @@ int tiltVal = 0;       // variable to store the value coming from the Pan Joysti
 int panVal = 0;       // variable to store the value coming from the Tilt Joystick potentiometer
 boolean camSwitch = false; // variable to store the value from Cam Switch Press Button
 boolean modeSwitch = false;   // variable to store the value from Mode Switch Press Button
-String displayLine1 = "";    // variable to store the value to de LCD 20x4 display line 1
-String displayLine2 = "";	// variable to store the value to de LCD 20x4 display line 2
-String displayLine3 = "";	// variable to store the value to de LCD 20x4 display line 3
-String displayLine4 = "";	// variable to store the value to de LCD 20x4 display line 4
+String displayLine1 = defaultDisplayLine1;    // variable to store the value to de LCD 20x4 display line 1
+String displayLine2 = defaultDisplayLine2;	// variable to store the value to de LCD 20x4 display line 2
+String displayLine3 = defaultDisplayLine3;	// variable to store the value to de LCD 20x4 display line 3
+String displayLine4 = defaultDisplayLine4;	// variable to store the value to de LCD 20x4 display line 4
 
 
 
