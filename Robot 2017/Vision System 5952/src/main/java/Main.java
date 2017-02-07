@@ -59,6 +59,16 @@ public class Main {
 			
 			CameraManager.getInstance().multiCamera = prop.getProperty("multicam").equals("true");
 			
+			CameraManager.getInstance().serialRemoteDeviceName = prop.getProperty("serialRemoteDeviceName");
+			
+			CameraManager.getInstance().serialRemoteBaudrate = Integer.parseInt(prop.getProperty("serialRemoteBaudrate"));
+			
+			CameraManager.getInstance().serialRemoteDATABITS = Integer.parseInt(prop.getProperty("serialRemoteDATABITS"));
+			
+			CameraManager.getInstance().serialRemoteSTOPBITS = Integer.parseInt(prop.getProperty("serialRemoteSTOPBITS"));
+			
+			CameraManager.getInstance().serialRemotePARITY = Integer.parseInt(prop.getProperty("serialRemotePARITY"));
+			
 			CameraManager.getInstance().startStreaming();
 			
 			System.out.println("Team number = " + prop.getProperty("teamnumber"));

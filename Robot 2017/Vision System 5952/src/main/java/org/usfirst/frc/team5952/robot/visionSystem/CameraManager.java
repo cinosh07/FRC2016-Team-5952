@@ -14,6 +14,7 @@ import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import gnu.io.SerialPort;
 
 public class CameraManager {
 	
@@ -35,7 +36,14 @@ public class CameraManager {
 	private int teamnumber = 5952;
 	private int inputstreamport = 1185;
 	public String cameraName = "";
+	private TwoWaySerialComm serial;
 
+	public String serialRemoteDeviceName = "/dev/ttyUSB0";
+	public int serialRemoteBaudrate = 9600;
+	public int serialRemoteDATABITS= SerialPort.DATABITS_8;
+	public int serialRemoteSTOPBITS = SerialPort.STOPBITS_1;
+	public int serialRemotePARITY = SerialPort.PARITY_NONE;
+	
 	private String hotSpotAddress = "192.168.7.1";
 	private NetworkTable table = null;
 	
@@ -57,6 +65,13 @@ public class CameraManager {
 	
 	public void startStreaming() {
 		
+		serial = new TwoWaySerialComm();
+		try {
+			serial.connect( serialRemoteDeviceName , serialRemoteBaudrate, serialRemoteDATABITS, serialRemoteSTOPBITS , serialRemotePARITY );
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		// Connect NetworkTables, and get access to the publishing table
 		System.out.println("Initializing Network Table");
@@ -251,6 +266,20 @@ public class CameraManager {
 				inputStream.setSource(camera2);
 			}
 		}
+		
+	}
+	
+	public int sendCommandToRemote() {
+		
+		//TODO Traiter les bytes
+		return -1;
+	}
+
+	public void receiveCommandToRemote(String command) {
+		
+		//TODO Traiter la commande
+		
+		
 		
 	}
 
