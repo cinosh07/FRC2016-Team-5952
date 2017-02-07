@@ -25,8 +25,8 @@ public class Main {
 		try {
 			
 			//in = new FileInputStream("/home/pi/Robot2017/config.properties");
-			//in = new FileInputStream("/home/pi/FRCVisionClient/config.properties");
-			in = new FileInputStream("C:\\Users\\ares-b02\\robot_workspace\\Vision System Client 5952\\output\\config.properties");
+			in = new FileInputStream("/home/pi/FRCVisionClient/config.properties");
+			//in = new FileInputStream("C:\\Users\\ares-b02\\robot_workspace\\Vision System Client 5952\\output\\config.properties");
 			
 		} catch (FileNotFoundException e1) {
 			System.out.println("Cannot found properties files");
@@ -73,6 +73,16 @@ public class Main {
 			
 			StreamManager.getInstance().setMulticam(prop.getProperty("multicam").equals("true"));
 			
+			StreamManager.getInstance().serialRemoteDeviceName = prop.getProperty("serialRemoteDeviceName");
+			
+			StreamManager.getInstance().serialRemoteBaudrate = Integer.parseInt(prop.getProperty("serialRemoteBaudrate"));
+			
+			StreamManager.getInstance().serialRemoteDATABITS = Integer.parseInt(prop.getProperty("serialRemoteDATABITS"));
+			
+			StreamManager.getInstance().serialRemoteSTOPBITS = Integer.parseInt(prop.getProperty("serialRemoteSTOPBITS"));
+			
+			StreamManager.getInstance().serialRemotePARITY = Integer.parseInt(prop.getProperty("serialRemotePARITY"));
+			
 			StreamManager.getInstance().init();
 			
 			StreamManager.getInstance().startPlayback();
@@ -102,6 +112,16 @@ public class Main {
 			StreamManager.getInstance().setCamera2Ip("raspberrypi2.local");
 			
 			StreamManager.getInstance().setMulticam(false);
+			
+			StreamManager.getInstance().serialRemoteDeviceName = "com3";
+			
+			StreamManager.getInstance().serialRemoteBaudrate = 9600;
+			
+			StreamManager.getInstance().serialRemoteDATABITS = 8;
+			
+			StreamManager.getInstance().serialRemoteSTOPBITS = 1;
+			
+			StreamManager.getInstance().serialRemotePARITY = 0;
 			
 			StreamManager.getInstance().init();
 			

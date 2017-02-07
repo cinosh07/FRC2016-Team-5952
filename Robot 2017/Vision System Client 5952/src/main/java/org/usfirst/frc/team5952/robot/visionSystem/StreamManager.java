@@ -42,6 +42,7 @@ import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.ITable;
+import gnu.io.SerialPort;
 
 public class StreamManager {
 
@@ -65,7 +66,13 @@ public class StreamManager {
 	private ImageIcon imageVideo = null;
 	private ImageIcon defaultImageVideo = null;
 	private ImageIcon backgroundClean = null;
-
+	
+	public String serialRemoteDeviceName = "/dev/ttyUSB0";
+	public int serialRemoteBaudrate = 9600;
+	public int serialRemoteDATABITS= SerialPort.DATABITS_8;
+	public int serialRemoteSTOPBITS = SerialPort.STOPBITS_1;
+	public int serialRemotePARITY = SerialPort.PARITY_NONE;
+	
 	public Target targetPanel;
 	private JLabel messageBox;
 	private JLabel sight;
@@ -82,6 +89,8 @@ public class StreamManager {
 	public static String localPath = "";
 	
 	private int videoContainerMaxHeight = 423;
+	
+	private TwoWaySerialComm serial;
 	
 	
 	protected StreamManager(String path) {
@@ -117,7 +126,7 @@ public class StreamManager {
 	  	if (fullscreen) {
 	  		playerWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
 	  	}
-	  	playerWindow.setUndecorated(true);
+	  	playerWindow.setUndecorated(!debug);
 	  	playerWindow.getContentPane().setBackground(Color.black);
 	  	playerWindow.setTitle(title);
 
@@ -637,6 +646,14 @@ public class StreamManager {
 	}
 	
 	public void startPlayback() {
+		serial = new TwoWaySerialComm();
+		try {
+			serial.connect( serialRemoteDeviceName , serialRemoteBaudrate, serialRemoteDATABITS, serialRemoteSTOPBITS , serialRemotePARITY );
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		osd.robotCompassLabel.putAngle(0.0);
 		sendMessage("Init Target...");
 		targetPanel.initialiseTarget();
@@ -829,7 +846,21 @@ public class StreamManager {
 	public void setMulticam(Boolean multicam) {
 		this.multicam = multicam;
 	}
-
 	
+	public int sendCommandToRemote() {
+		
+		//TODO Traiter les bytes
+		return -1;
+	}
+
+	public void receiveCommandToRemote(String command) {
+		
+		//TODO Traiter la commande
+
+		String[] commandTosplit = command.split(":");
+		
+		
+		
+	}
 
 }
