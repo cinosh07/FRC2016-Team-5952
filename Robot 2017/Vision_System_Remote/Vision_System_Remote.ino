@@ -1,6 +1,6 @@
 #include "Arduino.h"
 
-String separator = "::";
+String separator = ":";
 int baudrate = 9600;
 int loopDelay = 100;
 
@@ -50,8 +50,6 @@ String displayLine1 = defaultDisplayLine1;    // variable to store the value to 
 String displayLine2 = defaultDisplayLine2;	// variable to store the value to de LCD 20x4 display line 2
 String displayLine3 = defaultDisplayLine3;	// variable to store the value to de LCD 20x4 display line 3
 String displayLine4 = defaultDisplayLine4;	// variable to store the value to de LCD 20x4 display line 4
-
-
 
 void setup() {
 
@@ -107,14 +105,18 @@ void loop() {
 
 int potValuScaled(int potValueRaw, int potMaxScaled, int potMaxRaw, int potMinRaw) {
 
+	double result = 0.0;
+
 	if (potMinRaw == 0) {
 
-		return potValueRaw * potMaxScaled / potMaxRaw;
+		result = (double)potValueRaw * (double)potMaxScaled / (double)potMaxRaw;
+		return (int)result;
 
 	} else if (potMinRaw > 0) {
 
 		potMaxRaw = potMaxRaw - potMinRaw;
-		return potValueRaw * potMaxScaled / potMaxRaw;
+		result = (double)potValueRaw * (double)potMaxScaled / (double)potMaxRaw;
+		return (int)result;
 	}
 
 }
