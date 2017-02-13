@@ -134,6 +134,24 @@ void setup() {
 
 void loop() {
 
+	// Data Structure
+	// String Sended over the serial port containing potentiometers and push button values seperated by a delimitor.
+	// Delimitor define by delimitor variable DEFAULT :
+	//
+	// DATA by order in the string:
+	//
+	// value from potentiometer 1
+	// value from potentiometer 2
+	// value from potentiometer 3
+	// value from Tilt potentiometer
+	// value from Pan potentiometer
+	// Button 1 state
+	// Button 2 state
+	// Button 3 state
+	// Button 4 state
+	// Button 5 state
+
+
 	pot1Val = analogRead(pot1Pin);    // read the value from potentiometer 1
 	pot2Val = analogRead(pot2Pin);    // read the value from potentiometer 2
 	pot3Val = analogRead(pot3Pin);    // read the value from potentiometer 3
