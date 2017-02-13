@@ -25,6 +25,9 @@ int offx = 31;
 int offy = 47;
 int offz = -23;
 
+String delimitor = ":";
+
+long duration, inches, cm;
 
 // this constant won't change.  It's the pin number
 // of the sensor's output:
@@ -76,7 +79,7 @@ void setup() {
 void loop() {
   // establish variables for duration of the ping,
   // and the distance result in inches and centimeters:
-  long duration, inches, cm;
+
 
   // The PING))) is triggered by a HIGH pulse of 2 or more microseconds.
   // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
@@ -95,38 +98,65 @@ void loop() {
 
   // convert the time into a distance
   inches = microsecondsToInches(duration);
-	cm = microsecondsToCentimeters(duration);
+  cm = microsecondsToCentimeters(duration);
+
+  PrintSerialData();
+
+
+
+
+  delay(100);
+}
+
+void PrintSerialData() {
+
+	// Data Structure
+	// String Sended over the serial port containing sensors values delimited seperated by a delimitor.
+	// Delimitor define by delimitor variable DEFAULT :
+	//
+	// DATA by order in the string:
+	//
+	// Ultrasonic sensor distance in inches
+	// Ultrasonic sensor distance in cm
+	// Gyro G's X axis
+	// Gyro G's Y axis
+	// Gyro G's Z axis
+	// Accelerometer X axis
+	// Accelerometer Y axis
+	// Accelerometer Z axis
+	// Magnetometer X axis
+	// Magnetometer Y axis
+	// Magnetometer Z axis=-
+	// Magnetometer heading
 
 	Serial.print(inches);
-	Serial.print("in, ");
+	Serial.print(delimitor);
 	Serial.print(cm);
-	Serial.print("cm");
-	Serial.println();
+	Serial.print(delimitor);
 
 	/*
-	    // Reads calibrated raw values from the sensor
-	    gyro.readGyroRawCal(&ix,&iy,&iz);
-	    Serial.print("X2:");
-	    Serial.print(ix);
-	    Serial.print("  Y:");
-	    Serial.print(iy);
-	    Serial.print("  Z:");
-	    Serial.println(iz);
-	    */
+	// Reads calibrated raw values from the sensor
+	gyro.readGyroRawCal(&ix,&iy,&iz);
+	Serial.print("X2:");
+	Serial.print(ix);
+	Serial.print("  Y:");
+	Serial.print(iy);
+	Serial.print("  Z:");
+	Serial.println(iz);
+	*/
 
-	// Reads calibrated values in deg/sec
-	    gyro.readGyro(&x,&y,&z);
-	    Serial.print("X3:");
-	    Serial.print(x);
-	    Serial.print("  Y:");
-	    Serial.print(y);
-	    Serial.print("  Z:");
-	    Serial.println(z);
+// Reads calibrated values in deg/sec
+	gyro.readGyro(&x,&y,&z);
+	Serial.print(x);
+	Serial.print(delimitor);
+	Serial.print(y);
+	Serial.print(delimitor);
+	Serial.print(z);
+	Serial.print(delimitor);
+	AccelerometerRead();
+	ReadMag();
+	Serial.println();
 
-	    AccelerometerRead();
-	    ReadMag();
-	    Serial.println("=================================================================================");
-  delay(100);
 }
 
 void ReadMag () {
@@ -134,17 +164,15 @@ void ReadMag () {
 	    mag.getHeading(&mx, &my, &mz);
 
 	    // display tab-separated gyro x/y/z values
-	    Serial.print("mag:\t");
-	    Serial.print(mx); Serial.print("\t");
-	    Serial.print(my); Serial.print("\t");
-	    Serial.print(mz); Serial.print("\t");
+	    Serial.print(mx); Serial.print(delimitor);
+	    Serial.print(my); Serial.print(delimitor);
+	    Serial.print(mz); Serial.print(delimitor);
 
 	// To calculate heading in degrees. 0 degree indicates North
 	    float heading = atan2(my, mx);
 	    if(heading < 0)
 	      heading += 2 * M_PI;
-	    Serial.print("heading:\t");
-	    Serial.println(heading * 180/M_PI);
+	    Serial.print(heading * 180/M_PI);
 
 	    // blink LED to indicate activity
 	    blinkState = !blinkState;
@@ -178,21 +206,16 @@ void AccelerometerRead()
 
  int x= (( result[0] | result[1]<<8)>>2)+offx ;
  float x1=x/4096.0;
- Serial.print("x=");
  Serial.print(x1);
- Serial.print("g");
+ Serial.print(delimitor);
  //
  int y= (( result[2] | result[3]<<8 )>>2)+offy;
  float y1=y/4096.0;
- Serial.print(",y=");
- Serial.print(y1);
- Serial.print("g");
+ Serial.print(y1);Serial.print(delimitor);
  //
  int z= (( result[4] | result[5]<<8 )>>2)+offz;
  float z1=z/4096.0;
- Serial.print(",z=");
- Serial.print(z1);
- Serial.println("g");
+ Serial.print(z1);Serial.print(delimitor);
 }
 void writeTo(int DEVICE, byte address, byte val)
 {
