@@ -19,7 +19,7 @@ public class Light extends Subsystem {
     }
     
     public void openLight(){
-    Light.set(Relay.Value.kOn);
+    Light.set(Relay.Value.kForward);
     }
     
     public void closeLight(){

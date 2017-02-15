@@ -9,7 +9,10 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team5952.robot.commands.CloseLight;
 import org.usfirst.frc.team5952.robot.commands.ExampleCommand;
+import org.usfirst.frc.team5952.robot.commands.OpenLight;
+import org.usfirst.frc.team5952.robot.commands.OpenTrap;
 import org.usfirst.frc.team5952.robot.commands.RobotVisionCommunication;
 import org.usfirst.frc.team5952.robot.commands.VisionCommunication;
 import org.usfirst.frc.team5952.robot.subsystems.DriveTrain;
@@ -53,6 +56,10 @@ public class Robot extends IterativeRobot {
 		onBoardAccelerometer = new OnBoardAccelerometer();
 		chooser.addDefault("Default Auto", new ExampleCommand());
 		
+		light = new Light();
+		trap = new Trap();
+		montecorde = new MonteCorde();
+		
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
 
@@ -70,6 +77,8 @@ public class Robot extends IterativeRobot {
 
 		SmartDashboard.putNumber(VisionCommunication.CAMERA1_DIST_TARGET, visionCommunication.getCamera1DistTarget());
 		SmartDashboard.putNumber(VisionCommunication.CAMERA2_DIST_TARGET, visionCommunication.getCamera2DistTarget());
+		
+		
 
 	}
 

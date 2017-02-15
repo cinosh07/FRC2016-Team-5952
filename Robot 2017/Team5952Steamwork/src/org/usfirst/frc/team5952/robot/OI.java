@@ -5,7 +5,9 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team5952.robot.commands.CloseLight;
 import org.usfirst.frc.team5952.robot.commands.ExampleCommand;
+import org.usfirst.frc.team5952.robot.commands.OpenLight;
 import org.usfirst.frc.team5952.robot.commands.OpenTrap;
 import org.usfirst.frc.team5952.robot.commands.SwitchCamera;
 
@@ -49,7 +51,9 @@ public class OI {
     	// Put Some buttons on the SmartDashboard
        
         SmartDashboard.putData("Switch Camera", new SwitchCamera(0));
-        
+        SmartDashboard.putData("openLight", new OpenLight());
+		SmartDashboard.putData("closeLight", new CloseLight());
+		
         // Create some buttons
         JoystickButton d_up = new JoystickButton(joy, 5);
         JoystickButton d_right= new JoystickButton(joy, 6);

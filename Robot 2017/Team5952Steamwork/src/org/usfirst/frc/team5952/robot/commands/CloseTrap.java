@@ -12,7 +12,7 @@ public class CloseTrap extends Command {
     public CloseTrap() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(Robot.trap);
+    	//requires(Robot.trap);
     }
 
     // Called just before this Command runs the first time

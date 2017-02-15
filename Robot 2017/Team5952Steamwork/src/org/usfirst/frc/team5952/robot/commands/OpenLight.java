@@ -12,7 +12,7 @@ public class OpenLight extends Command {
     public OpenLight() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(Robot.light);
+    	//requires(Robot.light);
     }
 
     // Called just before this Command runs the first time

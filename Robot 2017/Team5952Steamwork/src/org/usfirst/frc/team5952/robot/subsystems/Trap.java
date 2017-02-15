@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Trap extends Subsystem {
 	
 	DoubleSolenoid solenoid1 = new DoubleSolenoid(1,2);
-    DoubleSolenoid solenoid2 = new DoubleSolenoid(1,2);
+    DoubleSolenoid solenoid2 = new DoubleSolenoid(3,4);
 	
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
