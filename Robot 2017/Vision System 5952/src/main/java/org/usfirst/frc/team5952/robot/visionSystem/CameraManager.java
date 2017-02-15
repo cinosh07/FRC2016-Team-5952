@@ -59,6 +59,17 @@ public class CameraManager {
 	public double radarHeading = 0.0;
 	public double camera1InchesDistance = 0.0;
 	public double camera1CMDistance = 0.0;
+	public int currenState = 0;
+	public int remoteVisionPotentiometer1 = 0;
+	public int remoteVisionPotentiometer2 = 0;
+	public int remoteVisionPotentiometer3 = 0;
+	public int remoteVisionRadarTilt = 0;
+	public int remoteVisionRadarPan = 0;
+	public int remoteVisionButton2State = 0;
+	public int remoteVisionButton3State = 0;
+	public int remoteVisionButton4State = 0;
+	public int remoteVisionButton5State = 0;
+	public boolean frontOperation = true;
 
 	private String hotSpotAddress = "192.168.7.1";
 	private NetworkTable table = null;
