@@ -29,7 +29,7 @@ public class VisionCommunication {
 	// TODO Definition des constantes de commandes du Vision System.
 	public static final String SWITCH_CAMERA = "switchcamera";
 	public static final String CURRENT_CAMERA = "currentcamera";
-	
+
 	public static final String CAMERA1_SENSOR_DISTANCE = "camera1sensordistance";
 	public static final String RADAR_SENSOR_DISTANCE = "radarsensordistance";
 	public static final String ROBOT_BACK_SENSOR_DISTANCE = "robotbacksensordistance";
@@ -42,6 +42,18 @@ public class VisionCommunication {
 	public static final String RADAR_MAG_X = "radarmagx";
 	public static final String RADAR_MAG_Y = "radarmagy";
 	public static final String RADAR_MAG_Z = "radarmagz";
+	public static final String CURRENT_STATE = "currentstate";
+	public static final String REMOTE_VISION_POT_1 = "remotevisionpot1";
+	public static final String REMOTE_VISION_POT_2 = "remotevisionpot2";
+	public static final String REMOTE_VISION_POT_3 = "remotevisionpot3";
+	public static final String REMOTE_VISION_RADAR_TILT = "remotevisionradartilt";
+	public static final String REMOTE_VISION_RADAR_PAN = "remotevisionradarpan";
+	public static final String REMOTE_VISION_BUTTON2_STATE = "remotevisionbutton2state";
+	public static final String REMOTE_VISION_BUTTON3_STATE = "remotevisionbutton3state";
+	public static final String REMOTE_VISION_BUTTON4_STATE = "remotevisionbutton4state";
+	public static final String REMOTE_VISION_BUTTON5_STATE = "remotevisionbutton5state";
+	public static final String FRONT_OPERATION = "frontoperation";
+	public static final String ROBOT_COMPASS = "robotcompass";
 
 	// TODO definition des listeners sur la network table
 	private NetworkTable cameraTable;
@@ -113,75 +125,157 @@ public class VisionCommunication {
 		int currentCam = (int) cameraTable.getNumber(CURRENT_CAMERA, 0);
 		return currentCam;
 	}
-	
-	public double putCamera1SensorDistTarget() {
+
+	public double getCamera1SensorDistTarget() {
 
 		return cameraTable.getNumber(CAMERA1_SENSOR_DISTANCE, 0.0);
 	}
 
-	public double putRadarSensorDistTarget() {
+	public double getRadarSensorDistTarget() {
 
 		return cameraTable.getNumber(RADAR_SENSOR_DISTANCE, 0.0);
 	}
 
-	public double putRobotBackSensorDistTarget() {
+	public double getRobotBackSensorDistTarget() {
 		return cameraTable.getNumber(ROBOT_BACK_SENSOR_DISTANCE, 0.0);
 
 	}
 
-	public double putRadarGyroX() {
-		
+	public double getRadarGyroX() {
+
 		return cameraTable.getNumber(RADAR_GYRO_X, 0.0);
 
 	}
 
-	public double putRadarGyroY() {
-		
+	public double getRadarGyroY() {
+
 		return cameraTable.getNumber(RADAR_GYRO_Y, 0.0);
 
 	}
 
-	public double putRadarGyroZ() {
-		
+	public double getRadarGyroZ() {
+
 		return cameraTable.getNumber(RADAR_GYRO_Z, 0.0);
 
 	}
 
-	public double putRadarAccX() {
-		
+	public double getRadarAccX() {
+
 		return cameraTable.getNumber(RADAR_ACC_X, 0.0);
 
 	}
 
-	public double putRadarAccY() {
-		
+	public double getRadarAccY() {
+
 		return cameraTable.getNumber(RADAR_ACC_Y, 0.0);
 
 	}
 
-	public double putRadarAccZ() {
-		
+	public double getRadarAccZ() {
+
 		return cameraTable.getNumber(RADAR_ACC_Z, 0.0);
 
 	}
 
-	public double putRadarMagX() {
-		
+	public double getRadarMagX() {
+
 		return cameraTable.getNumber(RADAR_MAG_X, 0.0);
 
 	}
 
-	public double putRadarMagY() {
-		
+	public double getRadarMagY() {
+
 		return cameraTable.getNumber(RADAR_MAG_Y, 0.0);
 
 	}
 
-	public double putRadarMagZ() {
-		
+	public double getRadarMagZ() {
+
 		return cameraTable.getNumber(RADAR_MAG_Z, 0.0);
 
 	}
+	
+	public int getCurrentState() {
+
+		Double val = cameraTable.getNumber(CURRENT_STATE, 0);
+		return val.intValue();
+
+	}
+
+	public int getRemoteVisionPotentiometer1() {
+
+		Double val = cameraTable.getNumber(REMOTE_VISION_POT_1, 0.0);
+		return val.intValue();
+
+	}
+
+	public int getRemoteVisionPotentiometer2() {
+
+		Double val = cameraTable.getNumber(REMOTE_VISION_POT_2, 0.0);
+		return val.intValue();
+
+	}
+
+	public int getRemoteVisionPotentiometer3() {
+
+		Double val = cameraTable.getNumber(REMOTE_VISION_POT_3,  0.0);
+		return val.intValue();
+
+	}
+
+	public int getRemoteVisionRadarTilt() {
+
+		Double val = cameraTable.getNumber(REMOTE_VISION_RADAR_TILT,  0.0);
+		return val.intValue();
+
+	}
+
+	public int getRemoteVisionRadarPan() {
+
+		Double val = cameraTable.getNumber(REMOTE_VISION_RADAR_PAN,  0.0);
+		return val.intValue();
+
+	}
+
+	public int getRemoteVisionButton2State() {
+
+		Double val = cameraTable.getNumber(REMOTE_VISION_BUTTON2_STATE,  0.0);
+		return val.intValue();
+
+	}
+
+	public int getRemoteVisionButton3State() {
+
+		Double val = cameraTable.getNumber(REMOTE_VISION_BUTTON3_STATE,  0.0);
+		return val.intValue();
+
+	}
+
+	public int getRemoteVisionButton4State() {
+
+		Double val = cameraTable.getNumber(REMOTE_VISION_BUTTON4_STATE,  0.0);
+		return val.intValue();
+
+	}
+
+	public int getRemoteVisionButton5State() {
+
+		Double val = cameraTable.getNumber(REMOTE_VISION_BUTTON5_STATE,  0.0);
+		return val.intValue();
+
+	}
+	
+	public boolean getFrontOperation() {
+
+		return cameraTable.putBoolean(FRONT_OPERATION, true);
+
+	}
+	
+	public double getRobotCompass() {
+		
+		return cameraTable.getNumber(ROBOT_COMPASS, 0.0);
+	}
+
 
 	// ***************************************************************************************
 	// Setters
@@ -252,57 +346,128 @@ public class VisionCommunication {
 	}
 
 	public void putRadarGyroX(double x) {
-		
+
 		cameraTable.putNumber(RADAR_GYRO_X, x);
 
 	}
 
 	public void putRadarGyroY(double y) {
-		
+
 		cameraTable.putNumber(RADAR_GYRO_Y, y);
 
 	}
 
 	public void putRadarGyroZ(double z) {
-		
+
 		cameraTable.putNumber(RADAR_GYRO_Z, z);
 
 	}
 
 	public void putRadarAccX(double x) {
-		
+
 		cameraTable.putNumber(RADAR_ACC_X, x);
 
 	}
 
 	public void putRadarAccY(double y) {
-		
+
 		cameraTable.putNumber(RADAR_ACC_Y, y);
 
 	}
 
 	public void putRadarAccZ(double z) {
-		
+
 		cameraTable.putNumber(RADAR_ACC_Z, z);
 
 	}
 
 	public void putRadarMagX(double x) {
-		
+
 		cameraTable.putNumber(RADAR_MAG_X, x);
 
 	}
 
 	public void putRadarMagY(double y) {
-		
+
 		cameraTable.putNumber(RADAR_MAG_Y, y);
 
 	}
 
 	public void putRadarMagZ(double z) {
-		
+
 		cameraTable.putNumber(RADAR_MAG_Z, z);
 
+	}
+
+	public void putCurrentState(int state) {
+
+		cameraTable.putNumber(CURRENT_STATE, state);
+
+	}
+
+	public void putRemoteVisionPotentiometer1(int value) {
+
+		cameraTable.putNumber(REMOTE_VISION_POT_1, value);
+
+	}
+
+	public void putRemoteVisionPotentiometer2(int value) {
+
+		cameraTable.putNumber(REMOTE_VISION_POT_2, value);
+
+	}
+
+	public void putRemoteVisionPotentiometer3(int value) {
+
+		cameraTable.putNumber(REMOTE_VISION_POT_3, value);
+
+	}
+
+	public void putRemoteVisionRadarTilt(int value) {
+
+		cameraTable.putNumber(REMOTE_VISION_RADAR_TILT, value);
+
+	}
+
+	public void putRemoteVisionRadarPan(int value) {
+
+		cameraTable.putNumber(REMOTE_VISION_RADAR_PAN, value);
+
+	}
+
+	public void putRemoteVisionButton2State(int value) {
+
+		cameraTable.putNumber(REMOTE_VISION_BUTTON2_STATE, value);
+
+	}
+
+	public void putRemoteVisionButton3State(int value) {
+
+		cameraTable.putNumber(REMOTE_VISION_BUTTON3_STATE, value);
+
+	}
+
+	public void putRemoteVisionButton4State(int value) {
+
+		cameraTable.putNumber(REMOTE_VISION_BUTTON4_STATE, value);
+
+	}
+
+	public void putRemoteVisionButton5State(int value) {
+
+		cameraTable.putNumber(REMOTE_VISION_BUTTON5_STATE, value);
+
+	}
+	
+	public void putFrontOperation(boolean value) {
+
+		cameraTable.putBoolean(FRONT_OPERATION, value);
+
+	}
+	
+	public void putRobotCompass(double angle) {
+		
+		cameraTable.putNumber(ROBOT_COMPASS, angle);
 	}
 
 }
