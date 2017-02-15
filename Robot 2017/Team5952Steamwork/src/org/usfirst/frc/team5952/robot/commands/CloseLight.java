@@ -7,18 +7,17 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class OpenTrap extends Command {
+public class CloseLight extends Command {
 
-
-    public OpenTrap() {
+    public CloseLight() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(Robot.trap);
+    	requires(Robot.light);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.trap.openTrap();
+    	Robot.light.closeLight();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -32,7 +31,7 @@ public class OpenTrap extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.trap.stop();
+    	Robot.light.Stop();
     }
 
     // Called when another command which requires one or more of the same

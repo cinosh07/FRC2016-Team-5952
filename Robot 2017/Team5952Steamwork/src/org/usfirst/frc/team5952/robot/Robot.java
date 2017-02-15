@@ -14,6 +14,7 @@ import org.usfirst.frc.team5952.robot.commands.RobotVisionCommunication;
 import org.usfirst.frc.team5952.robot.commands.VisionCommunication;
 import org.usfirst.frc.team5952.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team5952.robot.subsystems.ExampleSubsystem;
+import org.usfirst.frc.team5952.robot.subsystems.Light;
 import org.usfirst.frc.team5952.robot.subsystems.MonteCorde;
 import org.usfirst.frc.team5952.robot.subsystems.OnBoardAccelerometer;
 import org.usfirst.frc.team5952.robot.subsystems.Trap;
@@ -36,7 +37,7 @@ public class Robot extends IterativeRobot {
     public static MonteCorde montecorde;
     public static OnBoardAccelerometer onBoardAccelerometer;
     public static RobotVisionCommunication visionCommunication;
-
+    public static Light light;
 
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();

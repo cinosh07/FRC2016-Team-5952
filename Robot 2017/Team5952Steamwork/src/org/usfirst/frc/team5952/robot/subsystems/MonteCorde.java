@@ -13,16 +13,23 @@ public class MonteCorde extends Subsystem {
 	//TODO ajouter le senseur
     private SpeedController moteurCorde;
     
+
     public MonteCorde() {
     	moteurCorde = new Talon(3);
+    	
     }
     
-    public void monte(){
+   
+	public void monte(){
     	moteurCorde.set(1.0);
     }
     
     public void arrete(){
     	moteurCorde.set(0.0);
+    }
+    
+    public void recule(){
+    	moteurCorde.set(0.1);
     }
     
     public void initDefaultCommand() {
