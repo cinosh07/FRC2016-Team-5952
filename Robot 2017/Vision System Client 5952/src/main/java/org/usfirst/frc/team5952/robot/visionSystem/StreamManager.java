@@ -73,6 +73,23 @@ public class StreamManager {
 	public int serialRemoteSTOPBITS = SerialPort.STOPBITS_1;
 	public int serialRemotePARITY = SerialPort.PARITY_NONE;
 	
+	public double radarInchesDistance = 0.0;
+	public double radarCMDistance = 0.0;
+	public double robotBackInchesDistance = 0.0;
+	public double robotBackCMDistance = 0.0;
+	public double radarGyroX = 0.0;
+	public double radarGyroY = 0.0;
+	public double radarGyroZ = 0.0;
+	public double radarAccX = 0.0;
+	public double radarAccY = 0.0;
+	public double radarAccZ = 0.0;
+	public double radarMagX = 0.0;
+	public double radarMagY = 0.0;
+	public double radarMagZ = 0.0;
+	public double radarHeading = 0.0;
+	public double camera1InchesDistance = 0.0;
+	public double camera1CMDistance = 0.0;
+	
 	public Target targetPanel;
 	private JLabel messageBox;
 	private JLabel sight;
