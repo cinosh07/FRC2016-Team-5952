@@ -17,20 +17,19 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import gnu.io.SerialPort;
 
 public class CameraManager {
-	
+
 	public Boolean debug = false;
 	public boolean multiCamera = false;
 	private String currentCamera = VisionCommunication.DEFAULT_CAMERA_1_NAME;
 	private Boolean cleanfeed = true;
-	private MjpegServer inputStream  = null;
+	private MjpegServer inputStream = null;
 	public String networkName = "";
 	private UsbCamera camera = null;
 	public int cameraToBroadcast = 1;
 	private HttpCamera camera2;
 	private String camera1IP = "";
 	private String camera2IP = "";
-	
-	
+
 	// ***********************************************************************
 	private static CameraManager instance = null;
 	private int teamnumber = 5952;
@@ -40,20 +39,37 @@ public class CameraManager {
 
 	public String serialRemoteDeviceName = "/dev/ttyUSB0";
 	public int serialRemoteBaudrate = 9600;
-	public int serialRemoteDATABITS= SerialPort.DATABITS_8;
+	public int serialRemoteDATABITS = SerialPort.DATABITS_8;
 	public int serialRemoteSTOPBITS = SerialPort.STOPBITS_1;
 	public int serialRemotePARITY = SerialPort.PARITY_NONE;
-	
+
+	public double radarInchesDistance = 0.0;
+	public double radarCMDistance = 0.0;
+	public double robotBackInchesDistance = 0.0;
+	public double robotBackCMDistance = 0.0;
+	public double radarGyroX = 0.0;
+	public double radarGyroY = 0.0;
+	public double radarGyroZ = 0.0;
+	public double radarAccX = 0.0;
+	public double radarAccY = 0.0;
+	public double radarAccZ = 0.0;
+	public double radarMagX = 0.0;
+	public double radarMagY = 0.0;
+	public double radarMagZ = 0.0;
+	public double radarHeading = 0.0;
+	public double camera1InchesDistance = 0.0;
+	public double camera1CMDistance = 0.0;
+
 	private String hotSpotAddress = "192.168.7.1";
 	private NetworkTable table = null;
-	
-	public CameraVisionCommunication visionCommunication; 
-	
+
+	public CameraVisionCommunication visionCommunication;
+
 	private int cameraOffset = 0;
-	
+
 	protected CameraManager() {
-	      // Exists only to defeat instantiation.
-	   }
+		// Exists only to defeat instantiation.
+	}
 
 	public static CameraManager getInstance() {
 		if (instance == null) {
@@ -61,17 +77,22 @@ public class CameraManager {
 		}
 		return instance;
 	}
-	
-	
+
 	public void startStreaming() {
 		
-		serial = new TwoWaySerialComm();
+		
+		if (cameraName.equals(VisionCommunication.DEFAULT_CAMERA_2_NAME)) {
+			serial = new TwoWaySerialComm();
 		try {
 			serial.connect( serialRemoteDeviceName , serialRemoteBaudrate, serialRemoteDATABITS, serialRemoteSTOPBITS , serialRemotePARITY );
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+			
+		}
+		
+		
 		
 		// Connect NetworkTables, and get access to the publishing table
 		System.out.println("Initializing Network Table");
@@ -215,109 +236,156 @@ public class CameraManager {
 			if (cameraName.equals(VisionCommunication.DEFAULT_CAMERA_1_NAME)) {
 				
 				visionCommunication.putCamera1IP(camera1IP);
-				visionCommunication.putCamera1DeltaTarget(0.0); // "TODO delta corection"
-				visionCommunication.putCamera1DistTarget(0.0); //"TODO distace to target"
+				//visionCommunication.putCamera1DeltaTarget(0.0); // "TODO delta corection"
+				visionCommunication.putCamera1DistTarget(0.0); //"TODO Analyse Image distace to target"
 //				visionCommunication.putCamera1TargetLocked(TODO true or false)				
 //				visionCommunication.putCamera1Offset(TOTO offset)		
 				
 			} else {
 				
 				visionCommunication.putCamera2IP(camera2IP);
-				visionCommunication.putCamera2DeltaTarget( 0.0); //"TODO delta corection"
-				visionCommunication.putCamera2DistTarget(0.0);	//"TODO distace to target"
+				visionCommunication.putCamera2DeltaTarget( radarHeading ); 
+				visionCommunication.putCamera2DistTarget(0.0);	//"TODO Analyse Image distace to target"
+				visionCommunication.putCamera1SensorDistTarget(camera1CMDistance);
+				visionCommunication.putRadarSensorDistTarget(radarCMDistance);
+				visionCommunication.putRobotBackSensorDistTarget(robotBackCMDistance);
+				visionCommunication.putRadarGyroX(radarGyroX);
+				visionCommunication.putRadarGyroY(radarGyroY);
+				visionCommunication.putRadarGyroZ(radarGyroZ);
+				visionCommunication.putRadarAccX(radarAccX);
+				visionCommunication.putRadarAccY(radarAccY);
+				visionCommunication.putRadarAccZ(radarAccZ);
+				visionCommunication.putRadarMagX(radarMagX);
+				visionCommunication.putRadarMagY(radarMagY);
+				visionCommunication.putRadarMagZ(radarMagZ);
+				
 //				visionCommunication.putCamera2TargetLocked(TODO true or false)		//TODO camera offset from centrer off robot		
 //				visionCommunication.putCamera2Offset(TOTO offset)
-				
+
 			}
 	
 		}	
 		
 	}
-	
-	private static String getCameraURL(String ip,String port) {
+
+	private static String getCameraURL(String ip, String port) {
 
 		String url = "http://";
 		url = url + ip;
-		url = url + ":"+port+"/stream.mjpg";
-		
+		url = url + ":" + port + "/stream.mjpg";
+
 		return url;
 	}
-	
+
 	private UsbCamera setUsbCamera(int cameraId, MjpegServer server) {
 		// This gets the image from a USB camera
 		// Usually this will be on device 0, but there are other overloads
 		// that can be used
 		UsbCamera camera = new UsbCamera("CoprocessorCamera", cameraId);
 		server.setSource(camera);
-		
+
 		return camera;
 	}
-	
-	private void switchCam () {
-	
+
+	private void switchCam() {
+
 		if (currentCamera.equals(VisionCommunication.DEFAULT_CAMERA_1_NAME)) {
 			if (camera != null) {
 				inputStream.setSource(camera);
 			}
-			
+
 		} else if (currentCamera.equals(VisionCommunication.DEFAULT_CAMERA_2_NAME)) {
-			
+
 			if (camera2 != null) {
 				inputStream.setSource(camera2);
 			}
 		}
-		
+
 	}
-	
+
 	public int sendCommandToRemote() {
-		
-		//TODO Traiter les bytes
+
+		// TODO Traiter les bytes
 		return -1;
 	}
 
-	public void receiveCommandToRemote(String command) {
-		
-		//TODO Traiter la commande
-		
-		
-		
+	public void receiveCommandFromRemote(String command) {
+
+		// Data Structure
+		// String Sended over the serial port containing sensors values
+		// delimited seperated by a delimitor.
+		// Delimitor define by delimitor variable DEFAULT :
+		//
+		// DATA by order in the string:
+		//
+		// Radar Ultrasonic sensor distance in inches
+		// Radar Ultrasonic sensor distance in cm
+		// Robot Back Ultrasonic sensor distance in inches
+		// Robot Back Ultrasonic sensor distance in cm
+		// Gyro G's X axis
+		// Gyro G's Y axis
+		// Gyro G's Z axis
+		// Accelerometer X axis
+		// Accelerometer Y axis
+		// Accelerometer Z axis
+		// Magnetometer X axis
+		// Magnetometer Y axis
+		// Magnetometer Z axis=-
+		// Magnetometer heading
+		// Camera 1 Ultrasonic sensor distance in inches
+		// Camera 1 Ultrasonic sensor distance in cm
+
+		String[] commandsArray = command.split(":");
+		radarInchesDistance = Double.parseDouble(commandsArray[0]);
+		radarCMDistance = Double.parseDouble(commandsArray[1]);
+		robotBackInchesDistance = Double.parseDouble(commandsArray[2]);
+		robotBackCMDistance = Double.parseDouble(commandsArray[3]);
+		radarGyroX = Double.parseDouble(commandsArray[4]);
+		radarGyroY = Double.parseDouble(commandsArray[5]);
+		radarGyroZ = Double.parseDouble(commandsArray[6]);
+		radarAccX = Double.parseDouble(commandsArray[7]);
+		radarAccY = Double.parseDouble(commandsArray[8]);
+		radarAccZ = Double.parseDouble(commandsArray[9]);
+		radarMagX = Double.parseDouble(commandsArray[10]);
+		radarMagY = Double.parseDouble(commandsArray[11]);
+		radarMagZ = Double.parseDouble(commandsArray[12]);
+		radarHeading = Double.parseDouble(commandsArray[13]);
+		camera1InchesDistance = Double.parseDouble(commandsArray[14]);
+		camera1CMDistance = Double.parseDouble(commandsArray[15]);
+
 	}
 
-	//Getters and Setters
-	public void setCurrentCamera (int camera) {
-		
+	// Getters and Setters
+	public void setCurrentCamera(int camera) {
+
 		if (cameraName.equals(VisionCommunication.DEFAULT_CAMERA_1_NAME) && multiCamera) {
-			
+
 			if (camera == 1) {
 				currentCamera = VisionCommunication.DEFAULT_CAMERA_1_NAME;
-			} else if(camera == 2) {
+			} else if (camera == 2) {
 				currentCamera = VisionCommunication.DEFAULT_CAMERA_2_NAME;
-				
+
 			}
-			switchCam ();
+			switchCam();
 		}
-		
+
 	}
+
 	public void setCameraName(String cameraName) {
 		this.cameraName = cameraName;
 	}
 
-
 	public void setInputstreamport(int inputstreamport) {
 		this.inputstreamport = inputstreamport;
 	}
-	
 
 	public void setTeamnumber(int teamnumber) {
 		this.teamnumber = teamnumber;
 	}
 
-	
-
 	public void setDebug(Boolean debug) {
 		this.debug = debug;
 	}
-
 
 	public void setCameraOffset(int cameraOffset) {
 		this.cameraOffset = cameraOffset;
