@@ -29,11 +29,13 @@ String delimitor = ":";
 
 long radarDuration, radarInches, radarCm;
 long backDuration, backInches, backCm;
+long camera1Duration, camera1Inches, camera1Cm;
 
 // this constant won't change.  It's the pin number
 // of the sensor's output:
 const int radarPingPin = 2;
 const int backPingPin = 3;
+const int camera1PingPin = 4;
 
 ITG3200 gyro = ITG3200();
 float x, y, z;
@@ -86,9 +88,33 @@ void loop() {
 
 	calculateRadarDistance();
 	calculateRobotBackDistance();
+	calculateCamera1Distance();
 	PrintSerialData();
 
 	delay(100);
+}
+
+void calculateCamera1Distance() {
+
+	// The PING))) is triggered by a HIGH pulse of 2 or more microseconds.
+	// Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
+	pinMode(camera1PingPin, OUTPUT);
+	digitalWrite(camera1PingPin, LOW);
+	delayMicroseconds(2);
+	digitalWrite(camera1PingPin, HIGH);
+	delayMicroseconds(5);
+	digitalWrite(camera1PingPin, LOW);
+
+	// The same pin is used to read the signal from the PING))): a HIGH
+	// pulse whose duration is the time (in microseconds) from the sending
+	// of the ping to the reception of its echo off of an object.
+	pinMode(camera1PingPin, INPUT);
+	camera1Duration = pulseIn(camera1PingPin, HIGH);
+
+	// convert the time into a distance
+	camera1Inches = microsecondsToInches(camera1Duration);
+	camera1Cm = microsecondsToCentimeters(camera1Duration);
+
 }
 
 void calculateRadarDistance() {
@@ -159,6 +185,8 @@ void PrintSerialData() {
 	// Magnetometer Y axis
 	// Magnetometer Z axis=-
 	// Magnetometer heading
+	// Camera 1 Ultrasonic sensor distance in inches
+	// Camera 1 Ultrasonic sensor distance in cm
 
 	Serial.print(radarInches);
 	Serial.print(delimitor);
@@ -191,6 +219,10 @@ void PrintSerialData() {
 	Serial.print(delimitor);
 	AccelerometerRead();
 	ReadMag();
+	Serial.print(camera1Inches);
+	Serial.print(delimitor);
+	Serial.print(camera1Cm);
+
 	Serial.println();
 
 }
@@ -216,6 +248,7 @@ void ReadMag() {
 	// blink LED to indicate activity
 	blinkState = !blinkState;
 	digitalWrite(LED_PIN, blinkState);
+	Serial.print(delimitor);
 }
 
 void AccelerometerStart() {
