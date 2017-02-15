@@ -52,7 +52,7 @@ public class TwoWaySerialComm {
       try {
         while( ( len = this.in.read( buffer ) ) > -1 ) {
        
-          StreamManager.getInstance().receiveCommandToRemote(new String( buffer, 0, len ));
+          StreamManager.getInstance().receiveCommandFromRemote(new String( buffer, 0, len ));
         }
       } catch( IOException e ) {
         e.printStackTrace();
