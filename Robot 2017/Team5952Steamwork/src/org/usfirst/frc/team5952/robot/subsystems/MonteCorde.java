@@ -15,7 +15,7 @@ public class MonteCorde extends Subsystem {
     
 
     public MonteCorde() {
-    	moteurCorde = new Talon(3);
+    	moteurCorde = new Talon(2);
     	
     }
     

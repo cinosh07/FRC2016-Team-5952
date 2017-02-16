@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team5952.robot.commands.CloseLight;
 import org.usfirst.frc.team5952.robot.commands.ExampleCommand;
+import org.usfirst.frc.team5952.robot.commands.MonteLaCorde;
 import org.usfirst.frc.team5952.robot.commands.OpenLight;
 import org.usfirst.frc.team5952.robot.commands.OpenTrap;
 import org.usfirst.frc.team5952.robot.commands.SwitchCamera;
@@ -67,6 +68,7 @@ public class OI {
         // Connect the buttons to commands
         d_up.whenPressed(new SwitchCamera(0));
         d_right.whenPressed(new OpenTrap());
+        r2.whenPressed(new MonteLaCorde());
 
     }
     

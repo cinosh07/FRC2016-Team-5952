@@ -1,6 +1,6 @@
 package org.usfirst.frc.team5952.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Trap extends Subsystem {
 	
-	DoubleSolenoid solenoid1 = new DoubleSolenoid(1,2);
-    DoubleSolenoid solenoid2 = new DoubleSolenoid(3,4);
+	Solenoid solenoid1 = new Solenoid(0);
+    Solenoid solenoid2 = new Solenoid(1);
 	
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
@@ -18,19 +18,19 @@ public class Trap extends Subsystem {
     
     public void openTrap() {
     	
-    	solenoid1.set(DoubleSolenoid.Value.kForward);
-    	solenoid2.set(DoubleSolenoid.Value.kForward);
+    	solenoid1.set(true);
+    	solenoid2.set(true);
     	
     }
     public void closeTrap() {
     	
-    	solenoid1.set(DoubleSolenoid.Value.kReverse);
-    	solenoid2.set(DoubleSolenoid.Value.kReverse);
+    	solenoid1.set(false);
+    	solenoid2.set(false);
     }
     public void stop() {
     	
-    	solenoid1.set(DoubleSolenoid.Value.kOff);
-    	solenoid2.set(DoubleSolenoid.Value.kOff);
+    	solenoid1.set(false);
+    	solenoid2.set(false);
     }
 }
 
