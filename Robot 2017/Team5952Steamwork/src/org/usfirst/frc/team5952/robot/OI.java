@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team5952.robot.commands.CloseLight;
+import org.usfirst.frc.team5952.robot.commands.CloseTrap;
+import org.usfirst.frc.team5952.robot.commands.DescendLaCorde;
 import org.usfirst.frc.team5952.robot.commands.ExampleCommand;
 import org.usfirst.frc.team5952.robot.commands.MonteLaCorde;
 import org.usfirst.frc.team5952.robot.commands.OpenLight;
@@ -54,21 +56,27 @@ public class OI {
         SmartDashboard.putData("Switch Camera", new SwitchCamera(0));
         SmartDashboard.putData("openLight", new OpenLight());
 		SmartDashboard.putData("closeLight", new CloseLight());
-		
+		SmartDashboard.putData("CloseTrap", new CloseTrap());
+		SmartDashboard.putData("OpenTrap", new OpenTrap());
         // Create some buttons
-        JoystickButton d_up = new JoystickButton(joy, 5);
-        JoystickButton d_right= new JoystickButton(joy, 6);
-        JoystickButton d_down= new JoystickButton(joy, 7);
-        JoystickButton d_left = new JoystickButton(joy, 8);
-        JoystickButton l2 = new JoystickButton(joy, 9);
-        JoystickButton r2 = new JoystickButton(joy, 10);
-        JoystickButton l1 = new JoystickButton(joy, 11);
-        JoystickButton r1 = new JoystickButton(joy, 12);
+	    JoystickButton b_1 = new JoystickButton(joy, 1);
+	    JoystickButton b_2 = new JoystickButton(joy, 2);
+	    JoystickButton b_3 = new JoystickButton(joy, 3);
+		JoystickButton b_4 = new JoystickButton(joy, 4);
+        JoystickButton b_5 = new JoystickButton(joy, 5);
+        JoystickButton b_6 = new JoystickButton(joy, 6);
+        JoystickButton b_7 = new JoystickButton(joy, 7);
+        JoystickButton b_8 = new JoystickButton(joy, 8);
+        JoystickButton b_9 = new JoystickButton(joy, 9);
+        JoystickButton b_10 = new JoystickButton(joy, 10);
+        JoystickButton b_11 = new JoystickButton(joy, 11);
+        JoystickButton b_12 = new JoystickButton(joy, 12);
 
         // Connect the buttons to commands
-        d_up.whenPressed(new SwitchCamera(0));
-        d_right.whenPressed(new OpenTrap());
-        r2.whenPressed(new MonteLaCorde());
+        b_1.whenPressed(new OpenTrap());
+        b_2.whileHeld(new MonteLaCorde());
+        b_3.whenPressed(new DescendLaCorde());
+        b_6.whenPressed(new SwitchCamera(0));
 
     }
     
