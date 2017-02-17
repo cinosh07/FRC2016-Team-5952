@@ -197,7 +197,7 @@ public class VisionCommunication {
 	
 	public int getCurrentState() {
 
-		Double val = cameraTable.getNumber(CURRENT_STATE, 0);
+		Double val = cameraTable.getNumber(CURRENT_STATE, 0.0);
 		return val.intValue();
 
 	}

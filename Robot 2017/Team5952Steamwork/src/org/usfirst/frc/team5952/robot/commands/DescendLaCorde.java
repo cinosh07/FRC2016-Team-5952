@@ -12,7 +12,7 @@ public class DescendLaCorde extends Command {
     public DescendLaCorde() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(Robot.montecorde);    	
+    	//requires(Robot.montecorde);    	
     }
 
     // Called just before this Command runs the first time

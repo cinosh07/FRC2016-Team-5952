@@ -11,7 +11,7 @@ public class MonteLaCorde extends Command {
     public MonteLaCorde() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(Robot.montecorde);
+    	//requires(Robot.montecorde);
     }
 
     // Called just before this Command runs the first time
