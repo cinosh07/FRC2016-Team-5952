@@ -895,17 +895,36 @@ public class StreamManager {
 		// TODO Traiter la commande
 
 		String[] commandTosplit = command.split(":");
+		System.out.println("commands receives: " + command);
+		
+		if (commandTosplit.length > 10) {
+			
+			System.out.println("commands lenght: " + commandTosplit.length);
+			System.out.println("command 0: " + commandTosplit[0]);
+			System.out.println("command 1: " + commandTosplit[1]);
+			System.out.println("command 2: " + commandTosplit[2]);
+			System.out.println("command 3: " + commandTosplit[3]);
+			System.out.println("command 4: " + commandTosplit[4]);
+			System.out.println("command 5: " + commandTosplit[5]);
+			System.out.println("command 6: " + commandTosplit[6]);
+			System.out.println("command 7: " + commandTosplit[7]);
+			System.out.println("command 8: " + commandTosplit[8]);
+			System.out.println("command 9: " + commandTosplit[9]);
 
-		currenState = Integer.parseInt(commandTosplit[0]);
-		remoteVisionPotentiometer1 = Integer.parseInt(commandTosplit[1]);
-		remoteVisionPotentiometer2 = Integer.parseInt(commandTosplit[2]);
-		remoteVisionPotentiometer3 = Integer.parseInt(commandTosplit[3]);
-		remoteVisionRadarTilt = Integer.parseInt(commandTosplit[4]);
-		remoteVisionRadarPan = Integer.parseInt(commandTosplit[5]);
-		remoteVisionButton2State = Integer.parseInt(commandTosplit[6]);
-		remoteVisionButton3State = Integer.parseInt(commandTosplit[7]);
-		remoteVisionButton4State = Integer.parseInt(commandTosplit[8]);
-		remoteVisionButton5State = Integer.parseInt(commandTosplit[9]);
+			
+			currenState = Integer.parseInt(commandTosplit[0]);
+			remoteVisionPotentiometer1 = Integer.parseInt(commandTosplit[1]);
+			remoteVisionPotentiometer2 = Integer.parseInt(commandTosplit[2]);
+			remoteVisionPotentiometer3 = Integer.parseInt(commandTosplit[3]);
+			remoteVisionRadarTilt = Integer.parseInt(commandTosplit[4]);
+			remoteVisionRadarPan = Integer.parseInt(commandTosplit[5]);
+			remoteVisionButton2State = Integer.parseInt(commandTosplit[6]);
+			remoteVisionButton3State = Integer.parseInt(commandTosplit[7]);
+			remoteVisionButton4State = Integer.parseInt(commandTosplit[8]);
+			remoteVisionButton5State = Integer.parseInt(commandTosplit[9]);
+			
+		}
+		
 
 	}
 

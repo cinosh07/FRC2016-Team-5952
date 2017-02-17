@@ -47,12 +47,16 @@ public class TwoWaySerialComm {
     }
  
     public void run() {
-      byte[] buffer = new byte[ 1024 ];
+    	int bufferSize = 1024;
+    	int total = 0;
+      byte[] buffer = new byte[ bufferSize ];
       int len = -1;
       try {
-        while( ( len = this.in.read( buffer ) ) > -1 ) {
+        while( total < bufferSize  && ( len = this.in.read( buffer, total, bufferSize - total ) ) > -1  ) {
        
           StreamManager.getInstance().receiveCommandFromRemote(new String( buffer, 0, len ));
+          
+          total += len;
         }
       } catch( IOException e ) {
         e.printStackTrace();
