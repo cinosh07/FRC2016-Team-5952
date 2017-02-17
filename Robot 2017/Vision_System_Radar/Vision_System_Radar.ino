@@ -63,20 +63,20 @@ void setup() {
 	// depending on how AD0 is connected on your breakout board, check its schematics for details
 	gyro.init(ITG3200_ADDR_AD0_LOW);
 
-	Serial.print("zeroCalibrating...");
+	//Serial.print("zeroCalibrating...");
 	gyro.zeroCalibrate(2500, 2);
-	Serial.println("done.");
+	//Serial.println("done.");
 
 	AccelerometerStart();
 
 	mag.initialize();
 
 	// verify connection
-	Serial.println("Testing device connections...");
-	Serial.println(
-			mag.testConnection() ?
-					"HMC5883L connection successful" :
-					"HMC5883L connection failed");
+	//Serial.println("Testing device connections...");
+	//Serial.println(
+		//	mag.testConnection() ?
+		//			"HMC5883L connection successful" :
+		//			"HMC5883L connection failed");
 
 	// configure Arduino LED for
 	pinMode(LED_PIN, OUTPUT);
@@ -222,6 +222,7 @@ void PrintSerialData() {
 	Serial.print(camera1Inches);
 	Serial.print(delimitor);
 	Serial.print(camera1Cm);
+	Serial.print(delimitor);
 
 	Serial.println();
 
