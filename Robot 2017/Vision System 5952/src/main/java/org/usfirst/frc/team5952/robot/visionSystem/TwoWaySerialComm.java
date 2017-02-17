@@ -46,20 +46,24 @@ public class TwoWaySerialComm {
       this.in = in;
     }
  
-    public void run() {
-      byte[] buffer = new byte[ 1024 ];
-      int len = -1;
-      try {
-        while( ( len = this.in.read( buffer ) ) > -1 ) {
-       
-          CameraManager.getInstance().receiveCommandFromRemote(new String( buffer, 0, len ));
-        }
-      } catch( IOException e ) {
-        e.printStackTrace();
+    
+  public void run() {
+  	int bufferSize = 1024;
+  	int total = 0;
+    byte[] buffer = new byte[ bufferSize ];
+    int len = -1;
+    try {
+      while( total < bufferSize  && ( len = this.in.read( buffer, total, bufferSize - total ) ) > -1  ) {
+     
+    	  CameraManager.getInstance().receiveCommandFromRemote(new String( buffer, 0, len ));
+        
+        total += len;
       }
+    } catch( IOException e ) {
+      e.printStackTrace();
     }
   }
- 
+}
   public static class SerialWriter implements Runnable {
  
     OutputStream out;
