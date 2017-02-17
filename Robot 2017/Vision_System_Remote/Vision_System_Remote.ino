@@ -11,6 +11,7 @@ int baudrate = 9600;
 int loopDelay = 100;
 
 int currentState = 0;
+int lastState = 0;
 
 String defaultDisplayLine1 = "Robuck Team 5952";
 String defaultDisplayLine2 = "Vision System Remote";
@@ -268,7 +269,7 @@ void loop() {
 	button4Val = digitalRead(button4Pin);  // read button4 value
 	button5Val = digitalRead(button5Pin);  // read button5 value
 
-	if (currentState == 0) {
+	if (currentState == 0  && lastState != currentState) {
 		setLCDDefault();
 		//ledButton1State = checkButtonStatus(button1Val, lastButton1Val,
 		//ledButton1State, 1);
@@ -281,25 +282,26 @@ void loop() {
 		ledButton5State = checkButtonStatus(button5Val, lastButton5Val,
 				ledButton5State, 5);
 
-	} else if (currentState == 1) {
+	} else if (currentState == 1 && lastState != currentState) {
 
 		if (!checkResetButtonFunctionStatus(button2Val, lastButton2Val, 2)) {
 			buttonFunction1();
 		}
 
-	} else if (currentState == 2) {
+	} else if (currentState == 2 && lastState != currentState) {
 
 		if (!checkResetButtonFunctionStatus(button2Val, lastButton2Val, 2)) {
 			buttonFunction1();
 		}
 
-	} else if (currentState == 3) {
+	} else if (currentState == 3 && lastState != currentState) {
 
 		if (!checkResetButtonFunctionStatus(button2Val, lastButton2Val, 2)) {
 			buttonFunction1();
 		}
 
-	} else if (currentState == 4) {
+
+	} else if (currentState == 4 && lastState != currentState) {
 
 		if (!checkResetButtonFunctionStatus(button2Val, lastButton2Val, 2)) {
 			buttonFunction1();
@@ -357,9 +359,9 @@ void receiveCommand() {
 	if (Serial.available() > 0) {
 		String command;
 		command = Serial.readString();
-		Serial.print("Command receive : ");
-		Serial.print(command);
-		Serial.println();
+		//Serial.print("Command receive : ");
+		//Serial.print(command);
+		//Serial.println();
 
 		if (command.length() > 0) {
 
@@ -432,7 +434,7 @@ void receiveCommand() {
 
 }
 
-}
+
 
 void printSerial() {
 
@@ -487,6 +489,7 @@ Serial.print((String) ledButton4State);
 // Value Led5State
 Serial.print(separator);
 Serial.print((String) ledButton5State);
+Serial.print(separator);
 Serial.println();
 
 }
@@ -506,28 +509,34 @@ if (buttonValue != lastVal) {
 	}
 
 	// remember the current state of the button
-	switch (button) {
+	if (buttonValue == 0 && ledState == HIGH) {
+		switch (button) {
 
-	case 2:
-		lastButton2Val = buttonValue;
-		currentState = 1;
-		setLCDButtonFunction1();
-		break;
-	case 3:
-		currentState = 2;
-		lastButton3Val = buttonValue;
-		setLCDButtonFunction2();
-		break;
-	case 4:
-		currentState = 3;
-		lastButton4Val = buttonValue;
-		setLCDButtonFunction3();
-		break;
-	case 5:
-		currentState = 4;
-		lastButton5Val = buttonValue;
-		setLCDButtonFunction4();
-		break;
+		case 2:
+			lastButton2Val = buttonValue;
+			lastState = currentState;
+			currentState = 1;
+			setLCDButtonFunction1();
+			break;
+		case 3:
+			lastState = currentState;
+			currentState = 2;
+			lastButton3Val = buttonValue;
+			setLCDButtonFunction2();
+			break;
+		case 4:
+			lastState = currentState;
+			currentState = 3;
+			lastButton4Val = buttonValue;
+			setLCDButtonFunction3();
+			break;
+		case 5:
+			lastState = currentState;
+			currentState = 4;
+			lastButton5Val = buttonValue;
+			setLCDButtonFunction4();
+			break;
+		}
 	}
 
 }
@@ -549,6 +558,7 @@ if (buttonValue != lastVal) {
 	case 2:
 		if (currentState == 1) {
 
+			lastState = currentState;
 			currentState = 0;
 			setLCDDefault();
 			lastButton2Val = buttonValue;
