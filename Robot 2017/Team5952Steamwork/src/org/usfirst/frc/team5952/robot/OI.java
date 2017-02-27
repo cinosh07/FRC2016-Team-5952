@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team5952.robot.commands.CloseLight;
 import org.usfirst.frc.team5952.robot.commands.CloseTrap;
 import org.usfirst.frc.team5952.robot.commands.DescendLaCorde;
-import org.usfirst.frc.team5952.robot.commands.ExampleCommand;
 import org.usfirst.frc.team5952.robot.commands.MonteLaCorde;
 import org.usfirst.frc.team5952.robot.commands.OpenLight;
 import org.usfirst.frc.team5952.robot.commands.OpenTrap;
+import org.usfirst.frc.team5952.robot.commands.StopLaCorde;
 import org.usfirst.frc.team5952.robot.commands.SwitchCamera;
 
 
@@ -73,10 +73,12 @@ public class OI {
         JoystickButton b_12 = new JoystickButton(joy, 12);
 
         // Connect the buttons to commands
-        b_1.whenPressed(new OpenTrap());
-        b_2.whileHeld(new MonteLaCorde());
-        b_3.whenPressed(new DescendLaCorde());
+        b_1.toggleWhenPressed(new OpenTrap());
+        b_3.toggleWhenPressed(new DescendLaCorde());
+        b_4.toggleWhenPressed(new MonteLaCorde());
+        b_5.toggleWhenPressed(new StopLaCorde());
         b_6.whenPressed(new SwitchCamera(0));
+        
 
     }
     

@@ -21,7 +21,7 @@ public class MonteCorde extends Subsystem {
     
    
 	public void monte(){
-    	moteurCorde.set(0.1);
+    	moteurCorde.set(-1.0);
     }
     
     public void arrete(){
