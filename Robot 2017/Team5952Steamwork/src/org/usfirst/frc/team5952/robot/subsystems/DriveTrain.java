@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveTrain extends Subsystem {
 	private SpeedController left_motor, right_motor;
 	private RobotDrive drive;
-	//private Encoder left_encoder, right_encoder;
+	public Encoder left_encoder, right_encoder;
 	private AnalogInput rangefinder;
 	private AnalogGyro gyro;
 
@@ -32,17 +32,17 @@ public class DriveTrain extends Subsystem {
 		right_motor = new Talon(1);
 	
 		drive = new RobotDrive(left_motor, right_motor);
-//		left_encoder = new Encoder(1, 2);
-//		right_encoder = new Encoder(3, 4);
+		left_encoder = new Encoder(0, 1);
+		right_encoder = new Encoder(2, 3);
 
 		// Encoders may measure differently in the real world and in
-		// simulation. In this example the robot moves 0.042 barleycorns
+		// simulation. In this example the robot moves 0.042 barleycorns ( close to 0.8467 cm )
 		// per tick in the real world, but the simulated encoders
 		// simulate 360 tick encoders. This if statement allows for the
 		// real robot to handle this difference in devices.
 //		if (Robot.isReal()) {
-//			left_encoder.setDistancePerPulse(0.042);
-//			right_encoder.setDistancePerPulse(0.042);
+			left_encoder.setDistancePerPulse(0.042);
+			right_encoder.setDistancePerPulse(0.042);
 //		} else {
 //			// Circumference in ft = 4in/12(in/ft)*PI
 //			left_encoder.setDistancePerPulse((4.0/12.0*Math.PI) / 360.0);
@@ -57,8 +57,8 @@ public class DriveTrain extends Subsystem {
 		LiveWindow.addActuator("Drive Train", "Right Motor", (Talon) right_motor);
 //		LiveWindow.addActuator("Drive Train", "Front Right Motor", (Talon) front_right_motor);
 //		LiveWindow.addActuator("Drive Train", "Back Right Motor", (Talon) back_right_motor);
-//		LiveWindow.addSensor("Drive Train", "Left Encoder", left_encoder);
-//		LiveWindow.addSensor("Drive Train", "Right Encoder", right_encoder);
+		LiveWindow.addSensor("Drive Train", "Left Encoder", left_encoder);
+		LiveWindow.addSensor("Drive Train", "Right Encoder", right_encoder);
 		LiveWindow.addSensor("Drive Train", "Rangefinder", rangefinder);
 		LiveWindow.addSensor("Drive Train", "Gyro", gyro);
 	}
@@ -75,10 +75,10 @@ public class DriveTrain extends Subsystem {
 	 * The log method puts interesting information to the SmartDashboard.
 	 */
 	public void log() {
-//		SmartDashboard.putNumber("Left Distance", left_encoder.getDistance());
-//		SmartDashboard.putNumber("Right Distance", right_encoder.getDistance());
-//		SmartDashboard.putNumber("Left Speed", left_encoder.getRate());
-//		SmartDashboard.putNumber("Right Speed", right_encoder.getRate());
+		SmartDashboard.putNumber("Left Distance", left_encoder.getDistance());
+		SmartDashboard.putNumber("Right Distance", right_encoder.getDistance());
+		SmartDashboard.putNumber("Left Speed", left_encoder.getRate());
+		SmartDashboard.putNumber("Right Speed", right_encoder.getRate());
 		SmartDashboard.putNumber("Gyro", gyro.getAngle());
 	}
 
@@ -90,13 +90,21 @@ public class DriveTrain extends Subsystem {
 	public void drive(double left, double right) {
 
 		drive.arcadeDrive(Robot.oi.getJoystick());
+		
+	}
+	
+	public void driveTest(double direction, double turn) {
+
+		
+		drive.arcadeDrive(direction, turn);
 	}
 
 	/**
 	 * @param joy The ps3 style joystick to use to drive tank style.
 	 */
 	public void drive(Joystick joy) {
-		drive(-joy.getY(), -joy.getAxis(AxisType.kThrottle));
+		drive.arcadeDrive(Robot.oi.getJoystick());
+		//drive(-joy.getY(), -joy.getAxis(AxisType.kThrottle));
 	}
 
 	/**
@@ -111,16 +119,16 @@ public class DriveTrain extends Subsystem {
 	 */
 	public void reset() {
 		gyro.reset();
-//		left_encoder.reset();
-//		right_encoder.reset();
+		left_encoder.reset();
+		right_encoder.reset();
 	}
 
 	/**
 	 * @return The distance driven (average of left and right encoders).
 	 */
-//	public double getDistance() {
-//		return (left_encoder.getDistance() + right_encoder.getDistance())/2;
-//	}
+	public double getDistance() {
+		return (left_encoder.getDistance() + right_encoder.getDistance())/2;
+	}
 
 	/**
 	 * @return The distance to the obstacle detected by the rangefinder.

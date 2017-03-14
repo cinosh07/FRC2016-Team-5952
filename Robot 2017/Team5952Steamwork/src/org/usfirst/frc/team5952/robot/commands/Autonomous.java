@@ -1,40 +1,32 @@
 package org.usfirst.frc.team5952.robot.commands;
 
-import org.usfirst.frc.team5952.robot.Robot;
-
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
  *
  */
-public class SwitchCamera extends Command {
+public class Autonomous extends CommandGroup {
 
-	private int cameraNumber = 1;
-    
-	public SwitchCamera() {
-    	
-    	
-    	
+    public Autonomous() {
+    	//addSequential(new DriveStraight(500.0));
+//        addSequential(new Pickup());
+//        addSequential(new SetDistanceToBox(0.10));
+//        // addSequential(new DriveStraight(4)); // Use Encoders if ultrasonic is broken
+//        addSequential(new Place());
+//        addSequential(new SetDistanceToBox(0.60));
+//        // addSequential(new DriveStraight(-2)); // Use Encoders if ultrasonic is broken
+//        addParallel(new SetWristSetpoint(-45));
+//        addSequential(new CloseClaw());
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	
-    	if (Robot.currentCamera == 1) {
-    		Robot.cameraTable.putNumber("SWITCH", 2);
-    		Robot.currentCamera = 2;
-    	} else {
-    		Robot.cameraTable.putNumber("SWITCH", 1);
-    		Robot.currentCamera = 1;
-    	}
-    	
-    	
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     }
- 
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
@@ -48,6 +40,5 @@ public class SwitchCamera extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	end();
     }
 }

@@ -1,7 +1,10 @@
 
 package org.usfirst.frc.team5952.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -9,7 +12,9 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team5952.robot.commands.Autonomous;
 import org.usfirst.frc.team5952.robot.commands.CloseLight;
+import org.usfirst.frc.team5952.robot.commands.DriveStraight;
 import org.usfirst.frc.team5952.robot.commands.ExampleCommand;
 import org.usfirst.frc.team5952.robot.commands.OpenLight;
 import org.usfirst.frc.team5952.robot.commands.OpenTrap;
@@ -21,6 +26,8 @@ import org.usfirst.frc.team5952.robot.subsystems.Light;
 import org.usfirst.frc.team5952.robot.subsystems.MonteCorde;
 import org.usfirst.frc.team5952.robot.subsystems.OnBoardAccelerometer;
 import org.usfirst.frc.team5952.robot.subsystems.Trap;
+
+import com.kauailabs.navx.frc.AHRS;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -41,6 +48,10 @@ public class Robot extends IterativeRobot {
     public static OnBoardAccelerometer onBoardAccelerometer;
     public static RobotVisionCommunication visionCommunication;
     public static Light light;
+    public static int currentCamera = 1;
+    public static AHRS ahrs;
+    public static double distance = 105.0;
+   
 
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
@@ -51,10 +62,30 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		
+		 try {
+				/***********************************************************************
+				 * navX-MXP:
+				 * - Communication via RoboRIO MXP (SPI, I2C, TTL UART) and USB.            
+				 * - See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface.
+				 * 
+				 * navX-Micro:
+				 * - Communication via I2C (RoboRIO MXP or Onboard) and USB.
+				 * - See http://navx-micro.kauailabs.com/guidance/selecting-an-interface.
+				 * 
+				 * Multiple navX-model devices on a single robot are supported.
+				 ************************************************************************/
+	            ahrs = new AHRS(SPI.Port.kMXP);
+	        } catch (RuntimeException ex ) {
+	            DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
+	        }
 		oi = new OI();
 		drivetrain = new DriveTrain();
 		onBoardAccelerometer = new OnBoardAccelerometer();
 		chooser.addDefault("Default Auto", new ExampleCommand());
+		
+		//autonomousCommand = new Autonomous();
+		autonomousCommand = new DriveStraight(3000);
 		
 		light = new Light();
 		trap = new Trap();
@@ -110,7 +141,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = chooser.getSelected();
+		//autonomousCommand = chooser.getSelected();
 
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -119,9 +150,10 @@ public class Robot extends IterativeRobot {
 		 * autonomousCommand = new ExampleCommand(); break; }
 		 */
 
+		autonomousCommand.start();
 		// schedule the autonomous command (example)
-		if (autonomousCommand != null)
-			autonomousCommand.start();
+//		if (autonomousCommand != null)
+//			autonomousCommand.start();
 	}
 
 	/**
@@ -143,8 +175,9 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-		if (autonomousCommand != null)
-			autonomousCommand.cancel();
+		autonomousCommand.cancel();
+//		if (autonomousCommand != null)
+//			autonomousCommand.cancel();
 	}
 
 	/**

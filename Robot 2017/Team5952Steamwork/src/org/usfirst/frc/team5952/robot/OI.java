@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team5952.robot.commands.CloseLight;
 import org.usfirst.frc.team5952.robot.commands.CloseTrap;
 import org.usfirst.frc.team5952.robot.commands.DescendLaCorde;
+import org.usfirst.frc.team5952.robot.commands.DriveStraight;
 import org.usfirst.frc.team5952.robot.commands.MonteLaCorde;
 import org.usfirst.frc.team5952.robot.commands.OpenLight;
 import org.usfirst.frc.team5952.robot.commands.OpenTrap;
@@ -53,7 +54,7 @@ public class OI {
     public OI() {
     	// Put Some buttons on the SmartDashboard
        
-        SmartDashboard.putData("Switch Camera", new SwitchCamera(0));
+
         SmartDashboard.putData("openLight", new OpenLight());
 		SmartDashboard.putData("closeLight", new CloseLight());
 		SmartDashboard.putData("CloseTrap", new CloseTrap());
@@ -74,10 +75,12 @@ public class OI {
 
         // Connect the buttons to commands
         b_1.toggleWhenPressed(new OpenTrap());
+        b_2.toggleWhenPressed( new OpenLight());
         b_3.toggleWhenPressed(new DescendLaCorde());
         b_4.toggleWhenPressed(new MonteLaCorde());
         b_5.toggleWhenPressed(new StopLaCorde());
-        b_6.whenPressed(new SwitchCamera(0));
+       // b_6.toggleWhenPressed(new DriveStraight(500.0));
+
         
 
     }
