@@ -28,6 +28,7 @@ public class DriveTrain extends Subsystem {
 	private AnalogGyro gyro;
 
 	public DriveTrain() {
+		
 		super();
 		left_motor = new Talon(1);
 		right_motor = new Talon(0);
@@ -41,14 +42,8 @@ public class DriveTrain extends Subsystem {
 		// per tick in the real world, but the simulated encoders
 		// simulate 360 tick encoders. This if statement allows for the
 		// real robot to handle this difference in devices.
-//		if (Robot.isReal()) {
-			left_encoder.setDistancePerPulse(0.042);
-			right_encoder.setDistancePerPulse(0.042);
-//		} else {
-//			// Circumference in ft = 4in/12(in/ft)*PI
-//			left_encoder.setDistancePerPulse((4.0/12.0*Math.PI) / 360.0);
-//			right_encoder.setDistancePerPulse((4.0/12.0*Math.PI) / 360.0);
-//		}
+		left_encoder.setDistancePerPulse(0.042);
+		right_encoder.setDistancePerPulse(0.042);
 
 		rangefinder = new AnalogInput(6);
 		gyro = new AnalogGyro(1);
@@ -56,8 +51,6 @@ public class DriveTrain extends Subsystem {
 		// Let's show everything on the LiveWindow
 		LiveWindow.addActuator("Drive Train", "Left Motor", (Talon) left_motor);
 		LiveWindow.addActuator("Drive Train", "Right Motor", (Talon) right_motor);
-//		LiveWindow.addActuator("Drive Train", "Front Right Motor", (Talon) front_right_motor);
-//		LiveWindow.addActuator("Drive Train", "Back Right Motor", (Talon) back_right_motor);
 		LiveWindow.addSensor("Drive Train", "Left Encoder", left_encoder);
 		LiveWindow.addSensor("Drive Train", "Right Encoder", right_encoder);
 		LiveWindow.addSensor("Drive Train", "Rangefinder", rangefinder);
@@ -76,11 +69,13 @@ public class DriveTrain extends Subsystem {
 	 * The log method puts interesting information to the SmartDashboard.
 	 */
 	public void log() {
+		
 		SmartDashboard.putNumber("Left Distance", left_encoder.getDistance());
 		SmartDashboard.putNumber("Right Distance", right_encoder.getDistance());
 		SmartDashboard.putNumber("Left Speed", left_encoder.getRate());
 		SmartDashboard.putNumber("Right Speed", right_encoder.getRate());
 		SmartDashboard.putNumber("Gyro", gyro.getAngle());
+		
 	}
 
 	/**
@@ -105,7 +100,6 @@ public class DriveTrain extends Subsystem {
 	 */
 	public void drive(Joystick joy) {
 		drive.arcadeDrive(Robot.oi.getJoystick());
-		//drive(-joy.getY(), -joy.getAxis(AxisType.kThrottle));
 	}
 
 	/**

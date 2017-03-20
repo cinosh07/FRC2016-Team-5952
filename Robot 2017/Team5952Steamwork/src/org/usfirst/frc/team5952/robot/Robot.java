@@ -1,7 +1,7 @@
 package org.usfirst.frc.team5952.robot;
 
 import org.usfirst.frc.team5952.robot.commands.DriveStraight;
-import org.usfirst.frc.team5952.robot.commands.ExampleCommand;
+import org.usfirst.frc.team5952.robot.commands.DriveStraightSimple;
 import org.usfirst.frc.team5952.robot.commands.RobotVisionCommunication;
 import org.usfirst.frc.team5952.robot.commands.VisionCommunication;
 import org.usfirst.frc.team5952.robot.subsystems.DriveTrain;
@@ -16,7 +16,6 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -45,7 +44,7 @@ public class Robot extends IterativeRobot {
     public static Light light;
     public static int currentCamera = 1;
     public static AHRS ahrs;
-    
+
    
 
 	Command autonomousCommand;
@@ -75,35 +74,40 @@ public class Robot extends IterativeRobot {
 		 catch (RuntimeException ex ) {
 	            DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
 	        }
+		 
 		oi = new OI();
 		drivetrain = new DriveTrain();
 		onBoardAccelerometer = new OnBoardAccelerometer();
-		chooser.addDefault("Default Auto", new ExampleCommand());
-		
-		//autonomousCommand = new Autonomous();
-		autonomousCommand = new DriveStraight(5, 10);// AutonomousCommandGroup();
+		chooser.addDefault("Drive Straight Simple",  new DriveStraightSimple(-0.45));
+		chooser.addObject("Franchir ligne", new DriveStraight(300) );
+		chooser.addObject("Poser Gear Centre", new DriveStraight(117.0) );
+		chooser.addObject("Poser Gear Gauche", new DriveStraight(300) );
+		chooser.addObject("Poser Gear Droite", new DriveStraight(300) );
+
 		
 		light = new Light();
 		trap = new Trap();
 		montecorde = new MonteCorde();
-		
-		// chooser.addObject("My Auto", new MyAutoCommand());
-		SmartDashboard.putData("Auto mode", chooser);
+		SmartDashboard.putData("Auto Selector", chooser);
 
 		cameraTable = NetworkTable.getTable(VisionCommunication.TABLE_NAME);
 		visionCommunication = new RobotVisionCommunication(cameraTable);
 
-		// Show what command your subsystem is running on the SmartDashboard
-		SmartDashboard.putData(drivetrain);
+		
+		
+		
+		
+		// Uncomments For Debugging
+		//SmartDashboard.putData(drivetrain);
 
-		SmartDashboard.putString(VisionCommunication.CAMERA1_IP, visionCommunication.getCamera1IP());
-		SmartDashboard.putString(VisionCommunication.CAMERA2_IP, visionCommunication.getCamera2IP());
+		//SmartDashboard.putString(VisionCommunication.CAMERA1_IP, visionCommunication.getCamera1IP());
+		//SmartDashboard.putString(VisionCommunication.CAMERA2_IP, visionCommunication.getCamera2IP());
 
-		SmartDashboard.putNumber(VisionCommunication.CAMERA1_DELTA_TARGET, visionCommunication.getCamera1DeltaTarget());
-		SmartDashboard.putNumber(VisionCommunication.CAMERA2_DELTA_TARGET, visionCommunication.getCamera2DeltaTarget());
+		//SmartDashboard.putNumber(VisionCommunication.CAMERA1_DELTA_TARGET, visionCommunication.getCamera1DeltaTarget());
+		//SmartDashboard.putNumber(VisionCommunication.CAMERA2_DELTA_TARGET, visionCommunication.getCamera2DeltaTarget());
 
-		SmartDashboard.putNumber(VisionCommunication.CAMERA1_DIST_TARGET, visionCommunication.getCamera1DistTarget());
-		SmartDashboard.putNumber(VisionCommunication.CAMERA2_DIST_TARGET, visionCommunication.getCamera2DistTarget());
+		//SmartDashboard.putNumber(VisionCommunication.CAMERA1_DIST_TARGET, visionCommunication.getCamera1DistTarget());
+		//SmartDashboard.putNumber(VisionCommunication.CAMERA2_DIST_TARGET, visionCommunication.getCamera2DistTarget());
 		
 		
 
@@ -137,21 +141,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		//autonomousCommand = chooser.getSelected();
-
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
-
-		Robot.drivetrain.driveTest(0.2, 0);
 		
-//		autonomousCommand.start();
-		// schedule the autonomous command (example)
-//		if (autonomousCommand != null)
-//			autonomousCommand.start();
+		autonomousCommand = chooser.getSelected();		
+		autonomousCommand.start();
+		
 	}
 
 	/**
@@ -161,14 +154,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		
 		System.out.println("Runing auton periodic");
-		
-		Robot.drivetrain.driveTest(-0.45, 0);
-		Timer.delay(0.1);
-	
-		visionCommunication.updateData();
-		visionCommunication.putOnBoardAccelData();
-		Scheduler.getInstance().run();
-		Robot.drivetrain.driveTest(-0.45, 0);
+		Scheduler.getInstance().run();	
 		log();
 		
 	}
@@ -180,8 +166,7 @@ public class Robot extends IterativeRobot {
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		autonomousCommand.cancel();
-//		if (autonomousCommand != null)
-//			autonomousCommand.cancel();
+
 	}
 
 	/**
@@ -208,13 +193,13 @@ public class Robot extends IterativeRobot {
 
 	private void log() {
 
-		SmartDashboard.putString(VisionCommunication.CAMERA1_IP, visionCommunication.getCamera1IP());
-		SmartDashboard.putString(VisionCommunication.CAMERA2_IP, visionCommunication.getCamera2IP());
-		SmartDashboard.putNumber(VisionCommunication.CAMERA2_DELTA_TARGET, visionCommunication.getCamera2DeltaTarget());
-		SmartDashboard.putNumber(VisionCommunication.CAMERA2_DIST_TARGET,visionCommunication.getCamera2DistTarget());
+		//SmartDashboard.putString(VisionCommunication.CAMERA1_IP, visionCommunication.getCamera1IP());
+		//SmartDashboard.putString(VisionCommunication.CAMERA2_IP, visionCommunication.getCamera2IP());
+		//SmartDashboard.putNumber(VisionCommunication.CAMERA2_DELTA_TARGET, visionCommunication.getCamera2DeltaTarget());
+		//SmartDashboard.putNumber(VisionCommunication.CAMERA2_DIST_TARGET,visionCommunication.getCamera2DistTarget());
 		
-		SmartDashboard.putNumber(VisionCommunication.CAMERA1_DELTA_TARGET, visionCommunication.getCamera1DeltaTarget());
-		SmartDashboard.putNumber(VisionCommunication.CAMERA1_DIST_TARGET, visionCommunication.getCamera1DistTarget());
+		//SmartDashboard.putNumber(VisionCommunication.CAMERA1_DELTA_TARGET, visionCommunication.getCamera1DeltaTarget());
+		//SmartDashboard.putNumber(VisionCommunication.CAMERA1_DIST_TARGET, visionCommunication.getCamera1DistTarget());
 		drivetrain.log();
 	}
 }
