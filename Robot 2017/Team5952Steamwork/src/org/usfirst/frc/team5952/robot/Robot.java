@@ -1,5 +1,17 @@
-
 package org.usfirst.frc.team5952.robot;
+
+import org.usfirst.frc.team5952.robot.commands.DriveStraight;
+import org.usfirst.frc.team5952.robot.commands.ExampleCommand;
+import org.usfirst.frc.team5952.robot.commands.RobotVisionCommunication;
+import org.usfirst.frc.team5952.robot.commands.VisionCommunication;
+import org.usfirst.frc.team5952.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team5952.robot.subsystems.ExampleSubsystem;
+import org.usfirst.frc.team5952.robot.subsystems.Light;
+import org.usfirst.frc.team5952.robot.subsystems.MonteCorde;
+import org.usfirst.frc.team5952.robot.subsystems.OnBoardAccelerometer;
+import org.usfirst.frc.team5952.robot.subsystems.Trap;
+
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -12,27 +24,10 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team5952.robot.commands.Autonomous;
-import org.usfirst.frc.team5952.robot.commands.CloseLight;
-import org.usfirst.frc.team5952.robot.commands.DriveStraight;
-import org.usfirst.frc.team5952.robot.commands.ExampleCommand;
-import org.usfirst.frc.team5952.robot.commands.OpenLight;
-import org.usfirst.frc.team5952.robot.commands.OpenTrap;
-import org.usfirst.frc.team5952.robot.commands.RobotVisionCommunication;
-import org.usfirst.frc.team5952.robot.commands.VisionCommunication;
-import org.usfirst.frc.team5952.robot.subsystems.DriveTrain;
-import org.usfirst.frc.team5952.robot.subsystems.ExampleSubsystem;
-import org.usfirst.frc.team5952.robot.subsystems.Light;
-import org.usfirst.frc.team5952.robot.subsystems.MonteCorde;
-import org.usfirst.frc.team5952.robot.subsystems.OnBoardAccelerometer;
-import org.usfirst.frc.team5952.robot.subsystems.Trap;
-
-import com.kauailabs.navx.frc.AHRS;
-
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
+ * documentation. If you change iothe name of this class or the package after
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
@@ -50,7 +45,7 @@ public class Robot extends IterativeRobot {
     public static Light light;
     public static int currentCamera = 1;
     public static AHRS ahrs;
-    public static double distance = 105.0;
+    
    
 
 	Command autonomousCommand;
@@ -76,7 +71,8 @@ public class Robot extends IterativeRobot {
 				 * Multiple navX-model devices on a single robot are supported.
 				 ************************************************************************/
 	            ahrs = new AHRS(SPI.Port.kMXP);
-	        } catch (RuntimeException ex ) {
+	        }
+		 catch (RuntimeException ex ) {
 	            DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
 	        }
 		oi = new OI();
@@ -85,7 +81,7 @@ public class Robot extends IterativeRobot {
 		chooser.addDefault("Default Auto", new ExampleCommand());
 		
 		//autonomousCommand = new Autonomous();
-		autonomousCommand = new DriveStraight(3000);
+		autonomousCommand = new DriveStraight(5, 10);// AutonomousCommandGroup();
 		
 		light = new Light();
 		trap = new Trap();
@@ -150,7 +146,9 @@ public class Robot extends IterativeRobot {
 		 * autonomousCommand = new ExampleCommand(); break; }
 		 */
 
-		autonomousCommand.start();
+		Robot.drivetrain.driveTest(0.2, 0);
+		
+//		autonomousCommand.start();
 		// schedule the autonomous command (example)
 //		if (autonomousCommand != null)
 //			autonomousCommand.start();
@@ -161,10 +159,16 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		
+		System.out.println("Runing auton periodic");
+		
+		Robot.drivetrain.driveTest(-0.45, 0);
+		Timer.delay(0.1);
 	
 		visionCommunication.updateData();
 		visionCommunication.putOnBoardAccelData();
 		Scheduler.getInstance().run();
+		Robot.drivetrain.driveTest(-0.45, 0);
 		log();
 		
 	}

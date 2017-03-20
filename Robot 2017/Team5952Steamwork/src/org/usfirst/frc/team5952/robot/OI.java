@@ -55,10 +55,10 @@ public class OI {
     	// Put Some buttons on the SmartDashboard
        
 
-        SmartDashboard.putData("openLight", new OpenLight());
-		SmartDashboard.putData("closeLight", new CloseLight());
-		SmartDashboard.putData("CloseTrap", new CloseTrap());
-		SmartDashboard.putData("OpenTrap", new OpenTrap());
+//        SmartDashboard.putData("openLight", new OpenLight());
+//		SmartDashboard.putData("closeLight", new CloseLight());
+//		SmartDashboard.putData("CloseTrap", new CloseTrap());
+//		SmartDashboard.putData("OpenTrap", new OpenTrap());
         // Create some buttons
 	    JoystickButton b_1 = new JoystickButton(joy, 1);
 	    JoystickButton b_2 = new JoystickButton(joy, 2);
@@ -72,10 +72,11 @@ public class OI {
         JoystickButton b_10 = new JoystickButton(joy, 10);
         JoystickButton b_11 = new JoystickButton(joy, 11);
         JoystickButton b_12 = new JoystickButton(joy, 12);
+        
 
         // Connect the buttons to commands
         b_1.toggleWhenPressed(new OpenTrap());
-        b_2.toggleWhenPressed( new OpenLight());
+       // b_2.toggleWhenPressed( new OpenLight());
         b_3.toggleWhenPressed(new DescendLaCorde());
         b_4.toggleWhenPressed(new MonteLaCorde());
         b_5.toggleWhenPressed(new StopLaCorde());

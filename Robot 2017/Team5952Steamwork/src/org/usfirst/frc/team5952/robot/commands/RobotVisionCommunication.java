@@ -2,7 +2,6 @@ package org.usfirst.frc.team5952.robot.commands;
 
 import org.usfirst.frc.team5952.robot.Robot;
 
-
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 public class RobotVisionCommunication extends VisionCommunication {

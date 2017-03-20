@@ -1,29 +1,23 @@
 package org.usfirst.frc.team5952.robot.commands;
 
-import org.usfirst.frc.team5952.robot.Robot;
-
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class OpenLight extends Command {
+public class DriveBangBang extends Command {
 
-    public OpenLight() {
+    public DriveBangBang() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	//requires(Robot.light);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.trap.openTrap();
-    	Robot.drivetrain.driveTest(0.75, 0.0);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -33,12 +27,10 @@ public class OpenLight extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.light.Stop();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	end();
     }
 }

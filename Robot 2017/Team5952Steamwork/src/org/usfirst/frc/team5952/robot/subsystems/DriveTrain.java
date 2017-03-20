@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+
 import org.usfirst.frc.team5952.robot.Robot;
 import org.usfirst.frc.team5952.robot.commands.TankDriveWithJoystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,12 +29,12 @@ public class DriveTrain extends Subsystem {
 
 	public DriveTrain() {
 		super();
-		left_motor = new Talon(0);
-		right_motor = new Talon(1);
+		left_motor = new Talon(1);
+		right_motor = new Talon(0);
 	
 		drive = new RobotDrive(left_motor, right_motor);
-		left_encoder = new Encoder(0, 1);
-		right_encoder = new Encoder(2, 3);
+		left_encoder = new Encoder(2, 3);
+		right_encoder = new Encoder(0, 1);
 
 		// Encoders may measure differently in the real world and in
 		// simulation. In this example the robot moves 0.042 barleycorns ( close to 0.8467 cm )
