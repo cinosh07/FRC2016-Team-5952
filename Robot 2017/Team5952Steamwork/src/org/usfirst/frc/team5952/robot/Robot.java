@@ -2,6 +2,9 @@ package org.usfirst.frc.team5952.robot;
 
 import org.usfirst.frc.team5952.robot.commands.DriveStraight;
 import org.usfirst.frc.team5952.robot.commands.DriveStraightSimple;
+import org.usfirst.frc.team5952.robot.commands.GearDropCenterPosition;
+import org.usfirst.frc.team5952.robot.commands.GearDropLeftPosition;
+import org.usfirst.frc.team5952.robot.commands.GearDropRightPosition;
 import org.usfirst.frc.team5952.robot.commands.RobotVisionCommunication;
 import org.usfirst.frc.team5952.robot.commands.VisionCommunication;
 import org.usfirst.frc.team5952.robot.subsystems.DriveTrain;
@@ -79,10 +82,10 @@ public class Robot extends IterativeRobot {
 		drivetrain = new DriveTrain();
 		onBoardAccelerometer = new OnBoardAccelerometer();
 		chooser.addDefault("Drive Straight Simple",  new DriveStraightSimple(-0.45));
-		chooser.addObject("Franchir ligne", new DriveStraight(300) );
-		chooser.addObject("Poser Gear Centre", new DriveStraight(117.0) );
-		chooser.addObject("Poser Gear Gauche", new DriveStraight(300) );
-		chooser.addObject("Poser Gear Droite", new DriveStraight(300) );
+		chooser.addObject("Franchir ligne", new DriveStraight(117.0,-0.5));
+		chooser.addObject("Poser Gear Centre", new GearDropCenterPosition());
+		chooser.addObject("Poser Gear Gauche", new GearDropLeftPosition());
+		chooser.addObject("Poser Gear Droite", new GearDropRightPosition());
 
 		
 		light = new Light();
@@ -91,11 +94,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Auto Selector", chooser);
 
 		cameraTable = NetworkTable.getTable(VisionCommunication.TABLE_NAME);
-		visionCommunication = new RobotVisionCommunication(cameraTable);
-
-		
-		
-		
+		visionCommunication = new RobotVisionCommunication(cameraTable);	
 		
 		// Uncomments For Debugging
 		//SmartDashboard.putData(drivetrain);
@@ -161,10 +160,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to
-		// continue until interrupted by another command, remove
-		// this line or comment it out.
+
 		autonomousCommand.cancel();
 
 	}
