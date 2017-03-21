@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class DriveStraight extends Command {
+public class DriveStraightReverse extends Command {
 	
 	static final double Kp = 0.03;
 
@@ -15,9 +15,9 @@ public class DriveStraight extends Command {
 	double targetSpeed;
 	
 
-    public DriveStraight(double distance, double speed) {
+    public DriveStraightReverse(double distance, double speed) {
     	
-    
+    	
     	targetDistance = distance;
     	targetSpeed = speed;
     	
@@ -25,7 +25,8 @@ public class DriveStraight extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	 Robot.drivetrain.reset();
+    	Robot.drivetrain.left_encoder.reset();
+    	Robot.drivetrain.reset();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -40,7 +41,7 @@ public class DriveStraight extends Command {
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
   
-    	if (Robot.drivetrain.left_encoder.getDistance() > targetDistance) {
+    	if (-Robot.drivetrain.left_encoder.getDistance() > targetDistance) {
     		
     		return true;
     		

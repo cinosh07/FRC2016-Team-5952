@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class CloseTrap extends Command {
 
+
+	
     public CloseTrap() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
@@ -22,16 +24,30 @@ public class CloseTrap extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	Robot.trap.closeTrap();
+
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+
+    	if (Robot.trap.checkClosed()  && Robot.isAutonomous) {
+    		
+    		return true;
+    		
+    	} else {
+    		
+    		return false;
+    		
+    	}
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.trap.stop();
+    	
+    	if (!Robot.isAutonomous) {
+    		Robot.trap.stop();
+    	}
+    	
     }
 
     // Called when another command which requires one or more of the same

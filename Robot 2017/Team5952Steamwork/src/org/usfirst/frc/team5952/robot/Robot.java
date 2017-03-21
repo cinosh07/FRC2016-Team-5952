@@ -38,6 +38,10 @@ public class Robot extends IterativeRobot {
     public static Light light;
     public static int currentCamera = 1;
     public static AHRS ahrs;
+    
+    public static Boolean isAutonomous = false;
+    
+    
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 
@@ -112,6 +116,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		
+		isAutonomous = true;
 		autonomousCommand = chooser.getSelected();		
 		autonomousCommand.start();
 		
@@ -132,7 +137,11 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 
-		autonomousCommand.cancel();
+		isAutonomous = false;
+		if(autonomousCommand != null) {
+			autonomousCommand.cancel();
+		}
+		
 
 	}
 

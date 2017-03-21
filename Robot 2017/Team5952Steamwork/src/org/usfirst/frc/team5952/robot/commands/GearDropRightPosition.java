@@ -22,7 +22,9 @@ public class GearDropRightPosition extends CommandGroup {
     	// Ouvrir la trappe
     	addSequential(new OpenTrap());
     	// Recule de 20 pouces
-    	addSequential(new DriveStraight(20.0, 0.5));
+    	addSequential(new DriveStraightReverse(20.0, 0.5));
+    	// Fermer la trappe
+    	addSequential(new CloseTrap());
     	
     }
 }

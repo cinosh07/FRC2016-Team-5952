@@ -16,6 +16,35 @@ public class Trap extends Subsystem {
         //setDefaultCommand(new MySpecialCommand());rwa
     }
     
+    public Boolean checkOpenned() {
+    	
+    	if (solenoid1.get() && solenoid2.get() ) {
+    		
+    		return true;
+    		
+    	} else {
+    		
+    		return false;
+    		
+    	}
+    	
+    	
+    }
+    public Boolean checkClosed() {
+    	
+    	if (!solenoid1.get() && !solenoid2.get() ) {
+    		
+    		return true;
+    		
+    	} else {
+    		
+    		return false;
+    		
+    	}
+    	
+    	
+    }
+    
     public void openTrap() {
     	
     	solenoid1.set(true);
