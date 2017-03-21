@@ -1,9 +1,7 @@
 package org.usfirst.frc.team5952.robot.commands;
 
-import java.util.Date;
 
 import org.usfirst.frc.team5952.robot.Robot;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -16,14 +14,14 @@ public class DriveTurn extends Command {
 	double targetDistance;
 	double targetSpeed;
 	double targetAngle;
-
+	double startAngle;
 
     public DriveTurn(double distance, double speed, double angle) {
     	
     	targetDistance = distance;
     	targetSpeed = speed;
     	targetAngle = angle;
-    	
+    	startAngle = Robot.ahrs.getAngle();
     }
     
     
@@ -36,8 +34,8 @@ public class DriveTurn extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	
-    	double angle = Robot.ahrs.getAngle();
-    	Robot.drivetrain.driveTest(targetSpeed, -angle * Kp);
+    	
+    	Robot.drivetrain.driveTest(targetSpeed, targetAngle * Kp);
 		Timer.delay(0.01);
 
     }
@@ -45,7 +43,7 @@ public class DriveTurn extends Command {
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
     	
-    	if (Robot.drivetrain.left_encoder.getDistance() > targetDistance) {
+    	if (Robot.drivetrain.left_encoder.getDistance() > targetDistance  || Robot.ahrs.getAngle() > (startAngle - targetAngle)) {
     		
     		return true;
     		

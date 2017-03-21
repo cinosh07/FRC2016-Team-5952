@@ -70,6 +70,8 @@ public class DriveTrain extends Subsystem {
 	 */
 	public void log() {
 		
+		
+		// Uncomment to debug
 		SmartDashboard.putNumber("Left Distance", left_encoder.getDistance());
 		SmartDashboard.putNumber("Right Distance", right_encoder.getDistance());
 		SmartDashboard.putNumber("Left Speed", left_encoder.getRate());
