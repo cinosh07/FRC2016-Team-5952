@@ -28,7 +28,9 @@ public class DriveTurn extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	
     	 Robot.drivetrain.reset();
+    	 
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -43,7 +45,7 @@ public class DriveTurn extends Command {
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
     	
-    	if (Robot.drivetrain.left_encoder.getDistance() > targetDistance  || Robot.ahrs.getAngle() > (startAngle - targetAngle)) {
+    	if (Robot.ahrs.getAngle() > (startAngle - targetAngle)) {
     		
     		return true;
     		

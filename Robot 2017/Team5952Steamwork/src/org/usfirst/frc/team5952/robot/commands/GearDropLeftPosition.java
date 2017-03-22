@@ -27,5 +27,6 @@ public class GearDropLeftPosition extends CommandGroup {
     	addSequential(new DriveStraightReverse(20.0, 0.2));
     	// Fermer la trappe
     	addSequential(new CloseTrap());
+    	
     }
 }
