@@ -28,8 +28,10 @@ public class DriveTurn extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	
-    	 Robot.drivetrain.reset();
+    	   	
+    	Robot.drivetrain.left_encoder.reset();
+    	Robot.drivetrain.right_encoder.reset();
+    	Robot.drivetrain.reset();
     	 
     }
 
