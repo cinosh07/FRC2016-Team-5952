@@ -91,7 +91,7 @@ public class DriveTrain extends Subsystem {
 		
 	}
 	
-	public void driveTest(double direction, double turn) {
+	public void driveAuto(double direction, double turn) {
 
 		
 		drive.arcadeDrive(direction, turn);

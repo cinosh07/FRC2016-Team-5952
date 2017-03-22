@@ -35,7 +35,7 @@ public class DriveTurn extends Command {
     protected void execute() {
     	
     	
-    	Robot.drivetrain.driveTest(targetSpeed, targetAngle * Kp);
+    	Robot.drivetrain.driveAuto(targetSpeed, targetAngle * Kp);
 		Timer.delay(0.01);
 
     }
@@ -55,7 +55,7 @@ public class DriveTurn extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.drivetrain.driveTest(0, 0);
+    	Robot.drivetrain.driveAuto(0, 0);
     }
 
     // Called when another command which requires one or more of the same

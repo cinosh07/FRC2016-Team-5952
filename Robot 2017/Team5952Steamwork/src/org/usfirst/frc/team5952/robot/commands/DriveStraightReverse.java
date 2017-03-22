@@ -26,6 +26,7 @@ public class DriveStraightReverse extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	Robot.drivetrain.left_encoder.reset();
+    	Robot.drivetrain.right_encoder.reset();
     	Robot.drivetrain.reset();
     }
 
@@ -33,7 +34,7 @@ public class DriveStraightReverse extends Command {
     protected void execute() {
 
     	double angle = Robot.ahrs.getAngle();
-    	Robot.drivetrain.driveTest(targetSpeed, -angle * Kp);
+    	Robot.drivetrain.driveAuto(targetSpeed, -angle * Kp);
 		Timer.delay(0.01);
 
     }
@@ -53,7 +54,7 @@ public class DriveStraightReverse extends Command {
 
 	// Called once after isFinished returns true
 	protected void end() {
-		Robot.drivetrain.driveTest(0, 0);
+		Robot.drivetrain.driveAuto(0, 0);
 	}
 
 	// Called when another command which requires one or more of the same

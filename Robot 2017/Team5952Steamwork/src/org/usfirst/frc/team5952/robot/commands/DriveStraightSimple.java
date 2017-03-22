@@ -28,7 +28,7 @@ public class DriveStraightSimple extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
 
-    	Robot.drivetrain.driveTest(direction, 0);
+    	Robot.drivetrain.driveAuto(direction, 0);
     	Timer.delay(0.1);
     		
     	} 
@@ -44,7 +44,7 @@ public class DriveStraightSimple extends Command {
     // Called once after isFinished returns true
     protected void end() {
     	
-    	Robot.drivetrain.driveTest(0.0, 0.0);
+    	Robot.drivetrain.driveAuto(0.0, 0.0);
 	
     }
 

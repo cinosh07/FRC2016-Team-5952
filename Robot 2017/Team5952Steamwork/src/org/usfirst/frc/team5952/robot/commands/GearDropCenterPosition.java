@@ -18,7 +18,7 @@ public class GearDropCenterPosition extends CommandGroup {
     	//Delais
     	addSequential(new Delay(1.0));
     	// Recule de 20 pouces
-    	addSequential(new DriveStraightReverse(20.0, 0.5));
+    	addSequential(new DriveStraightReverse(20.0, 0.2));
     	// Fermer la trappe
     	addSequential(new CloseTrap());
     	
