@@ -13,6 +13,8 @@ public class GearDropCenterPosition extends CommandGroup {
 
     	//Avance de 80 pouces
     	addSequential(new DriveStraight(80.0,-0.5));
+    	//Delais
+    	addSequential(new Delay(0.5));
     	// Ouvrir la trap
     	addSequential(new OpenTrap());
     	//Delais
