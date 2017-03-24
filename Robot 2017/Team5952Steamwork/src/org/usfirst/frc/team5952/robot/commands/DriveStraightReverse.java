@@ -25,16 +25,20 @@ public class DriveStraightReverse extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	System.out.println("Reverse Drive is initialized");
     	Robot.drivetrain.left_encoder.reset();
     	Robot.drivetrain.right_encoder.reset();
     	Robot.drivetrain.reset();
+    	  Robot.ahrs.zeroYaw();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
 
+    	//System.out.println("Reverse Drive is running");
     	double angle = Robot.ahrs.getAngle();
-    	Robot.drivetrain.driveAuto(targetSpeed, -angle * Kp);
+    	//Robot.drivetrain.driveAuto(targetSpeed, -angle * Kp);
+    	Robot.drivetrain.driveAuto(targetSpeed, 0.21);
 		Timer.delay(0.01);
 
     }
@@ -42,8 +46,8 @@ public class DriveStraightReverse extends Command {
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
   
-    	if (-Robot.drivetrain.left_encoder.getDistance() > targetDistance) {
-    		
+    	if (Robot.drivetrain.right_encoder.getDistance() > targetDistance) {
+    		System.out.println("Reverse Drive is finished");
     		return true;
     		
     	}

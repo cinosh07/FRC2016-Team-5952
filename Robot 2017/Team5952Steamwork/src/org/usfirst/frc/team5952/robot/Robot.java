@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+	public static final double driveTrainOffSet = 0.22;
 	public static OI oi;
 	public static DriveTrain drivetrain;
 	public static Trap trap;
@@ -38,6 +39,7 @@ public class Robot extends IterativeRobot {
     public static Light light;
     public static int currentCamera = 1;
     public static AHRS ahrs;
+  
     
     public static Boolean isAutonomous = false;
     
@@ -69,9 +71,10 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 		drivetrain = new DriveTrain();
 		onBoardAccelerometer = new OnBoardAccelerometer();
-		chooser.addDefault("Drive Straight Simple",  new DriveStraightSimple(-0.45));
-		chooser.addObject("Franchir ligne", new DriveStraight(117.0,-0.5));
-		chooser.addObject("Poser Gear Centre", new GearDropCenterPosition());
+		//chooser.addDefault("Drive Straight Simple",  new DriveStraightSimple(-0.45));
+		chooser.addDefault("Poser Gear Centre", new GearDropCenterPosition());
+		chooser.addObject("Franchir ligne", new DriveStraight(80.0,-0.5));
+		chooser.addObject("Ligne Troy", new DriveStraightSimple(-0.45));
 		chooser.addObject("Poser Gear Gauche", new GearDropLeftPosition());
 		chooser.addObject("Poser Gear Droite", new GearDropRightPosition());
 
@@ -95,6 +98,8 @@ public class Robot extends IterativeRobot {
 
 		//SmartDashboard.putNumber(VisionCommunication.CAMERA1_DIST_TARGET, visionCommunication.getCamera1DistTarget());
 		//SmartDashboard.putNumber(VisionCommunication.CAMERA2_DIST_TARGET, visionCommunication.getCamera2DistTarget());
+		
+		//Robot.ahrs.
 
 	}
 
@@ -128,7 +133,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		
-		System.out.println("Runing auton periodic");
+		//System.out.println("Runing auton periodic");
 		Scheduler.getInstance().run();	
 		log();
 		

@@ -28,13 +28,18 @@ public class DriveStraight extends Command {
     	Robot.drivetrain.left_encoder.reset();
     	Robot.drivetrain.right_encoder.reset();
     	Robot.drivetrain.reset();
+  	    Robot.ahrs.zeroYaw();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
 
     	double angle = Robot.ahrs.getAngle();
-    	Robot.drivetrain.driveAuto(targetSpeed, -angle * Kp);
+    	
+    	
+    	
+    Robot.drivetrain.driveAuto(targetSpeed, Robot.drivetrain.CalOffSet(-angle * Kp));
+    	//Robot.drivetrain.driveAuto(targetSpeed, 0.21);
 		Timer.delay(0.01);
 
     }
@@ -42,7 +47,7 @@ public class DriveStraight extends Command {
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
   
-    	if (Robot.drivetrain.left_encoder.getDistance() > targetDistance) {
+    	if (-Robot.drivetrain.right_encoder.getDistance() > targetDistance) {
     		
     		return true;
     		

@@ -36,6 +36,7 @@ public class DriveTrain extends Subsystem {
 		drive = new RobotDrive(left_motor, right_motor);
 		left_encoder = new Encoder(2, 3);
 		right_encoder = new Encoder(0, 1);
+		
 
 		// Encoders may measure differently in the real world and in
 		// simulation. In this example the robot moves 0.042 barleycorns ( close to 0.8467 cm )
@@ -76,7 +77,7 @@ public class DriveTrain extends Subsystem {
 		SmartDashboard.putNumber("Right Distance", right_encoder.getDistance());
 		SmartDashboard.putNumber("Left Speed", left_encoder.getRate());
 		SmartDashboard.putNumber("Right Speed", right_encoder.getRate());
-		SmartDashboard.putNumber("Gyro", gyro.getAngle());
+		SmartDashboard.putNumber("Gyro", Robot.ahrs.getAngle());
 		
 	}
 
@@ -90,10 +91,19 @@ public class DriveTrain extends Subsystem {
 		drive.arcadeDrive(Robot.oi.getJoystick());
 		
 	}
+	public double CalOffSet(double turn){
+		
+		turn= turn + Robot.driveTrainOffSet;
+		if(turn >1.0){
+			
+			return 1.0;
+		}
+	
+		return turn;
+	}
 	
 	public void driveAuto(double direction, double turn) {
 
-		
 		drive.arcadeDrive(direction, turn);
 	}
 
