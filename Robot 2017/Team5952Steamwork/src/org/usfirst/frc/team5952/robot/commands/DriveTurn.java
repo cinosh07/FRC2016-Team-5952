@@ -10,18 +10,25 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class DriveTurn extends Command {
 	
-	static final double Kp = 0.03;
+	static final double kP = 0.03;
+	static final double kI = 0.0;
+	static final double kD = 0.0;
+	static final double kF = 0.0;
 	double targetDistance;
 	double targetSpeed;
 	double targetAngle;
 	double startAngle;
+	
+	static final double kToleranceDegree = 2.0f;
+	
 
     public DriveTurn(double distance, double speed, double angle) {
     	
     	targetDistance = distance;
     	targetSpeed = speed;
     	targetAngle = angle;
-    	startAngle = Robot.ahrs.getAngle();
+    	
+    	
     }
     
     
@@ -32,27 +39,44 @@ public class DriveTurn extends Command {
     	Robot.drivetrain.left_encoder.reset();
     	Robot.drivetrain.right_encoder.reset();
     	Robot.drivetrain.reset();
+    	Robot.ahrs.zeroYaw();
+    	startAngle = Robot.ahrs.getAngle();
     	 
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	
-    	
-    	Robot.drivetrain.driveAuto(targetSpeed, targetAngle * Kp);
+    	if(targetAngle > 0){
+    	Robot.drivetrain.driveAuto(targetSpeed, Robot.drivetrain.CalOffSet(0.5));
 		Timer.delay(0.01);
-
+    	}
+    	if(targetAngle < 0){
+    		Robot.drivetrain.driveAuto(targetSpeed, Robot.drivetrain.CalOffSet(-0.5));
+    		Timer.delay(0.01);
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
     	
-    	if (Robot.ahrs.getAngle() > (startAngle - targetAngle)) {
+    	if (targetAngle > 0) {
     		
-    		return true;
+    		if (Robot.ahrs.getAngle() > targetAngle) {
+        		
+        		return true;
+        		
+        	}
     		
     	}
-
+    	
+    	if (targetAngle < 0) {
+    		if (Robot.ahrs.getAngle() < targetAngle){
+            	return true;
+            }
+    	}
+    	
+        
     	return false;
      
     }

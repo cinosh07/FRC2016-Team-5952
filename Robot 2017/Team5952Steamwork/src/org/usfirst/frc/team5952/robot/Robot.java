@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-	public static final double driveTrainOffSet = 0.22;
+	public static final double driveTrainOffSet = 0.21;
 	public static OI oi;
 	public static DriveTrain drivetrain;
 	public static Trap trap;
@@ -39,6 +39,7 @@ public class Robot extends IterativeRobot {
     public static Light light;
     public static int currentCamera = 1;
     public static AHRS ahrs;
+   
   
     
     public static Boolean isAutonomous = false;
