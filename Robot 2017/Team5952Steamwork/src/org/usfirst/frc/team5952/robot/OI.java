@@ -9,6 +9,7 @@ import org.usfirst.frc.team5952.robot.commands.CloseLight;
 import org.usfirst.frc.team5952.robot.commands.CloseTrap;
 import org.usfirst.frc.team5952.robot.commands.DescendLaCorde;
 import org.usfirst.frc.team5952.robot.commands.DriveStraight;
+import org.usfirst.frc.team5952.robot.commands.DriveTurn;
 import org.usfirst.frc.team5952.robot.commands.MonteLaCorde;
 import org.usfirst.frc.team5952.robot.commands.OpenLight;
 import org.usfirst.frc.team5952.robot.commands.OpenTrap;
@@ -48,7 +49,7 @@ public class OI {
        // b_2.toggleWhenPressed( new OpenLight());
         b_3.toggleWhenPressed(new DescendLaCorde());
         b_4.toggleWhenPressed(new MonteLaCorde());
-        b_5.toggleWhenPressed(new StopLaCorde());
+        b_5.toggleWhenPressed(new DriveTurn(0.0,-0.25,5.0));
        // b_6.toggleWhenPressed(new DriveStraight(500.0));
 
         
