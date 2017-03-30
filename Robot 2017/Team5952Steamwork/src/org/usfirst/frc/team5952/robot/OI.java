@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team5952.robot.commands.CloseLight;
 import org.usfirst.frc.team5952.robot.commands.CloseTrap;
 import org.usfirst.frc.team5952.robot.commands.DescendLaCorde;
+import org.usfirst.frc.team5952.robot.commands.DriveSlowTurn;
 import org.usfirst.frc.team5952.robot.commands.DriveStraight;
 import org.usfirst.frc.team5952.robot.commands.DriveTurn;
 import org.usfirst.frc.team5952.robot.commands.MonteLaCorde;
@@ -43,13 +44,14 @@ public class OI {
         JoystickButton b_11 = new JoystickButton(joy, 11);
         JoystickButton b_12 = new JoystickButton(joy, 12);
         
+        //joy.getTwist()
 
         // Connect the buttons to commands
         b_1.toggleWhenPressed(new OpenTrap());
        // b_2.toggleWhenPressed( new OpenLight());
         b_3.toggleWhenPressed(new DescendLaCorde());
         b_4.toggleWhenPressed(new MonteLaCorde());
-        b_5.toggleWhenPressed(new DriveTurn(0.0,-0.25,5.0));
+        b_5.toggleWhenPressed(new DriveSlowTurn(true));
        // b_6.toggleWhenPressed(new DriveStraight(500.0));
 
         

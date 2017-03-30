@@ -22,7 +22,9 @@ public class TankDriveWithJoystick extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        Robot.drivetrain.drive(Robot.oi.getJoystick());
+    	if ( Robot.isSlow == false){ 
+    		Robot.drivetrain.drive(Robot.oi.getJoystick());
+    	}
         //Robot.drivetrain.drive(left, right);
     }
 

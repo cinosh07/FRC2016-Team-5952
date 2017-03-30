@@ -39,7 +39,7 @@ public class Robot extends IterativeRobot {
     public static Light light;
     public static int currentCamera = 1;
     public static AHRS ahrs;
-   
+   public static boolean isSlow = false;
   
     
     public static Boolean isAutonomous = false;
@@ -157,10 +157,16 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		
+		//SmartDashboard.putNumber("TWIST", Robot.oi.getJoystick().getTwist());
+		//Robot.oi.getJoystick().getTwist();
 		visionCommunication.updateData();
 		visionCommunication.putOnBoardAccelData();
 		Scheduler.getInstance().run();
 		log();
+		
+		SmartDashboard.putNumber("Joystick X null", Robot.oi.getJoystick().getY(null));
+		SmartDashboard.putNumber("Joystick X", Robot.oi.getJoystick().getY());
+		SmartDashboard.putBoolean("IS Slow", isSlow);
 	}
 
 	/**
