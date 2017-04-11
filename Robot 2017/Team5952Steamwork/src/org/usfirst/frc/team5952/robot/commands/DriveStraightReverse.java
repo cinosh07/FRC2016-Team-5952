@@ -46,9 +46,9 @@ public class DriveStraightReverse extends Command {
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
   
-    	//if (Robot.drivetrain.right_encoder.getDistance() > targetDistance) {
+    	if (Robot.drivetrain.right_encoder.getDistance() > targetDistance) {
     		
-        if (-Robot.drivetrain.left_encoder.getDistance() > targetDistance) {
+//        if (-Robot.drivetrain.left_encoder.getDistance() > targetDistance) {
     		
     		
     		System.out.println("Reverse Drive is finished");
