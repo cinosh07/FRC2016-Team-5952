@@ -43,8 +43,8 @@ public class DriveTrain extends Subsystem {
 		// per tick in the real world, but the simulated encoders
 		// simulate 360 tick encoders. This if statement allows for the
 		// real robot to handle this difference in devices.
-		left_encoder.setDistancePerPulse(0.042);
-		right_encoder.setDistancePerPulse(0.042);
+		left_encoder.setDistancePerPulse(Robot.leftEncoderDistancePerPulse);
+		right_encoder.setDistancePerPulse(Robot.rightEncoderDistancePerPulse);
 
 		rangefinder = new AnalogInput(6);
 		gyro = new AnalogGyro(1);

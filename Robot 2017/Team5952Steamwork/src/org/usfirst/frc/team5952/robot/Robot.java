@@ -29,6 +29,8 @@ public class Robot extends IterativeRobot {
 
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static final double driveTrainOffSet = 0.21;
+	public static final double leftEncoderDistancePerPulse= 0.00987;
+	public static final double rightEncoderDistancePerPulse= 0.00987;
 	public static OI oi;
 	public static DriveTrain drivetrain;
 	public static Trap trap;
@@ -39,7 +41,7 @@ public class Robot extends IterativeRobot {
     public static Light light;
     public static int currentCamera = 1;
     public static AHRS ahrs;
-   public static boolean isSlow = false;
+    public static boolean isSlow = false;
   
     
     public static Boolean isAutonomous = false;
@@ -78,7 +80,7 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Ligne Troy", new DriveStraightSimple(-0.45));
 		chooser.addObject("Poser Gear Gauche", new GearDropLeftPosition());
 		chooser.addObject("Poser Gear Droite", new GearDropRightPosition());
-
+        
 		
 		light = new Light();
 		trap = new Trap();
@@ -148,6 +150,9 @@ public class Robot extends IterativeRobot {
 			autonomousCommand.cancel();
 		}
 		
+		Robot.drivetrain.left_encoder.reset();
+    	Robot.drivetrain.right_encoder.reset();
+    	Robot.ahrs.zeroYaw();
 
 	}
 
@@ -180,7 +185,9 @@ public class Robot extends IterativeRobot {
 	}
 
 	private void log() {
-
+      
+		 
+        
 		//SmartDashboard.putString(VisionCommunication.CAMERA1_IP, visionCommunication.getCamera1IP());
 		//SmartDashboard.putString(VisionCommunication.CAMERA2_IP, visionCommunication.getCamera2IP());
 		//SmartDashboard.putNumber(VisionCommunication.CAMERA2_DELTA_TARGET, visionCommunication.getCamera2DeltaTarget());

@@ -11,11 +11,11 @@ public class GearDropLeftPosition extends CommandGroup {
 
     public GearDropLeftPosition() {
     	//Avance de 20 pouces
-    	addSequential(new DriveStraight(80.0,-0.7));
+    	addSequential(new DriveStraight(40.0,-0.7));
     	// Rotation 45 degrees a droite
-    	addSequential(new DriveTurn(20.0,-0.5,60.0));
+    	addSequential(new DriveTurn(0.0,-0.5,60.0));
     	//Avance de 20 pouces
-    	addSequential(new DriveStraight(40.0, -0.5));
+    	addSequential(new DriveStraight(30.0, -0.5));
     	// Ouvrir la trappe
     	addSequential(new OpenTrap());
     	//Delais
