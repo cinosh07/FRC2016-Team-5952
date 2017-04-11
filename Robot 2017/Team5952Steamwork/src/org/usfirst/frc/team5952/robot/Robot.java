@@ -172,6 +172,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Joystick X null", Robot.oi.getJoystick().getY(null));
 		SmartDashboard.putNumber("Joystick X", Robot.oi.getJoystick().getY());
 		SmartDashboard.putBoolean("IS Slow", isSlow);
+		SmartDashboard.putNumber("Monte Corde Speed", Robot.oi.getJoystick().getThrottle());
 	}
 
 	/**
