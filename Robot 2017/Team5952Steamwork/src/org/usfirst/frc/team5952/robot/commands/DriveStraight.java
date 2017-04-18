@@ -48,7 +48,7 @@ public class DriveStraight extends Command {
     protected boolean isFinished() {
   
     	if (-Robot.drivetrain.right_encoder.getDistance() > targetDistance) {
-//    		if (Robot.drivetrain.left_encoder.getDistance() > targetDistance) {
+//    		if (Robot.drivetrain.left_encoder.getDistance() > targetDistance  || -Robot.drivetrain.right_encoder.getDistance() > targetDistance) {
     		
     		return true;
     		
