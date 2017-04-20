@@ -49,11 +49,11 @@ public class DriveTurn extends Command {
     	
     	if(targetAngle > 0){
     		//Robot.drivetrain.driveAuto(0.0, targetSpeed);
-    	Robot.drivetrain.driveAuto(targetSpeed, 0.4);
+    	Robot.drivetrain.driveAuto(targetSpeed, 0.45);
 		Timer.delay(0.01);
     	}
     	if(targetAngle < 0){
-    		Robot.drivetrain.driveAuto(targetSpeed, -0.4);
+    		Robot.drivetrain.driveAuto(targetSpeed, -0.45);
     		Timer.delay(0.01);
     	}
     }
