@@ -31,6 +31,8 @@ public class Robot extends IterativeRobot {
 	public static final double driveTrainOffSet = 0.21;
 	public static final double leftEncoderDistancePerPulse= 0.00987;
 	public static final double rightEncoderDistancePerPulse= 0.00987;
+	public static final double minThrottle = 0.5;
+	public static final double maxThrottle = 1.0;
 	public static OI oi;
 	public static DriveTrain drivetrain;
 	public static Trap trap;
@@ -157,7 +159,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	/**
-	 * This function is called periodically during operator control
+	 * This function is called periodically during operator control 
 	 */
 	@Override
 	public void teleopPeriodic() {
@@ -172,7 +174,8 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Joystick X null", Robot.oi.getJoystick().getY(null));
 		SmartDashboard.putNumber("Joystick X", Robot.oi.getJoystick().getY());
 		SmartDashboard.putBoolean("IS Slow", isSlow);
-		SmartDashboard.putNumber("Monte Corde Speed", Robot.oi.getJoystick().getThrottle());
+		
+		
 	}
 
 	/**
@@ -185,6 +188,8 @@ public class Robot extends IterativeRobot {
 		LiveWindow.run();
 	}
 
+	
+	
 	private void log() {
       
 		 

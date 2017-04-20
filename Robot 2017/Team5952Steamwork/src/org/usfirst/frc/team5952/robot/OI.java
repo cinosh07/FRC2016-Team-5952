@@ -48,8 +48,7 @@ public class OI {
 
         // Connect the buttons to commands
         b_1.toggleWhenPressed(new OpenTrap());
-        b_6.toggleWhenPressed( new OpenLight());
-        b_3.toggleWhenPressed(new DescendLaCorde());
+        //b_3.toggleWhenPressed(new DescendLaCorde());
         b_2.toggleWhenPressed(new MonteLaCorde());
         b_5.toggleWhenPressed(new DriveSlowTurn(true));
        // b_6.toggleWhenPressed(new DriveStraight(500.0));

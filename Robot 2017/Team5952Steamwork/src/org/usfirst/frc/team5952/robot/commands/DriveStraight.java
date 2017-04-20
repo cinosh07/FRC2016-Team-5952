@@ -15,7 +15,7 @@ public class DriveStraight extends Command {
 	double targetSpeed;
 	
 
-    public DriveStraight(double distance, double speed) {
+    public DriveStraight(double distance, double speed) { 
     	
     
     	targetDistance = distance;

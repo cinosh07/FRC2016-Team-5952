@@ -24,7 +24,7 @@ public class MonteCorde extends Subsystem {
    
 	public void monte(){
 		//Robot.oi.getJoystick().getThrottle()
-    	moteurCorde.set(-1.0);
+    	moteurCorde.set(calibrateThrottle(Robot.oi.getJoystick().getThrottle()));
     }
     
     public void arrete(){
@@ -40,5 +40,23 @@ public class MonteCorde extends Subsystem {
         //setDefaultCommand(new MySpecialCommand());
     	
     }
+    
+    private double calibrateThrottle(double throttleValue){
+
+		
+		if (throttleValue > Robot.maxThrottle) {
+			
+			return -Robot.maxThrottle;
+			
+		} else if (throttleValue < Robot.minThrottle) {
+			
+			return -Robot.minThrottle;
+			
+		} else {
+			return -throttleValue;
+		}
+		
+		
+	}
 }
 
