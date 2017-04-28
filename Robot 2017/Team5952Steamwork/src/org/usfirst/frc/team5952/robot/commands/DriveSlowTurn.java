@@ -51,7 +51,7 @@ public class DriveSlowTurn extends Command {
     protected void execute() {
     	
     	if(activated){
-    	Robot.drivetrain.driveAuto(Robot.oi.getJoystick().getY()/2.5, Robot.oi.getJoystick().getTwist() / 2.5);
+    	Robot.drivetrain.driveAuto(Robot.oi.getJoystick().getY()/1.7, Robot.oi.getJoystick().getTwist() / 1.7);
 		Timer.delay(0.01);
 		
     	}

@@ -24,7 +24,8 @@ public class MonteCorde extends Subsystem {
    
 	public void monte(){
 		//Robot.oi.getJoystick().getThrottle()
-    	moteurCorde.set(calibrateThrottle(Robot.oi.getJoystick().getThrottle()));
+		moteurCorde.set(-1.0);
+    	//moteurCorde.set(calibrateThrottle(Robot.oi.getJoystick().getThrottle()));
     }
     
     public void arrete(){

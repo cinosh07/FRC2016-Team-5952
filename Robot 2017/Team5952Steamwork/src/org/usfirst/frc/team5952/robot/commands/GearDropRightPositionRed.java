@@ -5,16 +5,16 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class GearDropRightPosition extends CommandGroup {
+public class GearDropRightPositionRed extends CommandGroup {
 
-    public GearDropRightPosition() {
+    public GearDropRightPositionRed() {
        
     	//Avance de 20 pouces
-    	addSequential(new DriveStraight(69.891 ,-0.7));
+    	addSequential(new DriveStraight(68.891 ,-0.7));
     	// Rotation 45 degrees a droite
-    	addSequential(new DriveTurn(0.0,0.3,-52.11));
+    	addSequential(new DriveTurn(0.0,0.3,56.11));
     	//Avance de 20 pouces
-    	addSequential(new DriveStraight(81.604, -0.65));
+    	addSequential(new DriveStraight(78.604, -0.65));
     	// Ouvrir la trappe
     	addSequential(new OpenTrap());
     	//Delais
@@ -22,7 +22,7 @@ public class GearDropRightPosition extends CommandGroup {
     	//recule de 20 pouces
     	addSequential(new DriveStraightReverse(80, 0.6));
     	// Rotation 45 degrees a gauche
-    	addSequential(new DriveTurn(20.0,0.3,52.11));
+    	addSequential(new DriveTurn(20.0,0.3,-56.11));
     	//Avance de 20 pouces
     	addSequential(new DriveStraight(72.0,-0.8));
     	// Fermer la trappe

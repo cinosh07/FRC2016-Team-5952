@@ -4,7 +4,9 @@ import org.usfirst.frc.team5952.robot.commands.DriveStraight;
 import org.usfirst.frc.team5952.robot.commands.DriveStraightSimple;
 import org.usfirst.frc.team5952.robot.commands.GearDropCenterPosition;
 import org.usfirst.frc.team5952.robot.commands.GearDropLeftPosition;
+import org.usfirst.frc.team5952.robot.commands.GearDropLeftPositionRed;
 import org.usfirst.frc.team5952.robot.commands.GearDropRightPosition;
+import org.usfirst.frc.team5952.robot.commands.GearDropRightPositionRed;
 import org.usfirst.frc.team5952.robot.commands.RobotVisionCommunication;
 import org.usfirst.frc.team5952.robot.commands.VisionCommunication;
 import org.usfirst.frc.team5952.robot.subsystems.DriveTrain;
@@ -14,6 +16,8 @@ import org.usfirst.frc.team5952.robot.subsystems.MonteCorde;
 import org.usfirst.frc.team5952.robot.subsystems.OnBoardAccelerometer;
 import org.usfirst.frc.team5952.robot.subsystems.Trap;
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI;
@@ -44,6 +48,12 @@ public class Robot extends IterativeRobot {
     public static int currentCamera = 1;
     public static AHRS ahrs;
     public static boolean isSlow = false;
+    
+    public static DigitalInput blueDropLeft;
+    public static DigitalInput blueDropRight;
+    public static DigitalInput redDropLeft;
+    public static DigitalInput redDropRight;
+    public static DigitalInput centerDrop;
   
     
     public static Boolean isAutonomous = false;
@@ -78,11 +88,16 @@ public class Robot extends IterativeRobot {
 		onBoardAccelerometer = new OnBoardAccelerometer();
 		//chooser.addDefault("Drive Straight Simple",  new DriveStraightSimple(-0.45));
 		chooser.addDefault("Poser Gear Centre", new GearDropCenterPosition());
-		chooser.addObject("Franchir ligne", new DriveStraight(80.0,-0.5));
+		chooser.addObject("Franchir ligne", new DriveStraight(100.0,-0.5));
 		chooser.addObject("Ligne Troy", new DriveStraightSimple(-0.45));
 		chooser.addObject("Poser Gear Gauche", new GearDropLeftPosition());
 		chooser.addObject("Poser Gear Droite", new GearDropRightPosition());
         
+		blueDropLeft = new DigitalInput(4);
+		blueDropRight = new DigitalInput(5);
+		redDropLeft = new DigitalInput(6);
+		redDropRight = new DigitalInput(7);
+		centerDrop = new DigitalInput(8);
 		
 		light = new Light();
 		trap = new Trap();
@@ -127,7 +142,38 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		
 		isAutonomous = true;
-		autonomousCommand = chooser.getSelected();		
+		//autonomousCommand = chooser.getSelected();	
+		
+		
+		//Pose la gear au centre
+		if (!centerDrop.get()) {
+			autonomousCommand = new GearDropCenterPosition();
+		}
+		// Gauche cote Bleu
+		else if (!blueDropLeft.get()) {
+			autonomousCommand = new GearDropLeftPosition();
+		}	
+		// Droite Cote bleu
+		else if (!blueDropRight.get()) {
+			autonomousCommand = new GearDropRightPosition();
+		}	
+		// Gauche cote Rouge
+		else if (!redDropLeft.get()) {
+			autonomousCommand = new GearDropRightPositionRed();
+		}			
+		// Droite Cote Rouge
+		else if (!redDropRight.get()) {
+			autonomousCommand = new GearDropLeftPositionRed();
+		}
+		else {
+			autonomousCommand = new DriveStraight(100.0,-0.75);
+			
+		}
+		
+		
+		
+		
+		
 		autonomousCommand.start();
 		
 	}
